@@ -1,105 +1,142 @@
-parsed 55 thumbnail mappings from https://www.tangma2088.com/defaulten.html
-downloaded fashion/3 from https://qiqiygsheet.com/catalog/fashion/3.png
-downloaded fashion/1580 from https://qiqiygsheet.com/catalog/fashion/1580.jpg
-downloaded fashion/11 from https://qiqiygsheet.com/catalog/fashion/11.jpg
-downloaded fashion/139496 from https://qiqiygsheet.com/catalog/fashion/139496.jpg
-downloaded fashion/10 from https://qiqiygsheet.com/catalog/fashion/10.jpg
-downloaded fashion/394 from https://qiqiygsheet.com/catalog/fashion/394.jpg
-downloaded fashion/87630 from https://qiqiygsheet.com/catalog/fashion/87630.jpeg
-downloaded fashion/58658 from https://qiqiygsheet.com/catalog/fashion/58658.jpg
-downloaded fashion/155306 from https://qiqiygsheet.com/catalog/fashion/155306.jpg
-downloaded fashion/41628 from https://qiqiygsheet.com/catalog/fashion/41628.jpg
-downloaded fashion/1595 from https://qiqiygsheet.com/catalog/fashion/1595.png
-downloaded fashion/1602 from https://qiqiygsheet.com/catalog/fashion/1602.jpg
-downloaded fashion/65045 from https://qiqiygsheet.com/catalog/fashion/65045.jpg
-downloaded fashion/1618 from https://qiqiygsheet.com/catalog/fashion/1618.png
-downloaded fashion/1619 from https://qiqiygsheet.com/catalog/fashion/1619.jpg
-downloaded fashion/61968 from https://qiqiygsheet.com/catalog/fashion/61968.png
-downloaded fashion/1616 from https://qiqiygsheet.com/catalog/fashion/1616.png
-downloaded fashion/1615 from https://qiqiygsheet.com/catalog/fashion/1615.jpg
-downloaded fashion/1614 from https://qiqiygsheet.com/catalog/fashion/1614.jpg
-downloaded fashion/1611 from https://qiqiygsheet.com/catalog/fashion/1611.jpg
-downloaded fashion/1610 from https://qiqiygsheet.com/catalog/fashion/1610.jpg
-downloaded fashion/1609 from https://qiqiygsheet.com/catalog/fashion/1609.jpg
-downloaded fashion/1607 from https://qiqiygsheet.com/catalog/fashion/1607.jpg
-downloaded fashion/1606 from https://qiqiygsheet.com/catalog/fashion/1606.png
-downloaded fashion/1605 from https://qiqiygsheet.com/catalog/fashion/1605.jpg
-downloaded fashion/19629 from https://qiqiygsheet.com/catalog/fashion/19629.jpg
-downloaded fashion/1604 from https://qiqiygsheet.com/catalog/fashion/1604.png
-downloaded fashion/40865 from https://qiqiygsheet.com/catalog/fashion/40865.jpg
-downloaded fashion/1603 from https://qiqiygsheet.com/catalog/fashion/1603.png
-downloaded fashion/1600 from https://qiqiygsheet.com/catalog/fashion/1600.png
-downloaded fashion/67580 from https://qiqiygsheet.com/catalog/fashion/67580.jpg
-downloaded fashion/68696 from https://qiqiygsheet.com/catalog/fashion/68696.jpg
-downloaded fashion/1593 from https://qiqiygsheet.com/catalog/fashion/1593.jpg
-downloaded fashion/1592 from https://qiqiygsheet.com/catalog/fashion/1592.jpg
-downloaded fashion/1591 from https://qiqiygsheet.com/catalog/fashion/1591.jpg
-downloaded fashion/1590 from https://qiqiygsheet.com/catalog/fashion/1590.jpg
-downloaded fashion/1589 from https://qiqiygsheet.com/catalog/fashion/1589.jpg
-downloaded fashion/1587 from https://qiqiygsheet.com/catalog/fashion/1587.jpg
-downloaded fashion/40773 from https://qiqiygsheet.com/catalog/fashion/40773.jpg
-downloaded fashion/49906 from https://qiqiygsheet.com/catalog/fashion/49906.jpg
-downloaded fashion/1586 from https://qiqiygsheet.com/catalog/fashion/1586.jpg
-downloaded fashion/1585 from https://qiqiygsheet.com/catalog/fashion/1585.jpg
-downloaded fashion/1584 from https://qiqiygsheet.com/catalog/fashion/1584.jpg
-downloaded fashion/45005 from https://qiqiygsheet.com/catalog/fashion/45005.jpg
-downloaded fashion/1583 from https://qiqiygsheet.com/catalog/fashion/1583.jpg
-downloaded fashion/1582 from https://qiqiygsheet.com/catalog/fashion/1582.jpg
-downloaded fashion/1581 from https://qiqiygsheet.com/catalog/fashion/1581.jpg
-downloaded fashion/1612 from https://qiqiygsheet.com/catalog/fashion/1612.png
-downloaded fashion/1608 from https://qiqiygsheet.com/catalog/fashion/1608.jpg
-downloaded fashion/1601 from https://qiqiygsheet.com/catalog/fashion/1601.jpg
-downloaded fashion/1599 from https://qiqiygsheet.com/catalog/fashion/1599.jpg
-downloaded fashion/9879 from https://qiqiygsheet.com/catalog/fashion/9879.jpg
-parsed 36 thumbnail mappings from https://acc.tangma2088.com/defaulten.html
-downloaded 16511 from source thumbnail https://pic3.qiqiyg.com/upfile/category/202402281551274445.jpg
-downloaded 43569 from source thumbnail https://pic3.qiqiyg.com/upfile/category/43569.jpg
-downloaded 392 from source thumbnail https://acc.tangma2088.com/upfile/images/logo_1.jpg
-downloaded 391 from source thumbnail https://pic3.qiqiyg.com/upfile/category/391.jpg
-downloaded 28251 from source thumbnail https://pic3.qiqiyg.com/upfile/category/28251.jpg
-downloaded 393 from source thumbnail https://acc.tangma2088.com/upfile/images/logo_1.jpg
-downloaded 383 from source thumbnail https://acc.tangma2088.com/upfile/images/logo_1.jpg
-downloaded 385 from source thumbnail https://acc.tangma2088.com/upfile/images/logo_1.jpg
-downloaded 384 from source thumbnail https://pic3.qiqiyg.com/upfile/category/384.jpg
-downloaded 168165 from source thumbnail https://acc.tangma2088.com/upfile/category/168165.jpg
-downloaded 386 from source thumbnail https://pic3.qiqiyg.com//upfile/category/386.jpg
-downloaded 263724 from source thumbnail https://acc.tangma2088.com/upfile/category/263724.jpg
-downloaded 380 from source thumbnail https://pic3.qiqiyg.com/upfile/category/380.jpg
-downloaded 70206 from source thumbnail https://pic3.qiqiyg.com/upfile/category/70206.jpg
-invalid image accessories/70206: image file is truncated (72 bytes not processed)
-downloaded 390 from source thumbnail https://pic3.qiqiyg.com/upfile/category/390.jpg
-parsed 53 thumbnail mappings from https://bags.tangma2088.com/defaulten.html
-downloaded bags/29314 from https://qiqiygsheet.com/catalog/bags/29314.jpg
-downloaded bags/38931 from https://qiqiygsheet.com/catalog/bags/38931.jpg
-downloaded bags/6279 from https://qiqiygsheet.com/catalog/bags/6279.jpg
-downloaded bags/41554 from https://qiqiygsheet.com/catalog/bags/41554.jpg
-downloaded bags/31206 from https://qiqiygsheet.com/catalog/bags/31206.jpg
-downloaded bags/42002 from https://qiqiygsheet.com/catalog/bags/42002.jpg
-downloaded bags/11064 from https://qiqiygsheet.com/catalog/bags/11064.jpg
-downloaded bags/11053 from https://qiqiygsheet.com/catalog/bags/11053.jpg
-downloaded bags/11082 from https://qiqiygsheet.com/catalog/bags/11082.jpg
-downloaded bags/2412 from https://qiqiygsheet.com/catalog/bags/2412.jpg
-downloaded bags/43139 from https://qiqiygsheet.com/catalog/bags/43139.jpg
-downloaded bags/23237 from https://qiqiygsheet.com/catalog/bags/23237.jpg
-downloaded bags/2408 from https://qiqiygsheet.com/catalog/bags/2408.png
-downloaded bags/11074 from https://qiqiygsheet.com/catalog/bags/11074.jpg
-downloaded bags/102526 from https://qiqiygsheet.com/catalog/bags/102526.jpg
-downloaded bags/39326 from https://qiqiygsheet.com/catalog/bags/39326.jpg
-parsed 92 thumbnail mappings from https://shoes.tangma2088.com/defaulten.html
-downloaded shoes/355 from https://qiqiygsheet.com/catalog/shoes/355.jpg
-downloaded shoes/65136 from https://qiqiygsheet.com/catalog/shoes/65136.jpg
-downloaded shoes/336 from https://qiqiygsheet.com/catalog/shoes/336.jpg
-downloaded shoes/327 from https://qiqiygsheet.com/catalog/shoes/327.jpg
-downloaded shoes/347 from https://qiqiygsheet.com/catalog/shoes/347.jpg
-downloaded shoes/350 from https://qiqiygsheet.com/catalog/shoes/350.jpg
-downloaded shoes/234 from https://qiqiygsheet.com/catalog/shoes/234.jpg
-downloaded shoes/224 from https://qiqiygsheet.com/catalog/shoes/224.jpg
-downloaded shoes/229 from https://qiqiygsheet.com/catalog/shoes/229.jpg
-downloaded shoes/151 from https://qiqiygsheet.com/catalog/shoes/151.jpg
-downloaded shoes/104 from https://qiqiygsheet.com/catalog/shoes/104.jpg
-downloaded shoes/140 from https://qiqiygsheet.com/catalog/shoes/140.jpg
-downloaded shoes/52 from https://qiqiygsheet.com/catalog/shoes/52.jpg
-downloaded shoes/132 from https://qiqiygsheet.com/catalog/shoes/132.jpg
-downloaded shoes/367 from https://qiqiygsheet.com/catalog/shoes/367.jpg
-downloaded shoes/142649 from https://qiqiygsheet.com/catalog/shoes/142649.jpg
-saved 98 catalog images
+fashion: parsed 54 complete catalog entries
+fashion/170: image saved
+fashion/345535: image saved
+accessories: parsed 35 complete catalog entries
+accessories/70206: image missing
+accessories/121353: image missing
+accessories/376: image missing
+accessories/374: image missing
+accessories/78941: image missing
+accessories/278627: image missing
+accessories/265945: image missing
+accessories/265944: image missing
+accessories/266070: image missing
+accessories/265962: image missing
+accessories/213021: image missing
+accessories/275116: image missing
+accessories/262711: image missing
+accessories/363: image missing
+accessories/275073: image missing
+accessories/375: image missing
+accessories/305348: image missing
+accessories/144106: image missing
+accessories/377: image missing
+accessories/378: image missing
+accessories/198277: image missing
+accessories/70206: used original Sock 0725 thumbnail as fallback
+bags: parsed 53 complete catalog entries
+bags/38932: image saved
+bags/6296: image saved
+bags/2410: image saved
+bags/51031: image saved
+bags/23276: image saved
+bags/23236: image saved
+bags/90710: image saved
+bags/23241: image saved
+bags/11068: image saved
+bags/11072: image saved
+bags/23235: image saved
+bags/155489: image saved
+bags/101771: image saved
+bags/11084: image saved
+bags/6309: image saved
+bags/23279: image saved
+bags/48064: image saved
+bags/23280: image saved
+bags/23239: image saved
+bags/104086: image saved
+bags/37771: image saved
+bags/35714: image saved
+bags/136826: image saved
+bags/6305: image saved
+bags/23240: image saved
+bags/23275: image saved
+bags/23229: image saved
+bags/2409: image saved
+bags/23284: image saved
+bags/36575: image saved
+bags/71898: image saved
+bags/1: image missing
+bags/6308: image saved
+bags/23233: image saved
+bags/36560: image saved
+bags/6302: image saved
+bags/35352: image saved
+shoes: parsed 92 complete catalog entries
+shoes/65203: image saved
+shoes/181821: image missing
+shoes/61746: image saved
+shoes/177976: image saved
+shoes/178384: image saved
+shoes/178803: image saved
+shoes/178807: image saved
+shoes/179712: image saved
+shoes/181659: image missing
+shoes/180172: image saved
+shoes/58214: image saved
+shoes/159990: image saved
+shoes/64532: image saved
+shoes/304: image saved
+shoes/321: image saved
+shoes/316: image saved
+shoes/177042: image saved
+shoes/80836: image saved
+shoes/88376: image saved
+shoes/178397: image saved
+shoes/145: image saved
+shoes/27440: image saved
+shoes/179892: image saved
+shoes/161: image saved
+shoes/123: image saved
+shoes/177660: image saved
+shoes/82685: image saved
+shoes/28291: image saved
+shoes/177361: image saved
+shoes/177936: image saved
+shoes/181547: image missing
+shoes/177193: image saved
+shoes/33053: image saved
+shoes/178766: image saved
+shoes/179720: image saved
+shoes/178584: image saved
+shoes/27434: image missing
+shoes/179723: image saved
+shoes/179149: image saved
+shoes/179727: image saved
+shoes/181721: image missing
+shoes/80225: image saved
+shoes/154701: image saved
+shoes/156405: image saved
+shoes/84078: image saved
+shoes/75: image saved
+shoes/87692: image saved
+shoes/178651: image saved
+shoes/177966: image saved
+shoes/154460: image saved
+shoes/154469: image saved
+shoes/154721: image saved
+shoes/181815: image missing
+shoes/178663: image saved
+shoes/178671: image saved
+shoes/82: image missing
+shoes/177972: image saved
+shoes/178674: image saved
+shoes/88: image saved
+shoes/92: image saved
+shoes/164270: image saved
+shoes/178408: image saved
+shoes/179747: image saved
+shoes/181546: image missing
+shoes/49: image saved
+shoes/80880: image saved
+shoes/156346: image saved
+shoes/28852: image saved
+shoes/56: image saved
+shoes/72: image saved
+shoes/179656: image saved
+shoes/84731: image saved
+shoes/47: image saved
+shoes/139955: image saved
+shoes/177367: image saved
+shoes/181558: image missing
+wrote qiqishoes-com/assets/catalog/catalog-data.json

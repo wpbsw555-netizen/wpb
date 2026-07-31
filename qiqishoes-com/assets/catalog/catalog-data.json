@@ -1,0 +1,2393 @@
+{
+  "generatedAt": "2026-07-31T16:55:11.686827+00:00",
+  "departments": {
+    "fashion": {
+      "brandCn": "服饰",
+      "brandEn": "FASHION",
+      "title": {
+        "zh": "服饰目录",
+        "en": "Fashion Catalog",
+        "es": "Fashion Catalog"
+      },
+      "source": "https://www.tangma2088.com/defaulten.html",
+      "items": [
+        {
+          "id": "3",
+          "zh": "2026 New 0731",
+          "en": "2026 New 0731",
+          "es": "2026 New 0731",
+          "count": "78631",
+          "group": "category",
+          "landing": "https://www.tangma2088.com/categoryen_3.html?path=0_3",
+          "image": "assets/catalog/fashion/3.jpg"
+        },
+        {
+          "id": "1580",
+          "zh": "By Style 0730",
+          "en": "By Style 0730",
+          "es": "By Style 0730",
+          "count": "721373",
+          "group": "category",
+          "landing": "https://www.tangma2088.com/categoryen_1580.html?path=0_1580",
+          "image": "assets/catalog/fashion/1580.jpg"
+        },
+        {
+          "id": "11",
+          "zh": "T Shirt 0729",
+          "en": "T Shirt 0729",
+          "es": "T Shirt 0729",
+          "count": "353408",
+          "group": "category",
+          "landing": "https://www.tangma2088.com/categoryen_11.html?path=0_11",
+          "image": "assets/catalog/fashion/11.jpg"
+        },
+        {
+          "id": "139496",
+          "zh": "High Quality 0731",
+          "en": "High Quality 0731",
+          "es": "High Quality 0731",
+          "count": "117050",
+          "group": "category",
+          "landing": "https://www.tangma2088.com/categoryen_139496.html?path=0_139496",
+          "image": "assets/catalog/fashion/139496.jpg"
+        },
+        {
+          "id": "10",
+          "zh": "Polo Short 0728",
+          "en": "Polo Short 0728",
+          "es": "Polo Short 0728",
+          "count": "54030",
+          "group": "category",
+          "landing": "https://www.tangma2088.com/categoryen_10.html?path=0_10",
+          "image": "assets/catalog/fashion/10.jpg"
+        },
+        {
+          "id": "394",
+          "zh": "Jacket 0729",
+          "en": "Jacket 0729",
+          "es": "Jacket 0729",
+          "count": "85312",
+          "group": "category",
+          "landing": "https://www.tangma2088.com/categoryen_394.html?path=0_394",
+          "image": "assets/catalog/fashion/394.jpg"
+        },
+        {
+          "id": "87630",
+          "zh": "Down Jacket 0720",
+          "en": "Down Jacket 0720",
+          "es": "Down Jacket 0720",
+          "count": "32883",
+          "group": "category",
+          "landing": "https://www.tangma2088.com/categoryen_87630.html?path=0_87630",
+          "image": "assets/catalog/fashion/87630.jpg"
+        },
+        {
+          "id": "170",
+          "zh": "Fashion Dress 0730",
+          "en": "Fashion Dress 0730",
+          "es": "Fashion Dress 0730",
+          "count": "74210",
+          "group": "category",
+          "landing": "https://www.tangma2088.com/categoryen_170.html?path=0_170",
+          "image": "assets/catalog/fashion/170.jpg"
+        },
+        {
+          "id": "58658",
+          "zh": "Bikini 0729",
+          "en": "Bikini 0729",
+          "es": "Bikini 0729",
+          "count": "14216",
+          "group": "category",
+          "landing": "https://www.tangma2088.com/categoryen_58658.html?path=0_58658",
+          "image": "assets/catalog/fashion/58658.jpg"
+        },
+        {
+          "id": "345535",
+          "zh": "Spring Summer Kid Clothes 0721",
+          "en": "Spring Summer Kid Clothes 0721",
+          "es": "Spring Summer Kid Clothes 0721",
+          "count": "83604",
+          "group": "category",
+          "landing": "https://www.tangma2088.com/categoryen_345535.html?path=0_345535",
+          "image": "assets/catalog/fashion/345535.jpg"
+        },
+        {
+          "id": "155306",
+          "zh": "Fashion Dress 0714",
+          "en": "Fashion Dress 0714",
+          "es": "Fashion Dress 0714",
+          "count": "6399",
+          "group": "category",
+          "landing": "https://www.tangma2088.com/categoryen_155306.html?path=0_155306",
+          "image": "assets/catalog/fashion/155306.jpg"
+        },
+        {
+          "id": "41628",
+          "zh": "Lululemon ALO 不接急单 0714",
+          "en": "Lululemon ALO 不接急单 0714",
+          "es": "Lululemon ALO 不接急单 0714",
+          "count": "42383",
+          "group": "category",
+          "landing": "https://www.tangma2088.com/categoryen_41628.html?path=0_41628",
+          "image": "assets/catalog/fashion/41628.jpg"
+        },
+        {
+          "id": "1595",
+          "zh": "Louis Vuitton",
+          "en": "Louis Vuitton",
+          "es": "Louis Vuitton",
+          "count": "1",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1595.html?path=0_1595",
+          "image": "assets/catalog/fashion/1595.jpg"
+        },
+        {
+          "id": "1602",
+          "zh": "Gucci",
+          "en": "Gucci",
+          "es": "Gucci",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1602.html?path=0_1602",
+          "image": "assets/catalog/fashion/1602.jpg"
+        },
+        {
+          "id": "65045",
+          "zh": "AF HOC",
+          "en": "AF HOC",
+          "es": "AF HOC",
+          "count": "903",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_65045.html?path=0_65045",
+          "image": "assets/catalog/fashion/65045.jpg"
+        },
+        {
+          "id": "1618",
+          "zh": "Adidas NIKE Jordan",
+          "en": "Adidas NIKE Jordan",
+          "es": "Adidas NIKE Jordan",
+          "count": "6302",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1618.html?path=0_1618",
+          "image": "assets/catalog/fashion/1618.jpg"
+        },
+        {
+          "id": "1619",
+          "zh": "AAPE BAPE",
+          "en": "AAPE BAPE",
+          "es": "AAPE BAPE",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1619.html?path=0_1619",
+          "image": "assets/catalog/fashion/1619.jpg"
+        },
+        {
+          "id": "61968",
+          "zh": "Amiri",
+          "en": "Amiri",
+          "es": "Amiri",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_61968.html?path=0_61968",
+          "image": "assets/catalog/fashion/61968.jpg"
+        },
+        {
+          "id": "1616",
+          "zh": "Armani",
+          "en": "Armani",
+          "es": "Armani",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1616.html?path=0_1616",
+          "image": "assets/catalog/fashion/1616.jpg"
+        },
+        {
+          "id": "1615",
+          "zh": "Balenciaga",
+          "en": "Balenciaga",
+          "es": "Balenciaga",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1615.html?path=0_1615",
+          "image": "assets/catalog/fashion/1615.jpg"
+        },
+        {
+          "id": "1614",
+          "zh": "Balmain",
+          "en": "Balmain",
+          "es": "Balmain",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1614.html?path=0_1614",
+          "image": "assets/catalog/fashion/1614.jpg"
+        },
+        {
+          "id": "1611",
+          "zh": "Burberry",
+          "en": "Burberry",
+          "es": "Burberry",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1611.html?path=0_1611",
+          "image": "assets/catalog/fashion/1611.jpg"
+        },
+        {
+          "id": "1610",
+          "zh": "Chanel",
+          "en": "Chanel",
+          "es": "Chanel",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1610.html?path=0_1610",
+          "image": "assets/catalog/fashion/1610.jpg"
+        },
+        {
+          "id": "1609",
+          "zh": "Chrome Hearts",
+          "en": "Chrome Hearts",
+          "es": "Chrome Hearts",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1609.html?path=0_1609",
+          "image": "assets/catalog/fashion/1609.jpg"
+        },
+        {
+          "id": "1607",
+          "zh": "DG",
+          "en": "DG",
+          "es": "DG",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1607.html?path=0_1607",
+          "image": "assets/catalog/fashion/1607.jpg"
+        },
+        {
+          "id": "1606",
+          "zh": "Dior",
+          "en": "Dior",
+          "es": "Dior",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1606.html?path=0_1606",
+          "image": "assets/catalog/fashion/1606.jpg"
+        },
+        {
+          "id": "1605",
+          "zh": "DSQ",
+          "en": "DSQ",
+          "es": "DSQ",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1605.html?path=0_1605",
+          "image": "assets/catalog/fashion/1605.jpg"
+        },
+        {
+          "id": "19629",
+          "zh": "Fear Of God",
+          "en": "Fear Of God",
+          "es": "Fear Of God",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_19629.html?path=0_19629",
+          "image": "assets/catalog/fashion/19629.jpg"
+        },
+        {
+          "id": "1604",
+          "zh": "Fendi",
+          "en": "Fendi",
+          "es": "Fendi",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1604.html?path=0_1604",
+          "image": "assets/catalog/fashion/1604.jpg"
+        },
+        {
+          "id": "40865",
+          "zh": "Gallery Dept",
+          "en": "Gallery Dept",
+          "es": "Gallery Dept",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_40865.html?path=0_40865",
+          "image": "assets/catalog/fashion/40865.jpg"
+        },
+        {
+          "id": "1603",
+          "zh": "Givenchy",
+          "en": "Givenchy",
+          "es": "Givenchy",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1603.html?path=0_1603",
+          "image": "assets/catalog/fashion/1603.jpg"
+        },
+        {
+          "id": "1600",
+          "zh": "Juicy",
+          "en": "Juicy",
+          "es": "Juicy",
+          "count": "778",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1600.html?path=0_1600",
+          "image": "assets/catalog/fashion/1600.jpg"
+        },
+        {
+          "id": "67580",
+          "zh": "Lacoste",
+          "en": "Lacoste",
+          "es": "Lacoste",
+          "count": "317",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_67580.html?path=0_67580",
+          "image": "assets/catalog/fashion/67580.jpg"
+        },
+        {
+          "id": "68696",
+          "zh": "Ralph Lauren",
+          "en": "Ralph Lauren",
+          "es": "Ralph Lauren",
+          "count": "6728",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_68696.html?path=0_68696",
+          "image": "assets/catalog/fashion/68696.jpg"
+        },
+        {
+          "id": "1593",
+          "zh": "Moncler",
+          "en": "Moncler",
+          "es": "Moncler",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1593.html?path=0_1593",
+          "image": "assets/catalog/fashion/1593.jpg"
+        },
+        {
+          "id": "1592",
+          "zh": "Moschino",
+          "en": "Moschino",
+          "es": "Moschino",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1592.html?path=0_1592",
+          "image": "assets/catalog/fashion/1592.jpg"
+        },
+        {
+          "id": "1591",
+          "zh": "Off White",
+          "en": "Off White",
+          "es": "Off White",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1591.html?path=0_1591",
+          "image": "assets/catalog/fashion/1591.jpg"
+        },
+        {
+          "id": "1590",
+          "zh": "Palm Angels",
+          "en": "Palm Angels",
+          "es": "Palm Angels",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1590.html?path=0_1590",
+          "image": "assets/catalog/fashion/1590.jpg"
+        },
+        {
+          "id": "1589",
+          "zh": "Philipp Plein",
+          "en": "Philipp Plein",
+          "es": "Philipp Plein",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1589.html?path=0_1589",
+          "image": "assets/catalog/fashion/1589.jpg"
+        },
+        {
+          "id": "1587",
+          "zh": "Prada",
+          "en": "Prada",
+          "es": "Prada",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1587.html?path=0_1587",
+          "image": "assets/catalog/fashion/1587.jpg"
+        },
+        {
+          "id": "40773",
+          "zh": "REPRESENT",
+          "en": "REPRESENT",
+          "es": "REPRESENT",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_40773.html?path=0_40773",
+          "image": "assets/catalog/fashion/40773.jpg"
+        },
+        {
+          "id": "49906",
+          "zh": "RHUDE",
+          "en": "RHUDE",
+          "es": "RHUDE",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_49906.html?path=0_49906",
+          "image": "assets/catalog/fashion/49906.jpg"
+        },
+        {
+          "id": "1586",
+          "zh": "Stone Island",
+          "en": "Stone Island",
+          "es": "Stone Island",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1586.html?path=0_1586",
+          "image": "assets/catalog/fashion/1586.jpg"
+        },
+        {
+          "id": "1585",
+          "zh": "Supreme",
+          "en": "Supreme",
+          "es": "Supreme",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1585.html?path=0_1585",
+          "image": "assets/catalog/fashion/1585.jpg"
+        },
+        {
+          "id": "1584",
+          "zh": "Tommy",
+          "en": "Tommy",
+          "es": "Tommy",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1584.html?path=0_1584",
+          "image": "assets/catalog/fashion/1584.jpg"
+        },
+        {
+          "id": "45005",
+          "zh": "Trapstar",
+          "en": "Trapstar",
+          "es": "Trapstar",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_45005.html?path=0_45005",
+          "image": "assets/catalog/fashion/45005.jpg"
+        },
+        {
+          "id": "1583",
+          "zh": "Valentino",
+          "en": "Valentino",
+          "es": "Valentino",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1583.html?path=0_1583",
+          "image": "assets/catalog/fashion/1583.jpg"
+        },
+        {
+          "id": "1582",
+          "zh": "Versace",
+          "en": "Versace",
+          "es": "Versace",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1582.html?path=0_1582",
+          "image": "assets/catalog/fashion/1582.jpg"
+        },
+        {
+          "id": "1581",
+          "zh": "YSL",
+          "en": "YSL",
+          "es": "YSL",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1581.html?path=0_1581",
+          "image": "assets/catalog/fashion/1581.jpg"
+        },
+        {
+          "id": "1612",
+          "zh": "BOSS",
+          "en": "BOSS",
+          "es": "BOSS",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1612.html?path=0_1612",
+          "image": "assets/catalog/fashion/1612.jpg"
+        },
+        {
+          "id": "1608",
+          "zh": "CK",
+          "en": "CK",
+          "es": "CK",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1608.html?path=0_1608",
+          "image": "assets/catalog/fashion/1608.jpg"
+        },
+        {
+          "id": "1601",
+          "zh": "Hermes",
+          "en": "Hermes",
+          "es": "Hermes",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1601.html?path=0_1601",
+          "image": "assets/catalog/fashion/1601.jpg"
+        },
+        {
+          "id": "1599",
+          "zh": "Kenzo",
+          "en": "Kenzo",
+          "es": "Kenzo",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_1599.html?path=0_1599",
+          "image": "assets/catalog/fashion/1599.jpg"
+        },
+        {
+          "id": "9879",
+          "zh": "Hotsale updating",
+          "en": "Hotsale updating",
+          "es": "Hotsale updating",
+          "count": "6271",
+          "group": "brand",
+          "landing": "https://www.tangma2088.com/categoryen_9879.html?path=0_9879",
+          "image": "assets/catalog/fashion/9879.jpg"
+        }
+      ]
+    },
+    "accessories": {
+      "brandCn": "附件",
+      "brandEn": "ACCESSORIES",
+      "title": {
+        "zh": "附件目录",
+        "en": "Accessories Catalog",
+        "es": "Accessories Catalog"
+      },
+      "source": "https://acc.tangma2088.com/defaulten.html",
+      "items": [
+        {
+          "id": "16511",
+          "zh": "New Arrival 0731",
+          "en": "New Arrival 0731",
+          "es": "New Arrival 0731",
+          "count": "52464",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_16511.html?path=0_16511",
+          "image": "assets/catalog/accessories/16511.jpg"
+        },
+        {
+          "id": "43569",
+          "zh": "Jewelry 0707",
+          "en": "Jewelry 0707",
+          "es": "Jewelry 0707",
+          "count": "294544",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_43569.html?path=0_43569",
+          "image": "assets/catalog/accessories/43569.jpg"
+        },
+        {
+          "id": "392",
+          "zh": "Glasses 0629",
+          "en": "Glasses 0629",
+          "es": "Glasses 0629",
+          "count": "78207",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_392.html?path=0_392",
+          "image": "assets/catalog/accessories/392.jpg"
+        },
+        {
+          "id": "391",
+          "zh": "Plain Glasses 0728",
+          "en": "Plain Glasses 0728",
+          "es": "Plain Glasses 0728",
+          "count": "5422",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_391.html?path=0_391",
+          "image": "assets/catalog/accessories/391.jpg"
+        },
+        {
+          "id": "28251",
+          "zh": "Glasses Factory 0728",
+          "en": "Glasses Factory 0728",
+          "es": "Glasses Factory 0728",
+          "count": "31709",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_28251.html?path=0_28251",
+          "image": "assets/catalog/accessories/28251.jpg"
+        },
+        {
+          "id": "393",
+          "zh": "Belts 0724",
+          "en": "Belts 0724",
+          "es": "Belts 0724",
+          "count": "54742",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_393.html?path=0_393",
+          "image": "assets/catalog/accessories/393.jpg"
+        },
+        {
+          "id": "383",
+          "zh": "Watches 0721",
+          "en": "Watches 0721",
+          "es": "Watches 0721",
+          "count": "125046",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_383.html?path=0_383",
+          "image": "assets/catalog/accessories/383.jpg"
+        },
+        {
+          "id": "385",
+          "zh": "Caps 0730",
+          "en": "Caps 0730",
+          "es": "Caps 0730",
+          "count": "45956",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_385.html?path=0_385",
+          "image": "assets/catalog/accessories/385.jpg"
+        },
+        {
+          "id": "384",
+          "zh": "Bucket Hat 0730",
+          "en": "Bucket Hat 0730",
+          "es": "Bucket Hat 0730",
+          "count": "6615",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_384.html?path=0_384",
+          "image": "assets/catalog/accessories/384.jpg"
+        },
+        {
+          "id": "168165",
+          "zh": "26 Hat 0730",
+          "en": "26 Hat 0730",
+          "es": "26 Hat 0730",
+          "count": "2978",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_168165.html?path=0_168165",
+          "image": "assets/catalog/accessories/168165.jpg"
+        },
+        {
+          "id": "386",
+          "zh": "More Caps Hats 0730",
+          "en": "More Caps Hats 0730",
+          "es": "More Caps Hats 0730",
+          "count": "18148",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_386.html?path=0_386",
+          "image": "assets/catalog/accessories/386.jpg"
+        },
+        {
+          "id": "263724",
+          "zh": "Perfume 0727",
+          "en": "Perfume 0727",
+          "es": "Perfume 0727",
+          "count": "12325",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_263724.html?path=0_263724",
+          "image": "assets/catalog/accessories/263724.jpg"
+        },
+        {
+          "id": "380",
+          "zh": "Sock 0725",
+          "en": "Sock 0725",
+          "es": "Sock 0725",
+          "count": "11262",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_380.html?path=0_380",
+          "image": "assets/catalog/accessories/380.jpg"
+        },
+        {
+          "id": "70206",
+          "zh": "Socks 0725",
+          "en": "Socks 0725",
+          "es": "Socks 0725",
+          "count": "8232",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_70206.html?path=0_70206",
+          "image": "assets/catalog/accessories/70206.jpg"
+        },
+        {
+          "id": "390",
+          "zh": "Scarf F1st 0728",
+          "en": "Scarf F1st 0728",
+          "es": "Scarf F1st 0728",
+          "count": "45856",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_390.html?path=0_390",
+          "image": "assets/catalog/accessories/390.jpg"
+        },
+        {
+          "id": "121353",
+          "zh": "Hair Band Clasp Tie 0627",
+          "en": "Hair Band Clasp Tie 0627",
+          "es": "Hair Band Clasp Tie 0627",
+          "count": "12456",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_121353.html?path=0_121353",
+          "image": "assets/catalog/accessories/121353.jpg"
+        },
+        {
+          "id": "376",
+          "zh": "Boxers Brief 0723",
+          "en": "Boxers Brief 0723",
+          "es": "Boxers Brief 0723",
+          "count": "10705",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_376.html?path=0_376",
+          "image": "assets/catalog/accessories/376.jpg"
+        },
+        {
+          "id": "374",
+          "zh": "Bathrobe 0417",
+          "en": "Bathrobe 0417",
+          "es": "Bathrobe 0417",
+          "count": "94",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_374.html?path=0_374",
+          "image": "assets/catalog/accessories/374.jpg"
+        },
+        {
+          "id": "78941",
+          "zh": "Pen 0608",
+          "en": "Pen 0608",
+          "es": "Pen 0608",
+          "count": "811",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_78941.html?path=0_78941",
+          "image": "assets/catalog/accessories/78941.jpg"
+        },
+        {
+          "id": "278627",
+          "zh": "Umbrella 0726",
+          "en": "Umbrella 0726",
+          "es": "Umbrella 0726",
+          "count": "2134",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_278627.html?path=0_278627",
+          "image": "assets/catalog/accessories/278627.jpg"
+        },
+        {
+          "id": "265945",
+          "zh": "Towel 0728",
+          "en": "Towel 0728",
+          "es": "Towel 0728",
+          "count": "215",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_265945.html?path=0_265945",
+          "image": "assets/catalog/accessories/265945.jpg"
+        },
+        {
+          "id": "265944",
+          "zh": "Beddings 0608",
+          "en": "Beddings 0608",
+          "es": "Beddings 0608",
+          "count": "3559",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_265944.html?path=0_265944",
+          "image": "assets/catalog/accessories/265944.jpg"
+        },
+        {
+          "id": "266070",
+          "zh": "Blanket 0728",
+          "en": "Blanket 0728",
+          "es": "Blanket 0728",
+          "count": "3390",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_266070.html?path=0_266070",
+          "image": "assets/catalog/accessories/266070.jpg"
+        },
+        {
+          "id": "265962",
+          "zh": "Table Cushions 0701",
+          "en": "Table Cushions 0701",
+          "es": "Table Cushions 0701",
+          "count": "1963",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_265962.html?path=0_265962",
+          "image": "assets/catalog/accessories/265962.jpg"
+        },
+        {
+          "id": "213021",
+          "zh": "Pet Clothes",
+          "en": "Pet Clothes",
+          "es": "Pet Clothes",
+          "count": "7701",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_213021.html?path=0_213021",
+          "image": "assets/catalog/accessories/213021.jpg"
+        },
+        {
+          "id": "275116",
+          "zh": "Thermos 0411",
+          "en": "Thermos 0411",
+          "es": "Thermos 0411",
+          "count": "462",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_275116.html?path=0_275116",
+          "image": "assets/catalog/accessories/275116.jpg"
+        },
+        {
+          "id": "262711",
+          "zh": "Fear Of God 0202",
+          "en": "Fear Of God 0202",
+          "es": "Fear Of God 0202",
+          "count": "168",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_262711.html?path=0_262711",
+          "image": "assets/catalog/accessories/262711.jpg"
+        },
+        {
+          "id": "363",
+          "zh": "Electronis 0322",
+          "en": "Electronis 0322",
+          "es": "Electronis 0322",
+          "count": "394",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_363.html?path=0_363",
+          "image": "assets/catalog/accessories/363.jpg"
+        },
+        {
+          "id": "275073",
+          "zh": "Toy 0411",
+          "en": "Toy 0411",
+          "es": "Toy 0411",
+          "count": "322",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_275073.html?path=0_275073",
+          "image": "assets/catalog/accessories/275073.jpg"
+        },
+        {
+          "id": "375",
+          "zh": "Mobile phone shell 0717",
+          "en": "Mobile phone shell 0717",
+          "es": "Mobile phone shell 0717",
+          "count": "23846",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_375.html?path=0_375",
+          "image": "assets/catalog/accessories/375.jpg"
+        },
+        {
+          "id": "305348",
+          "zh": "Gloves 0731",
+          "en": "Gloves 0731",
+          "es": "Gloves 0731",
+          "count": "1318",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_305348.html?path=0_305348",
+          "image": "assets/catalog/accessories/305348.jpg"
+        },
+        {
+          "id": "144106",
+          "zh": "Tie 0606",
+          "en": "Tie 0606",
+          "es": "Tie 0606",
+          "count": "11881",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_144106.html?path=0_144106",
+          "image": "assets/catalog/accessories/144106.jpg"
+        },
+        {
+          "id": "377",
+          "zh": "Silk Sock 0307",
+          "en": "Silk Sock 0307",
+          "es": "Silk Sock 0307",
+          "count": "174",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_377.html?path=0_377",
+          "image": "assets/catalog/accessories/377.jpg"
+        },
+        {
+          "id": "378",
+          "zh": "Underware Sleepware 0307",
+          "en": "Underware Sleepware 0307",
+          "es": "Underware Sleepware 0307",
+          "count": "77",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_378.html?path=0_378",
+          "image": "assets/catalog/accessories/378.jpg"
+        },
+        {
+          "id": "198277",
+          "zh": "Sunglasses A",
+          "en": "Sunglasses A",
+          "es": "Sunglasses A",
+          "count": "2345",
+          "group": "category",
+          "landing": "https://acc.tangma2088.com/categoryen_198277.html?path=0_198277",
+          "image": "assets/catalog/accessories/198277.jpg"
+        }
+      ]
+    },
+    "bags": {
+      "brandCn": "包包",
+      "brandEn": "BAGS",
+      "title": {
+        "zh": "包包目录",
+        "en": "Bags Catalog",
+        "es": "Bags Catalog"
+      },
+      "source": "https://bags.tangma2088.com/defaulten.html",
+      "items": [
+        {
+          "id": "29314",
+          "zh": "New Arrival 0731",
+          "en": "New Arrival 0731",
+          "es": "New Arrival 0731",
+          "count": "5942",
+          "group": "category",
+          "landing": "https://bags.tangma2088.com/categoryen_29314.html?path=0_29314",
+          "image": "assets/catalog/bags/29314.jpg"
+        },
+        {
+          "id": "38932",
+          "zh": "Luggage",
+          "en": "Luggage",
+          "es": "Luggage",
+          "count": "0",
+          "group": "category",
+          "landing": "https://bags.tangma2088.com/categoryen_38932.html?path=0_38932",
+          "image": "assets/catalog/bags/38932.jpg"
+        },
+        {
+          "id": "38931",
+          "zh": "2026 LV Original",
+          "en": "2026 LV Original",
+          "es": "2026 LV Original",
+          "count": "55647",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_38931.html?path=0_38931",
+          "image": "assets/catalog/bags/38931.jpg"
+        },
+        {
+          "id": "6279",
+          "zh": "2026 LV 1:1",
+          "en": "2026 LV 1:1",
+          "es": "2026 LV 1:1",
+          "count": "62048",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_6279.html?path=0_6279",
+          "image": "assets/catalog/bags/6279.jpg"
+        },
+        {
+          "id": "41554",
+          "zh": "2026 Gucci Original",
+          "en": "2026 Gucci Original",
+          "es": "2026 Gucci Original",
+          "count": "34005",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_41554.html?path=0_41554",
+          "image": "assets/catalog/bags/41554.jpg"
+        },
+        {
+          "id": "31206",
+          "zh": "2026 Gucci 1:1",
+          "en": "2026 Gucci 1:1",
+          "es": "2026 Gucci 1:1",
+          "count": "54275",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_31206.html?path=0_31206",
+          "image": "assets/catalog/bags/31206.jpg"
+        },
+        {
+          "id": "42002",
+          "zh": "2026 Chanel Original",
+          "en": "2026 Chanel Original",
+          "es": "2026 Chanel Original",
+          "count": "37413",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_42002.html?path=0_42002",
+          "image": "assets/catalog/bags/42002.jpg"
+        },
+        {
+          "id": "6296",
+          "zh": "2026 Chanel 1:1",
+          "en": "2026 Chanel 1:1",
+          "es": "2026 Chanel 1:1",
+          "count": "37030",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_6296.html?path=0_6296",
+          "image": "assets/catalog/bags/6296.jpg"
+        },
+        {
+          "id": "2410",
+          "zh": "2026 Dior Original",
+          "en": "2026 Dior Original",
+          "es": "2026 Dior Original",
+          "count": "26089",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_2410.html?path=0_2410",
+          "image": "assets/catalog/bags/2410.jpg"
+        },
+        {
+          "id": "51031",
+          "zh": "2026 Dior 1:1",
+          "en": "2026 Dior 1:1",
+          "es": "2026 Dior 1:1",
+          "count": "38181",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_51031.html?path=0_51031",
+          "image": "assets/catalog/bags/51031.jpg"
+        },
+        {
+          "id": "23276",
+          "zh": "2026 Armani",
+          "en": "2026 Armani",
+          "es": "2026 Armani",
+          "count": "250",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_23276.html?path=0_23276",
+          "image": "assets/catalog/bags/23276.jpg"
+        },
+        {
+          "id": "23236",
+          "zh": "2026 Alexander Wang",
+          "en": "2026 Alexander Wang",
+          "es": "2026 Alexander Wang",
+          "count": "244",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_23236.html?path=0_23236",
+          "image": "assets/catalog/bags/23236.jpg"
+        },
+        {
+          "id": "11064",
+          "zh": "2026 Burberry",
+          "en": "2026 Burberry",
+          "es": "2026 Burberry",
+          "count": "15283",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_11064.html?path=0_11064",
+          "image": "assets/catalog/bags/11064.jpg"
+        },
+        {
+          "id": "90710",
+          "zh": "2026 Bvlgari",
+          "en": "2026 Bvlgari",
+          "es": "2026 Bvlgari",
+          "count": "1818",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_90710.html?path=0_90710",
+          "image": "assets/catalog/bags/90710.jpg"
+        },
+        {
+          "id": "11082",
+          "zh": "2025 Balenciaga",
+          "en": "2025 Balenciaga",
+          "es": "2025 Balenciaga",
+          "count": "33063",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_11082.html?path=0_11082",
+          "image": "assets/catalog/bags/11082.jpg"
+        },
+        {
+          "id": "23241",
+          "zh": "2024 Bally",
+          "en": "2024 Bally",
+          "es": "2024 Bally",
+          "count": "935",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_23241.html?path=0_23241",
+          "image": "assets/catalog/bags/23241.jpg"
+        },
+        {
+          "id": "11053",
+          "zh": "2026 Bottega Veneta",
+          "en": "2026 Bottega Veneta",
+          "es": "2026 Bottega Veneta",
+          "count": "27073",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_11053.html?path=0_11053",
+          "image": "assets/catalog/bags/11053.jpg"
+        },
+        {
+          "id": "11068",
+          "zh": "2025 COACH",
+          "en": "2025 COACH",
+          "es": "2025 COACH",
+          "count": "11477",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_11068.html?path=0_11068",
+          "image": "assets/catalog/bags/11068.jpg"
+        },
+        {
+          "id": "11072",
+          "zh": "2025 Celine",
+          "en": "2025 Celine",
+          "es": "2025 Celine",
+          "count": "19224",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_11072.html?path=0_11072",
+          "image": "assets/catalog/bags/11072.jpg"
+        },
+        {
+          "id": "11074",
+          "zh": "2025 CHLOE",
+          "en": "2025 CHLOE",
+          "es": "2025 CHLOE",
+          "count": "4311",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_11074.html?path=0_11074",
+          "image": "assets/catalog/bags/11074.jpg"
+        },
+        {
+          "id": "23235",
+          "zh": "2026 DG",
+          "en": "2026 DG",
+          "es": "2026 DG",
+          "count": "13094",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_23235.html?path=0_23235",
+          "image": "assets/catalog/bags/23235.jpg"
+        },
+        {
+          "id": "155489",
+          "zh": "2026 Demellier",
+          "en": "2026 Demellier",
+          "es": "2026 Demellier",
+          "count": "48",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_155489.html?path=0_155489",
+          "image": "assets/catalog/bags/155489.jpg"
+        },
+        {
+          "id": "101771",
+          "zh": "2025 Delvaux",
+          "en": "2025 Delvaux",
+          "es": "2025 Delvaux",
+          "count": "3215",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_101771.html?path=0_101771",
+          "image": "assets/catalog/bags/101771.jpg"
+        },
+        {
+          "id": "2408",
+          "zh": "2026 Fendi",
+          "en": "2026 Fendi",
+          "es": "2026 Fendi",
+          "count": "29085",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_2408.html?path=0_2408",
+          "image": "assets/catalog/bags/2408.jpg"
+        },
+        {
+          "id": "11084",
+          "zh": "2026 Givenchy",
+          "en": "2026 Givenchy",
+          "es": "2026 Givenchy",
+          "count": "4659",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_11084.html?path=0_11084",
+          "image": "assets/catalog/bags/11084.jpg"
+        },
+        {
+          "id": "23237",
+          "zh": "2025 Goyard",
+          "en": "2025 Goyard",
+          "es": "2025 Goyard",
+          "count": "24910",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_23237.html?path=0_23237",
+          "image": "assets/catalog/bags/23237.jpg"
+        },
+        {
+          "id": "43139",
+          "zh": "2025 Hermes Original",
+          "en": "2025 Hermes Original",
+          "es": "2025 Hermes Original",
+          "count": "14215",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_43139.html?path=0_43139",
+          "image": "assets/catalog/bags/43139.jpg"
+        },
+        {
+          "id": "6309",
+          "zh": "2025 Hermes 1:1",
+          "en": "2025 Hermes 1:1",
+          "es": "2025 Hermes 1:1",
+          "count": "15391",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_6309.html?path=0_6309",
+          "image": "assets/catalog/bags/6309.jpg"
+        },
+        {
+          "id": "23279",
+          "zh": "2025 Issey Miyake",
+          "en": "2025 Issey Miyake",
+          "es": "2025 Issey Miyake",
+          "count": "5588",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_23279.html?path=0_23279",
+          "image": "assets/catalog/bags/23279.jpg"
+        },
+        {
+          "id": "48064",
+          "zh": "2025 Jacquemus",
+          "en": "2025 Jacquemus",
+          "es": "2025 Jacquemus",
+          "count": "3847",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_48064.html?path=0_48064",
+          "image": "assets/catalog/bags/48064.jpg"
+        },
+        {
+          "id": "23280",
+          "zh": "2024 Kenzo 1:1",
+          "en": "2024 Kenzo 1:1",
+          "es": "2024 Kenzo 1:1",
+          "count": "27",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_23280.html?path=0_23280",
+          "image": "assets/catalog/bags/23280.jpg"
+        },
+        {
+          "id": "23239",
+          "zh": "2025 Loewe",
+          "en": "2025 Loewe",
+          "es": "2025 Loewe",
+          "count": "15558",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_23239.html?path=0_23239",
+          "image": "assets/catalog/bags/23239.jpg"
+        },
+        {
+          "id": "102526",
+          "zh": "2025 Loro piana",
+          "en": "2025 Loro piana",
+          "es": "2025 Loro piana",
+          "count": "4495",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_102526.html?path=0_102526",
+          "image": "assets/catalog/bags/102526.jpg"
+        },
+        {
+          "id": "104086",
+          "zh": "2024 Lanvin",
+          "en": "2024 Lanvin",
+          "es": "2024 Lanvin",
+          "count": "23",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_104086.html?path=0_104086",
+          "image": "assets/catalog/bags/104086.jpg"
+        },
+        {
+          "id": "37771",
+          "zh": "2026 Marc Jacobs",
+          "en": "2026 Marc Jacobs",
+          "es": "2026 Marc Jacobs",
+          "count": "5329",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_37771.html?path=0_37771",
+          "image": "assets/catalog/bags/37771.jpg"
+        },
+        {
+          "id": "35714",
+          "zh": "2024 Moschino",
+          "en": "2024 Moschino",
+          "es": "2024 Moschino",
+          "count": "474",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_35714.html?path=0_35714",
+          "image": "assets/catalog/bags/35714.jpg"
+        },
+        {
+          "id": "136826",
+          "zh": "2025 Michael Kors",
+          "en": "2025 Michael Kors",
+          "es": "2025 Michael Kors",
+          "count": "11315",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_136826.html?path=0_136826",
+          "image": "assets/catalog/bags/136826.jpg"
+        },
+        {
+          "id": "6305",
+          "zh": "2024 MCM",
+          "en": "2024 MCM",
+          "es": "2024 MCM",
+          "count": "3961",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_6305.html?path=0_6305",
+          "image": "assets/catalog/bags/6305.jpg"
+        },
+        {
+          "id": "23240",
+          "zh": "2025 Miu Miu",
+          "en": "2025 Miu Miu",
+          "es": "2025 Miu Miu",
+          "count": "11873",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_23240.html?path=0_23240",
+          "image": "assets/catalog/bags/23240.jpg"
+        },
+        {
+          "id": "23275",
+          "zh": "2026 Mont Blanc",
+          "en": "2026 Mont Blanc",
+          "es": "2026 Mont Blanc",
+          "count": "5148",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_23275.html?path=0_23275",
+          "image": "assets/catalog/bags/23275.jpg"
+        },
+        {
+          "id": "23229",
+          "zh": "2024 Off White",
+          "en": "2024 Off White",
+          "es": "2024 Off White",
+          "count": "3187",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_23229.html?path=0_23229",
+          "image": "assets/catalog/bags/23229.jpg"
+        },
+        {
+          "id": "2412",
+          "zh": "2025 Prada",
+          "en": "2025 Prada",
+          "es": "2025 Prada",
+          "count": "48104",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_2412.html?path=0_2412",
+          "image": "assets/catalog/bags/2412.jpg"
+        },
+        {
+          "id": "2409",
+          "zh": "2025 YSL",
+          "en": "2025 YSL",
+          "es": "2025 YSL",
+          "count": "29433",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_2409.html?path=0_2409",
+          "image": "assets/catalog/bags/2409.jpg"
+        },
+        {
+          "id": "23284",
+          "zh": "2024 Philipp Plein",
+          "en": "2024 Philipp Plein",
+          "es": "2024 Philipp Plein",
+          "count": "36",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_23284.html?path=0_23284",
+          "image": "assets/catalog/bags/23284.jpg"
+        },
+        {
+          "id": "36575",
+          "zh": "2024 Pinko",
+          "en": "2024 Pinko",
+          "es": "2024 Pinko",
+          "count": "294",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_36575.html?path=0_36575",
+          "image": "assets/catalog/bags/36575.jpg"
+        },
+        {
+          "id": "71898",
+          "zh": "2024 Tods 1:1",
+          "en": "2024 Tods 1:1",
+          "es": "2024 Tods 1:1",
+          "count": "30",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_71898.html?path=0_71898",
+          "image": "assets/catalog/bags/71898.jpg"
+        },
+        {
+          "id": "1",
+          "zh": "2025 Valentino",
+          "en": "2025 Valentino",
+          "es": "2025 Valentino",
+          "count": "15039",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_1.html?path=0_1",
+          "image": "assets/catalog/bags/1.jpg"
+        },
+        {
+          "id": "6308",
+          "zh": "2025 VERSACE",
+          "en": "2025 VERSACE",
+          "es": "2025 VERSACE",
+          "count": "3288",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_6308.html?path=0_6308",
+          "image": "assets/catalog/bags/6308.jpg"
+        },
+        {
+          "id": "39326",
+          "zh": "26 Stella Mccartney",
+          "en": "26 Stella Mccartney",
+          "es": "26 Stella Mccartney",
+          "count": "1099",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_39326.html?path=0_39326",
+          "image": "assets/catalog/bags/39326.jpg"
+        },
+        {
+          "id": "23233",
+          "zh": "2025 Tory Burch",
+          "en": "2025 Tory Burch",
+          "es": "2025 Tory Burch",
+          "count": "16684",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_23233.html?path=0_23233",
+          "image": "assets/catalog/bags/23233.jpg"
+        },
+        {
+          "id": "36560",
+          "zh": "2024 Tom Ford",
+          "en": "2024 Tom Ford",
+          "es": "2024 Tom Ford",
+          "count": "710",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_36560.html?path=0_36560",
+          "image": "assets/catalog/bags/36560.jpg"
+        },
+        {
+          "id": "6302",
+          "zh": "2024 Rimowa",
+          "en": "2024 Rimowa",
+          "es": "2024 Rimowa",
+          "count": "504",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_6302.html?path=0_6302",
+          "image": "assets/catalog/bags/6302.jpg"
+        },
+        {
+          "id": "35352",
+          "zh": "other Producing",
+          "en": "other Producing",
+          "es": "other Producing",
+          "count": "3092",
+          "group": "brand",
+          "landing": "https://bags.tangma2088.com/categoryen_35352.html?path=0_35352",
+          "image": "assets/catalog/bags/35352.jpg"
+        }
+      ]
+    },
+    "shoes": {
+      "brandCn": "鞋子",
+      "brandEn": "SHOES",
+      "title": {
+        "zh": "鞋子目录",
+        "en": "Shoes Catalog",
+        "es": "Shoes Catalog"
+      },
+      "source": "https://shoes.tangma2088.com/defaulten.html",
+      "items": [
+        {
+          "id": "355",
+          "zh": "NEW ARRIVAL 0731",
+          "en": "NEW ARRIVAL 0731",
+          "es": "NEW ARRIVAL 0731",
+          "count": "40247",
+          "group": "category",
+          "landing": "https://shoes.tangma2088.com/categoryen_355.html?path=0_355",
+          "image": "assets/catalog/shoes/355.jpg"
+        },
+        {
+          "id": "367",
+          "zh": "Factory B 0730",
+          "en": "Factory B 0730",
+          "es": "Factory B 0730",
+          "count": "208957",
+          "group": "category",
+          "landing": "https://shoes.tangma2088.com/categoryen_367.html?path=0_367",
+          "image": "assets/catalog/shoes/367.jpg"
+        },
+        {
+          "id": "65136",
+          "zh": "Factory C0730",
+          "en": "Factory C0730",
+          "es": "Factory C0730",
+          "count": "214817",
+          "group": "category",
+          "landing": "https://shoes.tangma2088.com/categoryen_65136.html?path=0_65136",
+          "image": "assets/catalog/shoes/65136.jpg"
+        },
+        {
+          "id": "65203",
+          "zh": "Kid shoes 0713",
+          "en": "Kid shoes 0713",
+          "es": "Kid shoes 0713",
+          "count": "3909",
+          "group": "category",
+          "landing": "https://shoes.tangma2088.com/categoryen_65203.html?path=0_65203",
+          "image": "assets/catalog/shoes/65203.jpg"
+        },
+        {
+          "id": "336",
+          "zh": "Gucci 2026 0731",
+          "en": "Gucci 2026 0731",
+          "es": "Gucci 2026 0731",
+          "count": "11771",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_336.html?path=0_336",
+          "image": "assets/catalog/shoes/336.jpg"
+        },
+        {
+          "id": "327",
+          "zh": "Louis Vittion 2026 0731",
+          "en": "Louis Vittion 2026 0731",
+          "es": "Louis Vittion 2026 0731",
+          "count": "50732",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_327.html?path=0_327",
+          "image": "assets/catalog/shoes/327.jpg"
+        },
+        {
+          "id": "181821",
+          "zh": "Amina muaddi 2026 0730",
+          "en": "Amina muaddi 2026 0730",
+          "es": "Amina muaddi 2026 0730",
+          "count": "9",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_181821.html?path=0_181821",
+          "image": "assets/catalog/shoes/181821.jpg"
+        },
+        {
+          "id": "347",
+          "zh": "Alexander McQueen 2026 0728",
+          "en": "Alexander McQueen 2026 0728",
+          "es": "Alexander McQueen 2026 0728",
+          "count": "5799",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_347.html?path=0_347",
+          "image": "assets/catalog/shoes/347.jpg"
+        },
+        {
+          "id": "350",
+          "zh": "Armani 2026 0730",
+          "en": "Armani 2026 0730",
+          "es": "Armani 2026 0730",
+          "count": "2307",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_350.html?path=0_350",
+          "image": "assets/catalog/shoes/350.jpg"
+        },
+        {
+          "id": "61746",
+          "zh": "Amiri 2026 0725",
+          "en": "Amiri 2026 0725",
+          "es": "Amiri 2026 0725",
+          "count": "4258",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_61746.html?path=0_61746",
+          "image": "assets/catalog/shoes/61746.jpg"
+        },
+        {
+          "id": "177976",
+          "zh": "Acne 2026 0602",
+          "en": "Acne 2026 0602",
+          "es": "Acne 2026 0602",
+          "count": "9",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_177976.html?path=0_177976",
+          "image": "assets/catalog/shoes/177976.jpg"
+        },
+        {
+          "id": "178384",
+          "zh": "Alo 2026 0621",
+          "en": "Alo 2026 0621",
+          "es": "Alo 2026 0621",
+          "count": "64",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_178384.html?path=0_178384",
+          "image": "assets/catalog/shoes/178384.jpg"
+        },
+        {
+          "id": "178803",
+          "zh": "Adidas 2026 0613",
+          "en": "Adidas 2026 0613",
+          "es": "Adidas 2026 0613",
+          "count": "110",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_178803.html?path=0_178803",
+          "image": "assets/catalog/shoes/178803.jpg"
+        },
+        {
+          "id": "178807",
+          "zh": "Adizero 2026 0609",
+          "en": "Adizero 2026 0609",
+          "es": "Adizero 2026 0609",
+          "count": "25",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_178807.html?path=0_178807",
+          "image": "assets/catalog/shoes/178807.jpg"
+        },
+        {
+          "id": "179712",
+          "zh": "Altra 2026 0617",
+          "en": "Altra 2026 0617",
+          "es": "Altra 2026 0617",
+          "count": "10",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_179712.html?path=0_179712",
+          "image": "assets/catalog/shoes/179712.jpg"
+        },
+        {
+          "id": "181659",
+          "zh": "Alala 2026 0728",
+          "en": "Alala 2026 0728",
+          "es": "Alala 2026 0728",
+          "count": "9",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_181659.html?path=0_181659",
+          "image": "assets/catalog/shoes/181659.jpg"
+        },
+        {
+          "id": "180172",
+          "zh": "Asics 2026 0624",
+          "en": "Asics 2026 0624",
+          "es": "Asics 2026 0624",
+          "count": "30",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_180172.html?path=0_180172",
+          "image": "assets/catalog/shoes/180172.jpg"
+        },
+        {
+          "id": "58214",
+          "zh": "Balmain 2026 0607",
+          "en": "Balmain 2026 0607",
+          "es": "Balmain 2026 0607",
+          "count": "3451",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_58214.html?path=0_58214",
+          "image": "assets/catalog/shoes/58214.jpg"
+        },
+        {
+          "id": "159990",
+          "zh": "Bape 20250715",
+          "en": "Bape 20250715",
+          "es": "Bape 20250715",
+          "count": "485",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_159990.html?path=0_159990",
+          "image": "assets/catalog/shoes/159990.jpg"
+        },
+        {
+          "id": "64532",
+          "zh": "Berluti 2026 0623",
+          "en": "Berluti 2026 0623",
+          "es": "Berluti 2026 0623",
+          "count": "4463",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_64532.html?path=0_64532",
+          "image": "assets/catalog/shoes/64532.jpg"
+        },
+        {
+          "id": "234",
+          "zh": "Boss 2026 0731",
+          "en": "Boss 2026 0731",
+          "es": "Boss 2026 0731",
+          "count": "15548",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_234.html?path=0_234",
+          "image": "assets/catalog/shoes/234.jpg"
+        },
+        {
+          "id": "304",
+          "zh": "Balenciaga 2026 0715",
+          "en": "Balenciaga 2026 0715",
+          "es": "Balenciaga 2026 0715",
+          "count": "8281",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_304.html?path=0_304",
+          "image": "assets/catalog/shoes/304.jpg"
+        },
+        {
+          "id": "321",
+          "zh": "Bottega Veneta 2026 0728",
+          "en": "Bottega Veneta 2026 0728",
+          "es": "Bottega Veneta 2026 0728",
+          "count": "5718",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_321.html?path=0_321",
+          "image": "assets/catalog/shoes/321.jpg"
+        },
+        {
+          "id": "224",
+          "zh": "Burberry 2026 0728",
+          "en": "Burberry 2026 0728",
+          "es": "Burberry 2026 0728",
+          "count": "11347",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_224.html?path=0_224",
+          "image": "assets/catalog/shoes/224.jpg"
+        },
+        {
+          "id": "316",
+          "zh": "Bally 2026 0614",
+          "en": "Bally 2026 0614",
+          "es": "Bally 2026 0614",
+          "count": "4537",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_316.html?path=0_316",
+          "image": "assets/catalog/shoes/316.jpg"
+        },
+        {
+          "id": "142649",
+          "zh": "Brunello Cucinelli 2026 0730",
+          "en": "Brunello Cucinelli 2026 0730",
+          "es": "Brunello Cucinelli 2026 0730",
+          "count": "5542",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_142649.html?path=0_142649",
+          "image": "assets/catalog/shoes/142649.jpg"
+        },
+        {
+          "id": "177042",
+          "zh": "Billionaire 2026 0607",
+          "en": "Billionaire 2026 0607",
+          "es": "Billionaire 2026 0607",
+          "count": "94",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_177042.html?path=0_177042",
+          "image": "assets/catalog/shoes/177042.jpg"
+        },
+        {
+          "id": "80836",
+          "zh": "Celine 20260319",
+          "en": "Celine 20260319",
+          "es": "Celine 20260319",
+          "count": "2743",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_80836.html?path=0_80836",
+          "image": "assets/catalog/shoes/80836.jpg"
+        },
+        {
+          "id": "140",
+          "zh": "Christian Louboutin 2026 0731",
+          "en": "Christian Louboutin 2026 0731",
+          "es": "Christian Louboutin 2026 0731",
+          "count": "8670",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_140.html?path=0_140",
+          "image": "assets/catalog/shoes/140.jpg"
+        },
+        {
+          "id": "229",
+          "zh": "Chanel 2026 0731",
+          "en": "Chanel 2026 0731",
+          "es": "Chanel 2026 0731",
+          "count": "21079",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_229.html?path=0_229",
+          "image": "assets/catalog/shoes/229.jpg"
+        },
+        {
+          "id": "88376",
+          "zh": "Coach 2026 0728",
+          "en": "Coach 2026 0728",
+          "es": "Coach 2026 0728",
+          "count": "1850",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_88376.html?path=0_88376",
+          "image": "assets/catalog/shoes/88376.jpg"
+        },
+        {
+          "id": "178397",
+          "zh": "Chrome Hearts 2026 0606",
+          "en": "Chrome Hearts 2026 0606",
+          "es": "Chrome Hearts 2026 0606",
+          "count": "18",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_178397.html?path=0_178397",
+          "image": "assets/catalog/shoes/178397.jpg"
+        },
+        {
+          "id": "145",
+          "zh": "DG 2026 0728",
+          "en": "DG 2026 0728",
+          "es": "DG 2026 0728",
+          "count": "14006",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_145.html?path=0_145",
+          "image": "assets/catalog/shoes/145.jpg"
+        },
+        {
+          "id": "151",
+          "zh": "Dior 2026 0731",
+          "en": "Dior 2026 0731",
+          "es": "Dior 2026 0731",
+          "count": "39059",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_151.html?path=0_151",
+          "image": "assets/catalog/shoes/151.jpg"
+        },
+        {
+          "id": "27440",
+          "zh": "DSQ 2026 0717",
+          "en": "DSQ 2026 0717",
+          "es": "DSQ 2026 0717",
+          "count": "1896",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_27440.html?path=0_27440",
+          "image": "assets/catalog/shoes/27440.jpg"
+        },
+        {
+          "id": "179892",
+          "zh": "Diesel 2026 0728",
+          "en": "Diesel 2026 0728",
+          "es": "Diesel 2026 0728",
+          "count": "193",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_179892.html?path=0_179892",
+          "image": "assets/catalog/shoes/179892.jpg"
+        },
+        {
+          "id": "161",
+          "zh": "Fendi 2026 0725",
+          "en": "Fendi 2026 0725",
+          "es": "Fendi 2026 0725",
+          "count": "14579",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_161.html?path=0_161",
+          "image": "assets/catalog/shoes/161.jpg"
+        },
+        {
+          "id": "123",
+          "zh": "Ferragamo 2026 0622",
+          "en": "Ferragamo 2026 0622",
+          "es": "Ferragamo 2026 0622",
+          "count": "18184",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_123.html?path=0_123",
+          "image": "assets/catalog/shoes/123.jpg"
+        },
+        {
+          "id": "177660",
+          "zh": "FOG 2026 0602",
+          "en": "FOG 2026 0602",
+          "es": "FOG 2026 0602",
+          "count": "11",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_177660.html?path=0_177660",
+          "image": "assets/catalog/shoes/177660.jpg"
+        },
+        {
+          "id": "82685",
+          "zh": "GGDB 2026 0608",
+          "en": "GGDB 2026 0608",
+          "es": "GGDB 2026 0608",
+          "count": "3198",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_82685.html?path=0_82685",
+          "image": "assets/catalog/shoes/82685.jpg"
+        },
+        {
+          "id": "132",
+          "zh": "Givenchy 2026 0729",
+          "en": "Givenchy 2026 0729",
+          "es": "Givenchy 2026 0729",
+          "count": "8848",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_132.html?path=0_132",
+          "image": "assets/catalog/shoes/132.jpg"
+        },
+        {
+          "id": "28291",
+          "zh": "Giuseppe Zanotti 20260123",
+          "en": "Giuseppe Zanotti 20260123",
+          "es": "Giuseppe Zanotti 20260123",
+          "count": "2132",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_28291.html?path=0_28291",
+          "image": "assets/catalog/shoes/28291.jpg"
+        },
+        {
+          "id": "177361",
+          "zh": "Richard 2026 0530",
+          "en": "Richard 2026 0530",
+          "es": "Richard 2026 0530",
+          "count": "44",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_177361.html?path=0_177361",
+          "image": "assets/catalog/shoes/177361.jpg"
+        },
+        {
+          "id": "177936",
+          "zh": "RickOwens 2026 0606",
+          "en": "RickOwens 2026 0606",
+          "es": "RickOwens 2026 0606",
+          "count": "18",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_177936.html?path=0_177936",
+          "image": "assets/catalog/shoes/177936.jpg"
+        },
+        {
+          "id": "181547",
+          "zh": "Roger Vivier 2026 0725",
+          "en": "Roger Vivier 2026 0725",
+          "es": "Roger Vivier 2026 0725",
+          "count": "9",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_181547.html?path=0_181547",
+          "image": "assets/catalog/shoes/181547.jpg"
+        },
+        {
+          "id": "104",
+          "zh": "Hermes 2026 0731",
+          "en": "Hermes 2026 0731",
+          "es": "Hermes 2026 0731",
+          "count": "38745",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_104.html?path=0_104",
+          "image": "assets/catalog/shoes/104.jpg"
+        },
+        {
+          "id": "177193",
+          "zh": "Hogan 2026 0615",
+          "en": "Hogan 2026 0615",
+          "es": "Hogan 2026 0615",
+          "count": "73",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_177193.html?path=0_177193",
+          "image": "assets/catalog/shoes/177193.jpg"
+        },
+        {
+          "id": "33053",
+          "zh": "Jimmy Choo 20250628",
+          "en": "Jimmy Choo 20250628",
+          "es": "Jimmy Choo 20250628",
+          "count": "3404",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_33053.html?path=0_33053",
+          "image": "assets/catalog/shoes/33053.jpg"
+        },
+        {
+          "id": "178766",
+          "zh": "Jil Sander 2026 0608",
+          "en": "Jil Sander 2026 0608",
+          "es": "Jil Sander 2026 0608",
+          "count": "9",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_178766.html?path=0_178766",
+          "image": "assets/catalog/shoes/178766.jpg"
+        },
+        {
+          "id": "179720",
+          "zh": "Jmweston 2026 0617",
+          "en": "Jmweston 2026 0617",
+          "es": "Jmweston 2026 0617",
+          "count": "10",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_179720.html?path=0_179720",
+          "image": "assets/catalog/shoes/179720.jpg"
+        },
+        {
+          "id": "178584",
+          "zh": "Karl Lagefeld 2026 0728",
+          "en": "Karl Lagefeld 2026 0728",
+          "es": "Karl Lagefeld 2026 0728",
+          "count": "18",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_178584.html?path=0_178584",
+          "image": "assets/catalog/shoes/178584.jpg"
+        },
+        {
+          "id": "27434",
+          "zh": "Kenzo 20250810",
+          "en": "Kenzo 20250810",
+          "es": "Kenzo 20250810",
+          "count": "471",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_27434.html?path=0_27434",
+          "image": "assets/catalog/shoes/27434.jpg"
+        },
+        {
+          "id": "179723",
+          "zh": "Kailas 2026 0624",
+          "en": "Kailas 2026 0624",
+          "es": "Kailas 2026 0624",
+          "count": "54",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_179723.html?path=0_179723",
+          "image": "assets/catalog/shoes/179723.jpg"
+        },
+        {
+          "id": "179149",
+          "zh": "Kiton 2026 0612",
+          "en": "Kiton 2026 0612",
+          "es": "Kiton 2026 0612",
+          "count": "35",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_179149.html?path=0_179149",
+          "image": "assets/catalog/shoes/179149.jpg"
+        },
+        {
+          "id": "179727",
+          "zh": "Kolon Sport 2026 0617",
+          "en": "Kolon Sport 2026 0617",
+          "es": "Kolon Sport 2026 0617",
+          "count": "40",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_179727.html?path=0_179727",
+          "image": "assets/catalog/shoes/179727.jpg"
+        },
+        {
+          "id": "181721",
+          "zh": "Le silla 2026 0728",
+          "en": "Le silla 2026 0728",
+          "es": "Le silla 2026 0728",
+          "count": "100",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_181721.html?path=0_181721",
+          "image": "assets/catalog/shoes/181721.jpg"
+        },
+        {
+          "id": "80225",
+          "zh": "Lanvin 20260126",
+          "en": "Lanvin 20260126",
+          "es": "Lanvin 20260126",
+          "count": "1806",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_80225.html?path=0_80225",
+          "image": "assets/catalog/shoes/80225.jpg"
+        },
+        {
+          "id": "154701",
+          "zh": "Loro Piana 2026 0730",
+          "en": "Loro Piana 2026 0730",
+          "es": "Loro Piana 2026 0730",
+          "count": "6176",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_154701.html?path=0_154701",
+          "image": "assets/catalog/shoes/154701.jpg"
+        },
+        {
+          "id": "156405",
+          "zh": "Loewe 2026 0729",
+          "en": "Loewe 2026 0729",
+          "es": "Loewe 2026 0729",
+          "count": "702",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_156405.html?path=0_156405",
+          "image": "assets/catalog/shoes/156405.jpg"
+        },
+        {
+          "id": "84078",
+          "zh": "Miumiu 2026 0721",
+          "en": "Miumiu 2026 0721",
+          "es": "Miumiu 2026 0721",
+          "count": "5721",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_84078.html?path=0_84078",
+          "image": "assets/catalog/shoes/84078.jpg"
+        },
+        {
+          "id": "75",
+          "zh": "Moncler 2026 0612",
+          "en": "Moncler 2026 0612",
+          "es": "Moncler 2026 0612",
+          "count": "5154",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_75.html?path=0_75",
+          "image": "assets/catalog/shoes/75.jpg"
+        },
+        {
+          "id": "87692",
+          "zh": "Moschino 20250513",
+          "en": "Moschino 20250513",
+          "es": "Moschino 20250513",
+          "count": "251",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_87692.html?path=0_87692",
+          "image": "assets/catalog/shoes/87692.jpg"
+        },
+        {
+          "id": "178651",
+          "zh": "Maison Margiela 2026 0728",
+          "en": "Maison Margiela 2026 0728",
+          "es": "Maison Margiela 2026 0728",
+          "count": "144",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_178651.html?path=0_178651",
+          "image": "assets/catalog/shoes/178651.jpg"
+        },
+        {
+          "id": "177966",
+          "zh": "Magnanni 2026 0604",
+          "en": "Magnanni 2026 0604",
+          "es": "Magnanni 2026 0604",
+          "count": "9",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_177966.html?path=0_177966",
+          "image": "assets/catalog/shoes/177966.jpg"
+        },
+        {
+          "id": "154460",
+          "zh": "Marni 2026 0608",
+          "en": "Marni 2026 0608",
+          "es": "Marni 2026 0608",
+          "count": "88",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_154460.html?path=0_154460",
+          "image": "assets/catalog/shoes/154460.jpg"
+        },
+        {
+          "id": "154469",
+          "zh": "Moon boot 20250412",
+          "en": "Moon boot 20250412",
+          "es": "Moon boot 20250412",
+          "count": "90",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_154469.html?path=0_154469",
+          "image": "assets/catalog/shoes/154469.jpg"
+        },
+        {
+          "id": "154721",
+          "zh": "Maison Mihara Yasuhiro 2026 0731",
+          "en": "Maison Mihara Yasuhiro 2026 0731",
+          "es": "Maison Mihara Yasuhiro 2026 0731",
+          "count": "149",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_154721.html?path=0_154721",
+          "image": "assets/catalog/shoes/154721.jpg"
+        },
+        {
+          "id": "181815",
+          "zh": "Newrock 2026 0731",
+          "en": "Newrock 2026 0731",
+          "es": "Newrock 2026 0731",
+          "count": "0",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_181815.html?path=0_181815",
+          "image": "assets/catalog/shoes/181815.jpg"
+        },
+        {
+          "id": "178663",
+          "zh": "Nike 2026 0624",
+          "en": "Nike 2026 0624",
+          "es": "Nike 2026 0624",
+          "count": "127",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_178663.html?path=0_178663",
+          "image": "assets/catalog/shoes/178663.jpg"
+        },
+        {
+          "id": "178671",
+          "zh": "Numeris 2026 0608",
+          "en": "Numeris 2026 0608",
+          "es": "Numeris 2026 0608",
+          "count": "9",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_178671.html?path=0_178671",
+          "image": "assets/catalog/shoes/178671.jpg"
+        },
+        {
+          "id": "82",
+          "zh": "Off White 2026 0725",
+          "en": "Off White 2026 0725",
+          "es": "Off White 2026 0725",
+          "count": "5461",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_82.html?path=0_82",
+          "image": "assets/catalog/shoes/82.jpg"
+        },
+        {
+          "id": "177972",
+          "zh": "ON 2026 0722",
+          "en": "ON 2026 0722",
+          "es": "ON 2026 0722",
+          "count": "214",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_177972.html?path=0_177972",
+          "image": "assets/catalog/shoes/177972.jpg"
+        },
+        {
+          "id": "178674",
+          "zh": "Onitsuka Tiger 2026 0608",
+          "en": "Onitsuka Tiger 2026 0608",
+          "es": "Onitsuka Tiger 2026 0608",
+          "count": "72",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_178674.html?path=0_178674",
+          "image": "assets/catalog/shoes/178674.jpg"
+        },
+        {
+          "id": "88",
+          "zh": "Philipp Plein 2026 0623",
+          "en": "Philipp Plein 2026 0623",
+          "es": "Philipp Plein 2026 0623",
+          "count": "5518",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_88.html?path=0_88",
+          "image": "assets/catalog/shoes/88.jpg"
+        },
+        {
+          "id": "92",
+          "zh": "Prada 2026 0730",
+          "en": "Prada 2026 0730",
+          "es": "Prada 2026 0730",
+          "count": "44766",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_92.html?path=0_92",
+          "image": "assets/catalog/shoes/92.jpg"
+        },
+        {
+          "id": "164270",
+          "zh": "Stefano Ricci 2026 0617",
+          "en": "Stefano Ricci 2026 0617",
+          "es": "Stefano Ricci 2026 0617",
+          "count": "711",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_164270.html?path=0_164270",
+          "image": "assets/catalog/shoes/164270.jpg"
+        },
+        {
+          "id": "178408",
+          "zh": "Santoni 2026 0623",
+          "en": "Santoni 2026 0623",
+          "es": "Santoni 2026 0623",
+          "count": "150",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_178408.html?path=0_178408",
+          "image": "assets/catalog/shoes/178408.jpg"
+        },
+        {
+          "id": "179747",
+          "zh": "Salomon 2026 0617",
+          "en": "Salomon 2026 0617",
+          "es": "Salomon 2026 0617",
+          "count": "28",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_179747.html?path=0_179747",
+          "image": "assets/catalog/shoes/179747.jpg"
+        },
+        {
+          "id": "181546",
+          "zh": "SmileRepublic 2026 0728",
+          "en": "SmileRepublic 2026 0728",
+          "es": "SmileRepublic 2026 0728",
+          "count": "27",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_181546.html?path=0_181546",
+          "image": "assets/catalog/shoes/181546.jpg"
+        },
+        {
+          "id": "49",
+          "zh": "Thom Browne 2026 0624",
+          "en": "Thom Browne 2026 0624",
+          "es": "Thom Browne 2026 0624",
+          "count": "1849",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_49.html?path=0_49",
+          "image": "assets/catalog/shoes/49.jpg"
+        },
+        {
+          "id": "80880",
+          "zh": "Tom Ford 2026 0608",
+          "en": "Tom Ford 2026 0608",
+          "es": "Tom Ford 2026 0608",
+          "count": "2161",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_80880.html?path=0_80880",
+          "image": "assets/catalog/shoes/80880.jpg"
+        },
+        {
+          "id": "52",
+          "zh": "Tod s 2026 0624",
+          "en": "Tod s 2026 0624",
+          "es": "Tod s 2026 0624",
+          "count": "6111",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_52.html?path=0_52",
+          "image": "assets/catalog/shoes/52.jpg"
+        },
+        {
+          "id": "156346",
+          "zh": "Tory Burch 20250513",
+          "en": "Tory Burch 20250513",
+          "es": "Tory Burch 20250513",
+          "count": "99",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_156346.html?path=0_156346",
+          "image": "assets/catalog/shoes/156346.jpg"
+        },
+        {
+          "id": "28852",
+          "zh": "UGG 20260204",
+          "en": "UGG 20260204",
+          "es": "UGG 20260204",
+          "count": "3837",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_28852.html?path=0_28852",
+          "image": "assets/catalog/shoes/28852.jpg"
+        },
+        {
+          "id": "56",
+          "zh": "Valentino 2026 0730",
+          "en": "Valentino 2026 0730",
+          "es": "Valentino 2026 0730",
+          "count": "13323",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_56.html?path=0_56",
+          "image": "assets/catalog/shoes/56.jpg"
+        },
+        {
+          "id": "72",
+          "zh": "Versace 2026 0729",
+          "en": "Versace 2026 0729",
+          "es": "Versace 2026 0729",
+          "count": "13163",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_72.html?path=0_72",
+          "image": "assets/catalog/shoes/72.jpg"
+        },
+        {
+          "id": "179656",
+          "zh": "Veja 2026 0617",
+          "en": "Veja 2026 0617",
+          "es": "Veja 2026 0617",
+          "count": "92",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_179656.html?path=0_179656",
+          "image": "assets/catalog/shoes/179656.jpg"
+        },
+        {
+          "id": "84731",
+          "zh": "YSL 2026 0730",
+          "en": "YSL 2026 0730",
+          "es": "YSL 2026 0730",
+          "count": "3482",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_84731.html?path=0_84731",
+          "image": "assets/catalog/shoes/84731.jpg"
+        },
+        {
+          "id": "47",
+          "zh": "Y-3 20260204",
+          "en": "Y-3 20260204",
+          "es": "Y-3 20260204",
+          "count": "1301",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_47.html?path=0_47",
+          "image": "assets/catalog/shoes/47.jpg"
+        },
+        {
+          "id": "139955",
+          "zh": "ZEGNA 2026 0731",
+          "en": "ZEGNA 2026 0731",
+          "es": "ZEGNA 2026 0731",
+          "count": "1265",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_139955.html?path=0_139955",
+          "image": "assets/catalog/shoes/139955.jpg"
+        },
+        {
+          "id": "177367",
+          "zh": "Zilli 2026 0606",
+          "en": "Zilli 2026 0606",
+          "es": "Zilli 2026 0606",
+          "count": "122",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_177367.html?path=0_177367",
+          "image": "assets/catalog/shoes/177367.jpg"
+        },
+        {
+          "id": "181558",
+          "zh": "Zara 2026 0725",
+          "en": "Zara 2026 0725",
+          "es": "Zara 2026 0725",
+          "count": "18",
+          "group": "brand",
+          "landing": "https://shoes.tangma2088.com/categoryen_181558.html?path=0_181558",
+          "image": "assets/catalog/shoes/181558.jpg"
+        }
+      ]
+    }
+  }
+}
