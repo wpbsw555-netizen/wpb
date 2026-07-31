@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/sync_catalog_images.py'
+      - 'scripts/repair_missing_catalog_images.py'
       - '.github/workflows/sync-catalog-images.yml'
 
 permissions:
@@ -23,12 +24,14 @@ jobs:
           python-version: '3.12'
       - name: Install dependencies
         run: python -m pip install --upgrade requests pillow beautifulsoup4
-      - name: Download, record and commit thumbnails
+      - name: Download, repair, record and commit thumbnails
         shell: bash
         run: |
           set +e
           python scripts/sync_catalog_images.py > sync-output.log 2>&1
-          status=$?
+          sync_status=$?
+          python scripts/repair_missing_catalog_images.py >> sync-output.log 2>&1
+          repair_status=$?
           cat sync-output.log
           mkdir -p qiqishoes-com/assets/catalog
           cp sync-output.log qiqishoes-com/assets/catalog/sync-report.txt
@@ -40,4 +43,5 @@ jobs:
             git pull --rebase origin main
             git push
           fi
-          exit $status
+          if [ "$sync_status" -ne 0 ]; then exit "$sync_status"; fi
+          exit "$repair_status"
