@@ -47,7 +47,7 @@ SOURCES = {
         "brand_en": "BAGS",
         "title_zh": "包包目录",
         "title_en": "Bags Catalog",
-        "category_count": 2,
+        "category_count": 1,
         "allowed_hosts": {"bags.tangma2088.com", "bags.qiqiyg.com"},
     },
     "shoes": {
@@ -64,6 +64,7 @@ SOURCES = {
 
 CATEGORY_RE = re.compile(r"category(?:en)?_(\d+)\.html", re.I)
 COUNT_RE = re.compile(r"\(([\d,]+)\)")
+CSS_URL_RE = re.compile(r"url\(['\"]?([^)'\"]+)", re.I)
 SKIP_NAMES = {
     "fashion", "fashion link", "accessory", "accessory link", "acces", "bags", "bags link",
     "shoes", "shoes link", "more fashion", "glasses", "belt", "jewerly", "jewelry",
@@ -83,7 +84,7 @@ def fetch_soup(session: requests.Session, url: str) -> BeautifulSoup:
 
 def nearest_container(anchor):
     node = anchor
-    for _ in range(6):
+    for _ in range(7):
         node = node.parent
         if node is None:
             break
@@ -109,21 +110,81 @@ def find_count(anchor) -> str | None:
     return None
 
 
-def find_image(anchor, base_url: str) -> str | None:
-    container = nearest_container(anchor)
-    candidates = []
-    if container is not None:
-        candidates.extend(container.find_all("img"))
-    candidates.extend(anchor.find_all("img"))
-    for image in candidates:
-        src = image.get("data-original") or image.get("data-src") or image.get("src")
-        if src and not src.lower().startswith("data:"):
-            return urljoin(base_url, src)
+def image_url_from_tag(image, base_url: str) -> str | None:
+    attrs = (
+        "data-original", "data-src", "data-lazy-src", "data-url", "src",
+    )
+    for attr in attrs:
+        src = image.get(attr)
+        if src and not str(src).lower().startswith("data:"):
+            return urljoin(base_url, str(src).strip())
+    srcset = image.get("srcset") or image.get("data-srcset")
+    if srcset:
+        first = str(srcset).split(",")[0].strip().split()[0]
+        if first and not first.lower().startswith("data:"):
+            return urljoin(base_url, first)
+    style = image.get("style") or ""
+    match = CSS_URL_RE.search(style)
+    if match:
+        return urljoin(base_url, match.group(1))
     return None
+
+
+def images_in_node(node, base_url: str) -> list[str]:
+    if node is None:
+        return []
+    urls: list[str] = []
+    for image in node.find_all("img"):
+        url = image_url_from_tag(image, base_url)
+        if url and url not in urls:
+            urls.append(url)
+    for source in node.find_all("source"):
+        srcset = source.get("srcset") or source.get("data-srcset")
+        if srcset:
+            first = str(srcset).split(",")[0].strip().split()[0]
+            url = urljoin(base_url, first)
+            if url not in urls:
+                urls.append(url)
+    for styled in node.find_all(style=True):
+        match = CSS_URL_RE.search(styled.get("style") or "")
+        if match:
+            url = urljoin(base_url, match.group(1))
+            if url not in urls:
+                urls.append(url)
+    return urls
+
+
+def build_image_map(soup: BeautifulSoup, base_url: str) -> dict[str, str]:
+    """Collect image-only and title-only links by the same category ID."""
+    image_map: dict[str, str] = {}
+    for anchor in soup.find_all("a", href=True):
+        match = CATEGORY_RE.search(anchor.get("href", ""))
+        if not match:
+            continue
+        category_id = match.group(1)
+        # The legacy page commonly has an image-only <a> followed by a title <a>.
+        candidates = images_in_node(anchor, base_url)
+        if not candidates:
+            parent = anchor.parent
+            if parent is not None:
+                candidates = images_in_node(parent, base_url)
+        if candidates and category_id not in image_map:
+            image_map[category_id] = candidates[0]
+    return image_map
+
+
+def find_image(anchor, base_url: str) -> str | None:
+    direct = images_in_node(anchor, base_url)
+    if direct:
+        return direct[0]
+    container = nearest_container(anchor)
+    candidates = images_in_node(container, base_url)
+    return candidates[0] if candidates else None
 
 
 def extract_records(soup: BeautifulSoup, base_url: str, allowed_hosts: set[str]) -> list[dict]:
     records: OrderedDict[str, dict] = OrderedDict()
+    image_map = build_image_map(soup, base_url)
     for anchor in soup.find_all("a", href=True):
         match = CATEGORY_RE.search(anchor.get("href", ""))
         if not match:
@@ -138,7 +199,7 @@ def extract_records(soup: BeautifulSoup, base_url: str, allowed_hosts: set[str])
         count = find_count(anchor)
         if count is None:
             continue
-        image_url = find_image(anchor, base_url)
+        image_url = image_map.get(category_id) or find_image(anchor, base_url)
         candidate = {
             "id": category_id,
             "name": name,
@@ -167,12 +228,17 @@ def image_is_valid(path: Path) -> bool:
         return False
 
 
-def fetch_image(session: requests.Session, urls: list[str]) -> bytes | None:
+def fetch_image(session: requests.Session, urls: list[str], referer: str) -> bytes | None:
     for url in urls:
         if not url:
             continue
         try:
-            response = session.get(url, headers={**HEADERS, "Referer": url}, timeout=45, allow_redirects=True)
+            response = session.get(
+                url,
+                headers={**HEADERS, "Referer": referer},
+                timeout=45,
+                allow_redirects=True,
+            )
         except requests.RequestException:
             continue
         if not response.ok or len(response.content) < 500:
@@ -195,6 +261,7 @@ def direct_image_candidates(department: str, category_id: str) -> list[str]:
 def save_jpeg(raw: bytes, destination: Path) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     with Image.open(BytesIO(raw)) as image:
+        image.load()
         image = image.convert("RGB")
         image.thumbnail((1000, 1000), Image.Resampling.LANCZOS)
         image.save(destination, format="JPEG", quality=90, optimize=True)
@@ -216,16 +283,20 @@ def sync_department(session: requests.Session, department: str, config: dict, re
     for index, record in enumerate(records):
         category_id = record["id"]
         destination = ROOT / department / f"{category_id}.jpg"
-        if not image_is_valid(destination):
-            urls = [record.get("source_image"), *direct_image_candidates(department, category_id)]
-            raw = fetch_image(session, [url for url in urls if url])
+        source_image = record.get("source_image")
+        # Refresh from the exact legacy thumbnail whenever it is available. This also
+        # replaces generic logos that were incorrectly matched during earlier runs.
+        should_refresh = bool(source_image) or not image_is_valid(destination)
+        if should_refresh:
+            urls = [source_image, *direct_image_candidates(department, category_id)]
+            raw = fetch_image(session, [url for url in urls if url], config["en"])
             if raw is not None:
                 try:
                     save_jpeg(raw, destination)
                     report.append(f"{department}/{category_id}: image saved")
                 except Exception as exc:
                     report.append(f"{department}/{category_id}: invalid image: {exc}")
-            else:
+            elif not image_is_valid(destination):
                 report.append(f"{department}/{category_id}: image missing")
 
         group = "category" if index < config["category_count"] else "brand"
