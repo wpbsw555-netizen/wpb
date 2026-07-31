@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-31T16:55:11.686827+00:00",
+  "generatedAt": "2026-07-31T17:13:34.084662+00:00",
   "departments": {
     "fashion": {
       "brandCn": "服饰",
@@ -941,7 +941,7 @@
           "en": "Luggage",
           "es": "Luggage",
           "count": "0",
-          "group": "category",
+          "group": "brand",
           "landing": "https://bags.tangma2088.com/categoryen_38932.html?path=0_38932",
           "image": "assets/catalog/bags/38932.jpg"
         },
