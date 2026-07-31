@@ -237,3 +237,7 @@ shoes/139955: image saved
 shoes/177367: image saved
 shoes/181558: image saved
 wrote qiqishoes-com/assets/catalog/catalog-data.json
+bags/1: repaired from landing page
+shoes/27434: repaired from landing page
+shoes/82: repaired from landing page
+repair complete: repaired=3, still_missing=0
