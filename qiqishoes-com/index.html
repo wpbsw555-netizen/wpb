@@ -7,19 +7,19 @@
   <title>QIQI SHOES Catalog</title>
   <link rel="stylesheet" href="./assets/styles.css">
 </head>
-<body>
+<body data-department="fashion">
   <div class="site">
     <header class="top">
       <a class="brand" href="./" aria-label="QIQI SHOES">
-        <span class="brand-cn">服饰</span><span class="brand-en">FASHION</span>
+        <span class="brand-cn" id="brandCn">服饰</span><span class="brand-en" id="brandEn">FASHION</span>
       </a>
       <div class="top-right">
-        <div class="portal-tabs">
-          <button class="portal-tab active" type="button">时尚链接</button>
-          <button class="portal-tab" type="button">附件链接</button>
-          <button class="portal-tab" type="button">包包链接</button>
-          <button class="portal-tab" type="button">鞋子链接</button>
-        </div>
+        <nav class="portal-tabs" aria-label="商品部门">
+          <a class="portal-tab" data-department="fashion" href="./fashion/">时尚链接</a>
+          <a class="portal-tab" data-department="accessories" href="./accessories/">附件链接</a>
+          <a class="portal-tab" data-department="bags" href="./bags/">包包链接</a>
+          <a class="portal-tab" data-department="shoes" href="./shoes/">鞋子链接</a>
+        </nav>
         <div class="langs">
           <button type="button" data-lang="zh">中文</button> |
           <button type="button" data-lang="en">英语</button> |
@@ -29,16 +29,7 @@
     </header>
 
     <div class="rule"></div>
-
-    <nav class="nav" aria-label="分类导航">
-      <button type="button" class="active">家</button>
-      <button type="button" data-filter="0724">新产品</button>
-      <button type="button" data-filter="运动">比基尼</button>
-      <button type="button" data-filter="短裤">裙子</button>
-      <button type="button" data-filter="polo">拉夫·劳伦</button>
-      <button type="button" data-filter="shirt">拉科斯特</button>
-      <button type="button" data-filter="jacket">高质量</button>
-    </nav>
+    <nav class="nav" id="categoryNav" aria-label="分类导航"></nav>
 
     <div class="tools">
       <div class="breadcrumb" id="breadcrumb">家</div>
