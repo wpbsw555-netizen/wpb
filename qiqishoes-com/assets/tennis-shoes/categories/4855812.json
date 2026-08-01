@@ -1,0 +1,56 @@
+{
+  "generatedAt": "2026-08-01T14:18:52.585058+00:00",
+  "category": {
+    "id": "4855812",
+    "name": "NB740",
+    "source": "https://yunnan0594.x.yupoo.com/categories/4855812"
+  },
+  "total": 9,
+  "products": [
+    {
+      "id": "191288037",
+      "title": "a2-740白蓝",
+      "image": "images/191288037.jpg"
+    },
+    {
+      "id": "191288004",
+      "title": "a2740白色",
+      "image": "images/191288004.jpg"
+    },
+    {
+      "id": "191287983",
+      "title": "a2黑色",
+      "image": "images/191287983.jpg"
+    },
+    {
+      "id": "191287956",
+      "title": "a2白色",
+      "image": "images/191287956.jpg"
+    },
+    {
+      "id": "191287938",
+      "title": "a2灰黄",
+      "image": "images/191287938.jpg"
+    },
+    {
+      "id": "191287918",
+      "title": "a2深蓝",
+      "image": "images/191287918.jpg"
+    },
+    {
+      "id": "191287895",
+      "title": "a2白绿",
+      "image": "images/191287895.jpg"
+    },
+    {
+      "id": "191287861",
+      "title": "a2蓝橙",
+      "image": "images/191287861.jpg"
+    },
+    {
+      "id": "191287818",
+      "title": "a2米色",
+      "image": "images/191287818.jpg"
+    }
+  ]
+}
