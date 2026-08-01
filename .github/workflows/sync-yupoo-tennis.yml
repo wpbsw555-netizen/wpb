@@ -7,6 +7,7 @@ on:
     paths:
       - 'scripts/sync_yupoo_tennis.py'
       - 'scripts/sync_yupoo_all_categories.py'
+      - 'scripts/clean_empty_tennis_categories.py'
       - '.github/workflows/sync-yupoo-tennis.yml'
 
 permissions:
@@ -41,6 +42,7 @@ jobs:
           set +e
           python scripts/sync_yupoo_all_categories.py > yupoo-sync.log 2>&1
           status=$?
+          python scripts/clean_empty_tennis_categories.py >> yupoo-sync.log 2>&1
           cat yupoo-sync.log
           mkdir -p qiqishoes-com/assets/tennis-shoes
           cp yupoo-sync.log qiqishoes-com/assets/tennis-shoes/workflow-output.log
