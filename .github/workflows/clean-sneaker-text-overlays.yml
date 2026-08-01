@@ -22,6 +22,7 @@ jobs:
     env:
       OCR_LANG: 'eng+chi_sim'
       TEXT_SCAN_WORKERS: '4'
+      RUN_REQUEST: '2026-08-01T23:21:00+08:00'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
