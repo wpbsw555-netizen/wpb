@@ -1,0 +1,47 @@
+name: Sync Yupoo Sneaker Catalog
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/sync_yupoo_tennis.py'
+      - '.github/workflows/sync-yupoo-tennis.yml'
+      - 'qiqishoes-com/tennis-shoes/**'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade requests beautifulsoup4 pillow
+
+      - name: Scrape, mirror and commit catalog
+        shell: bash
+        run: |
+          set +e
+          python scripts/sync_yupoo_tennis.py > yupoo-sync.log 2>&1
+          status=$?
+          cat yupoo-sync.log
+          mkdir -p qiqishoes-com/assets/tennis-shoes
+          cp yupoo-sync.log qiqishoes-com/assets/tennis-shoes/workflow-output.log
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qiqishoes-com scripts/sync_yupoo_tennis.py
+          if ! git diff --cached --quiet; then
+            git commit -m "Sync local Yupoo sneaker catalog"
+            git pull --rebase origin main
+            git push
+          fi
+          exit $status
