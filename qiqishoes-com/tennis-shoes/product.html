@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="QIQI SHOES sneaker product">
+  <title>QIQI SHOES · Product</title>
+  <link rel="stylesheet" href="../assets/styles.css?v=202608012200">
+  <style>
+    body{background:#f6f9fc}.detail-site{width:980px;max-width:calc(100% - 24px);margin:28px auto 70px}.detail-header{display:flex;align-items:center;gap:16px;background:#fff;border:1px solid #e0e8ee;border-radius:14px;padding:16px 20px;box-shadow:0 8px 26px rgba(20,67,94,.08)}.detail-logo{width:76px;height:76px;border-radius:50%;object-fit:cover;box-shadow:0 5px 14px rgba(0,0,0,.22)}.detail-slogan{font-size:25px;color:#087cb9;font-weight:800;flex:1}.detail-langs{color:#1a45e6}.detail-langs button{border:0;background:transparent;color:#1a45e6;cursor:pointer}.detail-langs button.active{font-weight:700;text-decoration:underline}.detail-card{display:grid;grid-template-columns:minmax(300px,1fr) 1fr;gap:30px;margin-top:22px;background:#fff;border:1px solid #e0e8ee;border-radius:16px;padding:28px;box-shadow:0 9px 28px rgba(20,67,94,.08)}.detail-image{min-height:440px;background:#f1f1f1;border:1px solid #d4d4d4;display:flex;align-items:center;justify-content:center;overflow:hidden}.detail-image img{width:100%;height:100%;max-height:570px;object-fit:contain}.detail-copy h1{font-size:25px;line-height:1.45;color:#263946;margin:0 0 14px}.detail-id{color:#83919a;margin-bottom:22px}.detail-note{background:#edf7fc;border-left:4px solid #087cb9;padding:16px 18px;color:#4f6572;line-height:1.7}.detail-list{margin:22px 0;padding-left:20px;color:#4f6572;line-height:1.9}.detail-actions{display:grid;gap:12px;margin-top:25px}.detail-action{min-height:52px;border-radius:27px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-weight:800}.detail-wa{background:#19bd62;color:#fff!important;box-shadow:0 6px 18px rgba(25,189,98,.25)}.detail-back{border:1px solid #91bed8;background:#f5fbff;color:#05629b}.detail-error{padding:60px;text-align:center;color:#777}.detail-footer{text-align:center;margin-top:25px;color:#8b969e}@media(max-width:750px){.detail-header{flex-wrap:wrap}.detail-slogan{font-size:20px}.detail-card{grid-template-columns:1fr;padding:18px}.detail-image{min-height:320px}.detail-langs{width:100%;text-align:center}}
+  </style>
+</head>
+<body>
+  <div class="detail-site">
+    <header class="detail-header">
+      <a href="./"><img class="detail-logo" src="../assets/accessories-logo.svg?v=202608012037" alt="QIQI SHOES"></a>
+      <div class="detail-slogan" id="detailSlogan">中国鞋具批发商</div>
+      <div class="detail-langs"><button type="button" data-lang="zh">中文</button> | <button type="button" data-lang="en">英语</button> | <button type="button" data-lang="es">西班牙语</button></div>
+    </header>
+    <main id="detailContent"><div class="detail-error">正在加载产品…</div></main>
+    <footer class="detail-footer">WhatsApp: +86 13159065939</footer>
+  </div>
+  <script>
+    (()=>{
+      const KEY='qiqi-catalog-language',DATA='../assets/tennis-shoes/catalog.json?v='+Date.now();
+      const T={zh:{slogan:'中国鞋具批发商',langs:['中文','英语','西班牙语'],note:'请保存这张产品图片，并通过 WhatsApp 发送给我们咨询价格。',list:['发送产品图片或产品 ID','告诉我们需要的尺码、颜色和数量','提供收货国家，以便计算运费'],wa:'通过 WhatsApp 咨询价格',back:'返回网球鞋目录',error:'没有找到该产品'},en:{slogan:'Chinese Footwear Wholesaler',langs:['Chinese','English','Spanish'],note:'Save this product image and send it to us on WhatsApp for a quote.',list:['Send the product image or product ID','Tell us the size, color and quantity','Provide the destination country for shipping cost'],wa:'Ask for Price on WhatsApp',back:'Back to Sneaker Catalog',error:'Product not found'},es:{slogan:'Mayorista chino de calzado',langs:['Chino','Inglés','Español'],note:'Guarde esta imagen y envíenosla por WhatsApp para solicitar precio.',list:['Envíe la imagen o ID del producto','Indique talla, color y cantidad','Indique el país de destino para calcular el envío'],wa:'Consultar precio por WhatsApp',back:'Volver al catálogo',error:'Producto no encontrado'}};
+      let lang='zh',product=null;
+      const id=new URLSearchParams(location.search).get('id')||'';
+      function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+      function saved(){try{const v=localStorage.getItem(KEY);return ['zh','en','es'].includes(v)?v:'zh'}catch{return 'zh'}}
+      function setLang(v){lang=['zh','en','es'].includes(v)?v:'zh';try{localStorage.setItem(KEY,lang)}catch{}document.documentElement.lang=lang==='zh'?'zh-CN':lang;const t=T[lang];document.querySelector('#detailSlogan').textContent=t.slogan;document.querySelectorAll('[data-lang]').forEach((b,i)=>{b.textContent=t.langs[i];b.classList.toggle('active',b.dataset.lang===lang)});render()}
+      function render(){const t=T[lang],root=document.querySelector('#detailContent');if(!product){root.innerHTML=`<div class="detail-error">${t.error}</div>`;return}const image=new URL(`../assets/tennis-shoes/${product.image}?v=${Date.now()}`,location.href).href;const msg=encodeURIComponent(`Hello, I want to ask about this product. Product ID: ${product.id}`);root.innerHTML=`<section class="detail-card"><div class="detail-image"><img src="${image}" alt="${esc(product.title)}"></div><div class="detail-copy"><h1>${esc(product.title)}</h1><div class="detail-id">Product ID: ${esc(product.id)}</div><div class="detail-note">${t.note}</div><ul class="detail-list">${t.list.map(x=>`<li>${x}</li>`).join('')}</ul><div class="detail-actions"><a class="detail-action detail-wa" href="https://wa.me/8613159065939?text=${msg}" target="_blank" rel="noopener noreferrer">${t.wa}</a><a class="detail-action detail-back" href="./">${t.back}</a></div></div></section>`}
+      document.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>setLang(b.dataset.lang));
+      fetch(DATA,{cache:'no-store'}).then(r=>r.json()).then(d=>{product=(d.products||[]).find(x=>String(x.id)===String(id))||null;setLang(saved())}).catch(()=>setLang(saved()));
+    })();
+  </script>
+</body>
+</html>
