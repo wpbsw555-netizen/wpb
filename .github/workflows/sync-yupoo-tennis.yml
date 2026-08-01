@@ -8,6 +8,7 @@ on:
       - 'scripts/sync_yupoo_tennis.py'
       - 'scripts/sync_yupoo_all_categories.py'
       - 'scripts/clean_empty_tennis_categories.py'
+      - 'scripts/remove_text_overlay_products.py'
       - '.github/workflows/sync-yupoo-tennis.yml'
 
 permissions:
@@ -22,6 +23,8 @@ jobs:
       MAX_CATEGORIES_PER_RUN: '0'
       MAX_PAGES_PER_CATEGORY: '100'
       IMAGE_WORKERS: '8'
+      OCR_LANG: 'eng+chi_sim'
+      TEXT_SCAN_WORKERS: '4'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -34,24 +37,40 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: python -m pip install --upgrade requests beautifulsoup4 pillow
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tesseract-ocr tesseract-ocr-eng tesseract-ocr-chi-sim
+          python -m pip install --upgrade requests beautifulsoup4 pillow pytesseract
 
-      - name: Scrape all categories, mirror images and build local directories
+      - name: Scrape, clean and commit full catalog
         shell: bash
         run: |
           set +e
           python scripts/sync_yupoo_all_categories.py > yupoo-sync.log 2>&1
-          status=$?
+          sync_status=$?
+
           python scripts/clean_empty_tennis_categories.py >> yupoo-sync.log 2>&1
+          empty_status=$?
+
+          python scripts/remove_text_overlay_products.py > text-overlay-cleanup.log 2>&1
+          cleanup_status=$?
+
           cat yupoo-sync.log
+          cat text-overlay-cleanup.log
+
           mkdir -p qiqishoes-com/assets/tennis-shoes
           cp yupoo-sync.log qiqishoes-com/assets/tennis-shoes/workflow-output.log
+          cp text-overlay-cleanup.log qiqishoes-com/assets/tennis-shoes/text-overlay-workflow-output.log
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add qiqishoes-com/assets/tennis-shoes
           if ! git diff --cached --quiet; then
-            git commit -m "Sync all local Yupoo sneaker categories"
+            git commit -m "Sync and clean local Yupoo sneaker categories"
             git pull --rebase origin main
             git push
           fi
-          exit $status
+
+          if [ "$sync_status" -ne 0 ]; then exit "$sync_status"; fi
+          if [ "$empty_status" -ne 0 ]; then exit "$empty_status"; fi
+          exit "$cleanup_status"
