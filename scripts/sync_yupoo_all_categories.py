@@ -11,7 +11,7 @@ from pathlib import Path
 import requests
 from PIL import Image, ImageFile
 
-import scripts.sync_yupoo_tennis as base
+import sync_yupoo_tennis as base
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
