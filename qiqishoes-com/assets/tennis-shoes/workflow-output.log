@@ -1,448 +1,80 @@
-legacy: preserved 260 AIR JORDAN 3 products
 discovery: 77 categories
 category 1/77 3551883: existing 260
-category 2/77 4724949 热卖款与特价: start
-category 4724949 page 1: parsed=11, new=11, total=11
-category 4724949 page 2: parsed=0, new=0, total=11
-category 4724949 images 11/11: {'saved': 11, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4724949: complete 11
-category 3/77 587485 乔丹: start
-category 587485 page 1: parsed=11, new=11, total=11
-category 587485 page 2: parsed=0, new=0, total=11
-category 587485 images 11/11: {'saved': 0, 'existing': 11, 'missing': 0, 'invalid': 0}
-category 587485: complete 11
-category 4/77 587486 科比: start
-category 587486 page 1: parsed=0, new=0, total=0
-category 587486 page 2: parsed=0, new=0, total=0
-category 587486: complete 0
-category 5/77 3551880 AIR JORDAN6 乔丹6代: start
-category 3551880 page 1: parsed=119, new=119, total=119
-category 3551880 page 2: parsed=0, new=0, total=119
-category 3551880 images 100/119: {'saved': 100, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 3551880 images 119/119: {'saved': 119, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 3551880: complete 119
-category 6/77 3588438 AIR JORDAN10 乔丹10代: start
-category 3588438 page 1: parsed=32, new=32, total=32
-category 3588438 page 2: parsed=0, new=0, total=32
-category 3588438 images 32/32: {'saved': 32, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 3588438: complete 32
-category 7/77 3696463 AIR JORDAN13 乔丹13代: start
-category 3696463 page 1: parsed=74, new=74, total=74
-category 3696463 page 2: parsed=0, new=0, total=74
-category 3696463 images 74/74: {'saved': 74, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 3696463: complete 74
-category 8/77 3696653 AIR JORDAN18 乔丹18代: start
-category 3696653 page 1: parsed=0, new=0, total=0
-category 3696653 page 2: parsed=0, new=0, total=0
-category 3696653: complete 0
-category 9/77 3696625 AIR JORDAN35 乔丹35代: start
-category 3696625 page 1: parsed=0, new=0, total=0
-category 3696625 page 2: parsed=0, new=0, total=0
-category 3696625: complete 0
-category 10/77 4896785 X2版！普拉达: start
-category 4896785 page 1: parsed=5, new=5, total=5
-category 4896785 page 2: parsed=0, new=0, total=5
-category 4896785 images 5/5: {'saved': 5, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4896785: complete 5
-category 11/77 4855812 NB740: start
-category 4855812 page 1: parsed=9, new=9, total=9
-category 4855812 page 2: parsed=0, new=0, total=9
-category 4855812 images 9/9: {'saved': 9, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4855812: complete 9
-category 12/77 4880047 H版！巴黎世家: start
-category 4880047 page 1: parsed=29, new=29, total=29
-category 4880047 page 2: parsed=0, new=0, total=29
-category 4880047 images 29/29: {'saved': 29, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4880047: complete 29
-category 13/77 4659462 GO版本巴黎世家十二代: start
-category 4659462 page 1: parsed=0, new=0, total=0
-category 4659462 page 2: parsed=0, new=0, total=0
-category 4659462: complete 0
-category 14/77 4746969 新百伦 New Balance 1906R: start
-category 4746969 page 1: parsed=10, new=10, total=10
-category 4746969 page 2: parsed=0, new=0, total=10
-category 4746969 images 10/10: {'saved': 10, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4746969: complete 10
-category 15/77 4662713 NIKE P-6000: start
-category 4662713 page 1: parsed=6, new=6, total=6
-category 4662713 page 2: parsed=0, new=0, total=6
-category 4662713 images 6/6: {'saved': 6, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4662713: complete 6
-category 16/77 3972909 童鞋: start
-category 3972909 page 1: parsed=6, new=6, total=6
-category 3972909 page 2: parsed=0, new=0, total=6
-category 3972909 images 6/6: {'saved': 5, 'existing': 1, 'missing': 0, 'invalid': 0}
-category 3972909: complete 6
-category 17/77 3698662 詹姆斯系列: start
-category 3698662 page 1: parsed=0, new=0, total=0
-category 3698662 page 2: parsed=0, new=0, total=0
-category 3698662: complete 0
-category 18/77 3698704 杜兰特系列: start
-category 3698704 page 1: parsed=0, new=0, total=0
-category 3698704 page 2: parsed=0, new=0, total=0
-category 3698704: complete 0
-category 19/77 3696731 库里系列: start
-category 3696731 page 1: parsed=0, new=0, total=0
-category 3696731 page 2: parsed=0, new=0, total=0
-category 3696731: complete 0
-category 20/77 4979109 X2版科比系列: start
-category 4979109 page 1: parsed=6, new=6, total=6
-category 4979109 page 2: parsed=0, new=0, total=6
-category 4979109 images 6/6: {'saved': 6, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4979109: complete 6
-category 21/77 0 未分类相册: start
-category 0 page 1: parsed=120, new=120, total=120
-category 0 page 2: parsed=38, new=38, total=158
-category 0 images 100/158: {'saved': 100, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 0 images 158/158: {'saved': 158, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 0: complete 158
-category 22/77 4040497 乔丹系列: start
-category 4040497 page 1: parsed=120, new=120, total=120
-category 4040497 page 2: parsed=120, new=120, total=240
-category 4040497 page 3: parsed=120, new=120, total=360
-category 4040497 page 4: parsed=120, new=120, total=480
-category 4040497 page 5: parsed=120, new=120, total=600
-category 4040497 page 6: parsed=120, new=120, total=720
-category 4040497 page 7: parsed=120, new=120, total=840
-category 4040497 page 8: parsed=120, new=120, total=960
-category 4040497 page 9: parsed=120, new=120, total=1080
-category 4040497 page 10: parsed=120, new=120, total=1200
-category 4040497 page 11: parsed=120, new=120, total=1320
-category 4040497 page 12: parsed=120, new=120, total=1440
-category 4040497 page 13: parsed=120, new=120, total=1560
-category 4040497 page 14: parsed=120, new=120, total=1680
-category 4040497 page 15: parsed=120, new=120, total=1800
-category 4040497 page 16: parsed=31, new=31, total=1831
-category 4040497 images 100/1831: {'saved': 72, 'existing': 28, 'missing': 0, 'invalid': 0}
-category 4040497 images 200/1831: {'saved': 142, 'existing': 58, 'missing': 0, 'invalid': 0}
-category 4040497 images 300/1831: {'saved': 216, 'existing': 84, 'missing': 0, 'invalid': 0}
-category 4040497 images 400/1831: {'saved': 300, 'existing': 100, 'missing': 0, 'invalid': 0}
-category 4040497 images 500/1831: {'saved': 390, 'existing': 110, 'missing': 0, 'invalid': 0}
-category 4040497 images 600/1831: {'saved': 484, 'existing': 116, 'missing': 0, 'invalid': 0}
-category 4040497 images 700/1831: {'saved': 570, 'existing': 130, 'missing': 0, 'invalid': 0}
-category 4040497 images 800/1831: {'saved': 660, 'existing': 140, 'missing': 0, 'invalid': 0}
-category 4040497 images 900/1831: {'saved': 754, 'existing': 146, 'missing': 0, 'invalid': 0}
-category 4040497 images 1000/1831: {'saved': 846, 'existing': 154, 'missing': 0, 'invalid': 0}
-category 4040497 images 1100/1831: {'saved': 931, 'existing': 169, 'missing': 0, 'invalid': 0}
-category 4040497 images 1200/1831: {'saved': 1022, 'existing': 178, 'missing': 0, 'invalid': 0}
-category 4040497 images 1300/1831: {'saved': 1112, 'existing': 188, 'missing': 0, 'invalid': 0}
-category 4040497 images 1400/1831: {'saved': 1195, 'existing': 205, 'missing': 0, 'invalid': 0}
-category 4040497 images 1500/1831: {'saved': 1279, 'existing': 221, 'missing': 0, 'invalid': 0}
-category 4040497 images 1600/1831: {'saved': 1374, 'existing': 226, 'missing': 0, 'invalid': 0}
-category 4040497 images 1700/1831: {'saved': 1460, 'existing': 240, 'missing': 0, 'invalid': 0}
-category 4040497 images 1800/1831: {'saved': 1547, 'existing': 253, 'missing': 0, 'invalid': 0}
-category 4040497 images 1831/1831: {'saved': 1573, 'existing': 258, 'missing': 0, 'invalid': 0}
-category 4040497: complete 1831
-category 23/77 4023216 AIR JORDAN1 乔丹1代（中帮）: start
-category 4023216 page 1: parsed=61, new=61, total=61
-category 4023216 page 2: parsed=0, new=0, total=61
-category 4023216 images 61/61: {'saved': 52, 'existing': 9, 'missing': 0, 'invalid': 0}
-category 4023216: complete 61
-category 24/77 4381819 AIR JORDAN3.5 乔丹3.5代: start
-category 4381819 page 1: parsed=12, new=12, total=12
-category 4381819 page 2: parsed=0, new=0, total=12
-category 4381819 images 12/12: {'saved': 9, 'existing': 3, 'missing': 0, 'invalid': 0}
-category 4381819: complete 12
-category 25/77 3569088 AIR JORDAN7 乔丹7代: start
-category 3569088 page 1: parsed=1, new=1, total=1
-category 3569088 page 2: parsed=0, new=0, total=1
-category 3569088 images 1/1: {'saved': 0, 'existing': 1, 'missing': 0, 'invalid': 0}
-category 3569088: complete 1
-category 26/77 3588473 AIR JORDAN11 乔丹11代: start
-category 3588473 page 1: parsed=120, new=120, total=120
-category 3588473 page 2: parsed=65, new=65, total=185
-category 3588473 images 100/185: {'saved': 0, 'existing': 100, 'missing': 0, 'invalid': 0}
-category 3588473 images 185/185: {'saved': 66, 'existing': 119, 'missing': 0, 'invalid': 0}
-category 3588473: complete 185
-category 27/77 3696630 AIR JORDAN13.5 乔丹13.5代: start
-category 3696630 page 1: parsed=0, new=0, total=0
-category 3696630 page 2: parsed=0, new=0, total=0
-category 3696630: complete 0
-category 28/77 4746968 Air Jordan 23: start
-category 4746968 page 1: parsed=8, new=8, total=8
-category 4746968 page 2: parsed=0, new=0, total=8
-category 4746968 images 8/8: {'saved': 4, 'existing': 4, 'missing': 0, 'invalid': 0}
-category 4746968: complete 8
-category 29/77 4021829 Air Jordan 37: start
-category 4021829 page 1: parsed=0, new=0, total=0
-category 4021829 page 2: parsed=0, new=0, total=0
-category 4021829: complete 0
-category 30/77 4903234 PK版 LV系列: start
-category 4903234 page 1: parsed=7, new=7, total=7
-category 4903234 page 2: parsed=0, new=0, total=7
-category 4903234 images 7/7: {'saved': 7, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4903234: complete 7
-category 31/77 4881045 马拉松3代 36-45带半码: start
-category 4881045 page 1: parsed=15, new=15, total=15
-category 4881045 page 2: parsed=0, new=0, total=15
-category 4881045 images 15/15: {'saved': 15, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4881045: complete 15
-category 32/77 4659478 GO版本巴黎世家三代: start
-category 4659478 page 1: parsed=42, new=42, total=42
-category 4659478 page 2: parsed=0, new=0, total=42
-category 4659478 images 42/42: {'saved': 42, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4659478: complete 42
-category 33/77 4805296 空军一号: start
-category 4805296 page 1: parsed=14, new=14, total=14
-category 4805296 page 2: parsed=0, new=0, total=14
-category 4805296 images 14/14: {'saved': 14, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4805296: complete 14
-category 34/77 4880035 New Balance 9060: start
-category 4880035 page 1: parsed=31, new=31, total=31
-category 4880035 page 2: parsed=0, new=0, total=31
-category 4880035 images 31/31: {'saved': 31, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4880035: complete 31
-category 35/77 4040499 dunk 原装版系列: start
-category 4040499 page 1: parsed=34, new=34, total=34
-category 4040499 page 2: parsed=0, new=0, total=34
-category 4040499 images 34/34: {'saved': 34, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4040499: complete 34
-category 36/77 3919192 乔治6代系列: start
-category 3919192 page 1: parsed=0, new=0, total=0
-category 3919192 page 2: parsed=0, new=0, total=0
-category 3919192: complete 0
-category 37/77 3768570 格瑞夫系列: start
-category 3768570 page 1: parsed=0, new=0, total=0
-category 3768570 page 2: parsed=0, new=0, total=0
-category 3768570: complete 0
-category 38/77 4021837 威少: start
-category 4021837 page 1: parsed=0, new=0, total=0
-category 4021837 page 2: parsed=0, new=0, total=0
-category 4021837: complete 0
-category 39/77 3696704 欧文系列: start
-category 3696704 page 1: parsed=0, new=0, total=0
-category 3696704 page 2: parsed=0, new=0, total=0
-category 3696704: complete 0
-category 40/77 3551911 科比系列: start
-category 3551911 page 1: parsed=120, new=120, total=120
-category 3551911 page 2: parsed=33, new=33, total=153
-category 3551911 images 100/153: {'saved': 100, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 3551911 images 153/153: {'saved': 153, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 3551911: complete 153
-category 41/77 3551881 AIR JORDAN 1 乔丹1代: start
-category 3551881 page 1: parsed=120, new=120, total=120
-category 3551881 page 2: parsed=120, new=120, total=240
-category 3551881 page 3: parsed=92, new=92, total=332
-category 3551881 images 100/332: {'saved': 0, 'existing': 100, 'missing': 0, 'invalid': 0}
-category 3551881 images 200/332: {'saved': 58, 'existing': 142, 'missing': 0, 'invalid': 0}
-category 3551881 images 300/332: {'saved': 148, 'existing': 152, 'missing': 0, 'invalid': 0}
-category 3551881 images 332/332: {'saved': 180, 'existing': 152, 'missing': 0, 'invalid': 0}
-category 3551881: complete 332
-category 42/77 3758472 AIR JORDAN2 乔丹2代: start
-category 3758472 page 1: parsed=3, new=3, total=3
-category 3758472 page 2: parsed=0, new=0, total=3
-category 3758472 images 3/3: {'saved': 3, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 3758472: complete 3
-category 43/77 3551885 AIR JORDAN4 乔丹4代: start
-category 3551885 page 1: parsed=120, new=120, total=120
-category 3551885 page 2: parsed=120, new=120, total=240
-category 3551885 page 3: parsed=120, new=120, total=360
-category 3551885 page 4: parsed=120, new=120, total=480
-category 3551885 page 5: parsed=120, new=120, total=600
-category 3551885 page 6: parsed=28, new=28, total=628
-category 3551885 images 100/628: {'saved': 0, 'existing': 100, 'missing': 0, 'invalid': 0}
-category 3551885 images 200/628: {'saved': 0, 'existing': 200, 'missing': 0, 'invalid': 0}
-category 3551885 images 300/628: {'saved': 0, 'existing': 300, 'missing': 0, 'invalid': 0}
-category 3551885 images 400/628: {'saved': 40, 'existing': 360, 'missing': 0, 'invalid': 0}
-category 3551885 images 500/628: {'saved': 129, 'existing': 371, 'missing': 0, 'invalid': 0}
-category 3551885 images 600/628: {'saved': 220, 'existing': 380, 'missing': 0, 'invalid': 0}
-category 3551885 images 628/628: {'saved': 248, 'existing': 380, 'missing': 0, 'invalid': 0}
-category 3551885: complete 628
-category 44/77 3551884 AIR JORDAN8 乔丹8代: start
-category 3551884 page 1: parsed=35, new=35, total=35
-category 3551884 page 2: parsed=0, new=0, total=35
-category 3551884 images 35/35: {'saved': 13, 'existing': 22, 'missing': 0, 'invalid': 0}
-category 3551884: complete 35
-category 45/77 3744221 AIR JORDAN 11 乔丹11代 低帮: start
-category 3744221 page 1: parsed=81, new=81, total=81
-category 3744221 page 2: parsed=0, new=0, total=81
-category 3744221 images 81/81: {'saved': 48, 'existing': 33, 'missing': 0, 'invalid': 0}
-category 3744221: complete 81
-category 46/77 3696635 AIR JORDAN14 乔丹14代: start
-category 3696635 page 1: parsed=45, new=45, total=45
-category 3696635 page 2: parsed=0, new=0, total=45
-category 3696635 images 45/45: {'saved': 9, 'existing': 36, 'missing': 0, 'invalid': 0}
-category 3696635: complete 45
-category 47/77 3696656 AIR JORDAN32 乔丹32代: start
-category 3696656 page 1: parsed=0, new=0, total=0
-category 3696656 page 2: parsed=0, new=0, total=0
-category 3696656: complete 0
-category 48/77 4872788 罗意威: start
-category 4872788 page 1: parsed=0, new=0, total=0
-category 4872788 page 2: parsed=0, new=0, total=0
-category 4872788: complete 0
-category 49/77 4825752 X2版 LV系列: start
-category 4825752 page 1: parsed=52, new=52, total=52
-category 4825752 page 2: parsed=0, new=0, total=52
-category 4825752 images 52/52: {'saved': 52, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4825752: complete 52
-category 50/77 4698866 OFF-WHITE: start
-category 4698866 page 1: parsed=11, new=11, total=11
-category 4698866 page 2: parsed=0, new=0, total=11
-category 4698866 images 11/11: {'saved': 11, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4698866: complete 11
-category 51/77 4659471 GO版本巴黎世家7代: start
-category 4659471 page 1: parsed=30, new=30, total=30
-category 4659471 page 2: parsed=0, new=0, total=30
-category 4659471 images 30/30: {'saved': 30, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4659471: complete 30
-category 52/77 3698660 dunk 系列: start
-category 3698660 page 1: parsed=120, new=120, total=120
-category 3698660 page 2: parsed=51, new=51, total=171
-category 3698660 images 100/171: {'saved': 76, 'existing': 24, 'missing': 0, 'invalid': 0}
-category 3698660 images 171/171: {'saved': 137, 'existing': 34, 'missing': 0, 'invalid': 0}
-category 3698660: complete 171
-category 53/77 4880032 New Balance 1000: start
-category 4880032 page 1: parsed=11, new=11, total=11
-category 4880032 page 2: parsed=0, new=0, total=11
-category 4880032 images 11/11: {'saved': 11, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4880032: complete 11
-category 54/77 4783409 Max 95: start
-category 4783409 page 1: parsed=14, new=14, total=14
-category 4783409 page 2: parsed=0, new=0, total=14
-category 4783409 images 14/14: {'saved': 14, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4783409: complete 14
-category 55/77 4021841 乔治6代男鞋: start
-category 4021841 page 1: parsed=0, new=0, total=0
-category 4021841 page 2: parsed=0, new=0, total=0
-category 4021841: complete 0
-category 56/77 3700364 韦斯特: start
-category 3700364 page 1: parsed=0, new=0, total=0
-category 3700364 page 2: parsed=0, new=0, total=0
-category 3700364: complete 0
-category 57/77 3696769 哈达威系列: start
-category 3696769 page 1: parsed=26, new=26, total=26
-category 3696769 page 2: parsed=0, new=0, total=26
-category 3696769 images 26/26: {'saved': 26, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 3696769: complete 26
-category 58/77 3696675 皮蓬系列: start
-category 3696675 page 1: parsed=19, new=19, total=19
-category 3696675 page 2: parsed=0, new=0, total=19
-category 3696675 images 19/19: {'saved': 19, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 3696675: complete 19
-category 59/77 4890253 科比9代39-46: start
-category 4890253 page 1: parsed=7, new=7, total=7
-category 4890253 page 2: parsed=0, new=0, total=7
-category 4890253 images 7/7: {'saved': 0, 'existing': 7, 'missing': 0, 'invalid': 0}
-category 4890253: complete 7
-category 60/77 4152138 AIR JORDAN1 乔丹1代（低帮）: start
-category 4152138 page 1: parsed=120, new=120, total=120
-category 4152138 page 2: parsed=120, new=120, total=240
-category 4152138 page 3: parsed=120, new=120, total=360
-category 4152138 page 4: parsed=120, new=120, total=480
-category 4152138 page 5: parsed=120, new=120, total=600
-category 4152138 page 6: parsed=120, new=120, total=720
-category 4152138 page 7: parsed=120, new=120, total=840
-category 4152138 page 8: parsed=12, new=12, total=852
-category 4152138 images 100/852: {'saved': 0, 'existing': 100, 'missing': 0, 'invalid': 0}
-category 4152138 images 200/852: {'saved': 0, 'existing': 200, 'missing': 0, 'invalid': 0}
-category 4152138 images 300/852: {'saved': 0, 'existing': 300, 'missing': 0, 'invalid': 0}
-category 4152138 images 400/852: {'saved': 0, 'existing': 400, 'missing': 0, 'invalid': 0}
-category 4152138 images 500/852: {'saved': 23, 'existing': 477, 'missing': 0, 'invalid': 0}
-category 4152138 images 600/852: {'saved': 119, 'existing': 481, 'missing': 0, 'invalid': 0}
-category 4152138 images 700/852: {'saved': 217, 'existing': 483, 'missing': 0, 'invalid': 0}
-category 4152138 images 800/852: {'saved': 314, 'existing': 486, 'missing': 0, 'invalid': 0}
-category 4152138 images 852/852: {'saved': 350, 'existing': 502, 'missing': 0, 'invalid': 0}
-category 4152138: complete 852
-category 61/77 3551886 AIR JORDAN5 乔丹5代: start
-category 3551886 page 1: parsed=120, new=120, total=120
-category 3551886 page 2: parsed=100, new=100, total=220
-category 3551886 images 100/220: {'saved': 0, 'existing': 100, 'missing': 0, 'invalid': 0}
-category 3551886 images 200/220: {'saved': 42, 'existing': 158, 'missing': 0, 'invalid': 0}
-category 3551886 images 220/220: {'saved': 62, 'existing': 158, 'missing': 0, 'invalid': 0}
-category 3551886: complete 220
-category 62/77 3588416 AIR JORDAN9 乔丹9代: start
-category 3588416 page 1: parsed=22, new=22, total=22
-category 3588416 page 2: parsed=0, new=0, total=22
-category 3588416 images 22/22: {'saved': 7, 'existing': 15, 'missing': 0, 'invalid': 0}
-category 3588416: complete 22
-category 63/77 3696477 AIR JORDAN12 乔丹12代: start
-category 3696477 page 1: parsed=120, new=120, total=120
-category 3696477 page 2: parsed=10, new=10, total=130
-category 3696477 images 100/130: {'saved': 6, 'existing': 94, 'missing': 0, 'invalid': 0}
-category 3696477 images 130/130: {'saved': 33, 'existing': 97, 'missing': 0, 'invalid': 0}
-category 3696477: complete 130
-category 64/77 4980263 Air Jordan17: start
-category 4980263 page 1: parsed=2, new=2, total=2
-category 4980263 page 2: parsed=0, new=0, total=2
-category 4980263 images 2/2: {'saved': 0, 'existing': 2, 'missing': 0, 'invalid': 0}
-category 4980263: complete 2
-category 65/77 3696662 AIR JORDAN34 乔丹34代: start
-category 3696662 page 1: parsed=0, new=0, total=0
-category 3696662 page 2: parsed=0, new=0, total=0
-category 3696662: complete 0
-category 66/77 4982786 莫兰特3代: start
-category 4982786 page 1: parsed=18, new=18, total=18
-category 4982786 page 2: parsed=0, new=0, total=18
-category 4982786 images 18/18: {'saved': 18, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4982786: complete 18
-category 67/77 5006239 XL版！Louis Vuitton LV: start
-category 5006239 page 1: parsed=6, new=6, total=6
-category 5006239 page 2: parsed=0, new=0, total=6
-category 5006239 images 6/6: {'saved': 6, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 5006239: complete 6
-category 68/77 4880042 X4版！巴黎世家: start
-category 4880042 page 1: parsed=8, new=8, total=8
-category 4880042 page 2: parsed=0, new=0, total=8
-category 4880042 images 8/8: {'saved': 8, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4880042: complete 8
-category 69/77 4659467 GO版本巴黎世家7.5代: start
-category 4659467 page 1: parsed=10, new=10, total=10
-category 4659467 page 2: parsed=0, new=0, total=10
-category 4659467 images 10/10: {'saved': 10, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4659467: complete 10
-category 70/77 3551906 原装版系列: start
-category 3551906 page 1: parsed=120, new=120, total=120
-category 3551906 page 2: parsed=120, new=120, total=240
-category 3551906 page 3: parsed=120, new=120, total=360
-category 3551906 page 4: parsed=120, new=120, total=480
-category 3551906 page 5: parsed=120, new=120, total=600
-category 3551906 page 6: parsed=40, new=40, total=640
-category 3551906 images 100/640: {'saved': 0, 'existing': 100, 'missing': 0, 'invalid': 0}
-category 3551906 images 200/640: {'saved': 0, 'existing': 200, 'missing': 0, 'invalid': 0}
-category 3551906 images 300/640: {'saved': 12, 'existing': 288, 'missing': 0, 'invalid': 0}
-category 3551906 images 400/640: {'saved': 14, 'existing': 386, 'missing': 0, 'invalid': 0}
-category 3551906 images 500/640: {'saved': 19, 'existing': 481, 'missing': 0, 'invalid': 0}
-category 3551906 images 600/640: {'saved': 26, 'existing': 574, 'missing': 0, 'invalid': 0}
-category 3551906 images 640/640: {'saved': 56, 'existing': 584, 'missing': 0, 'invalid': 0}
-category 3551906: complete 640
-category 71/77 3698690 超级真标乔丹系列: start
-category 3698690 page 1: parsed=120, new=120, total=120
-category 3698690 page 2: parsed=120, new=120, total=240
-category 3698690 page 3: parsed=120, new=120, total=360
-category 3698690 page 4: parsed=80, new=80, total=440
-category 3698690 images 100/440: {'saved': 0, 'existing': 100, 'missing': 0, 'invalid': 0}
-category 3698690 images 200/440: {'saved': 0, 'existing': 200, 'missing': 0, 'invalid': 0}
-category 3698690 images 300/440: {'saved': 0, 'existing': 300, 'missing': 0, 'invalid': 0}
-category 3698690 images 400/440: {'saved': 0, 'existing': 400, 'missing': 0, 'invalid': 0}
-category 3698690 images 440/440: {'saved': 10, 'existing': 430, 'missing': 0, 'invalid': 0}
-category 3698690: complete 440
-category 72/77 4550207 阿迪达斯: start
-category 4550207 page 1: parsed=20, new=20, total=20
-category 4550207 page 2: parsed=0, new=0, total=20
-category 4550207 images 20/20: {'saved': 20, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 4550207: complete 20
-category 73/77 3698693 椰子系列: start
-category 3698693 page 1: parsed=0, new=0, total=0
-category 3698693 page 2: parsed=0, new=0, total=0
-category 3698693: complete 0
-category 74/77 3698710 乔丹系列: start
-category 3698710 page 1: parsed=13, new=13, total=13
-category 3698710 page 2: parsed=0, new=0, total=13
-category 3698710 images 13/13: {'saved': 11, 'existing': 2, 'missing': 0, 'invalid': 0}
-category 3698710: complete 13
-category 75/77 3696735 hoka系列: start
-category 3696735 page 1: parsed=2, new=2, total=2
-category 3696735 page 2: parsed=0, new=0, total=2
-category 3696735 images 2/2: {'saved': 2, 'existing': 0, 'missing': 0, 'invalid': 0}
-category 3696735: complete 2
-category 76/77 3591561 拖鞋: start
-category 3591561 page 1: parsed=40, new=40, total=40
-category 3591561 page 2: parsed=0, new=0, total=40
-category 3591561 images 40/40: {'saved': 38, 'existing': 2, 'missing': 0, 'invalid': 0}
-category 3591561: complete 40
-category 77/77 4890251 纯原科比5代真碳双气垫: start
-category 4890251 page 1: parsed=0, new=0, total=0
-category 4890251 page 2: parsed=0, new=0, total=0
-category 4890251: complete 0
+category 2/77 4724949: existing 11
+category 3/77 587485: existing 11
+category 4/77 587486: existing 0
+category 5/77 3551880: existing 119
+category 6/77 3588438: existing 32
+category 7/77 3696463: existing 74
+category 8/77 3696653: existing 0
+category 9/77 3696625: existing 0
+category 10/77 4896785: existing 5
+category 11/77 4855812: existing 9
+category 12/77 4880047: existing 29
+category 13/77 4659462: existing 0
+category 14/77 4746969: existing 10
+category 15/77 4662713: existing 6
+category 16/77 3972909: existing 6
+category 17/77 3698662: existing 0
+category 18/77 3698704: existing 0
+category 19/77 3696731: existing 0
+category 20/77 4979109: existing 6
+category 21/77 0: existing 158
+category 22/77 4040497: existing 1831
+category 23/77 4023216: existing 61
+category 24/77 4381819: existing 12
+category 25/77 3569088: existing 1
+category 26/77 3588473: existing 185
+category 27/77 3696630: existing 0
+category 28/77 4746968: existing 8
+category 29/77 4021829: existing 0
+category 30/77 4903234: existing 7
+category 31/77 4881045: existing 15
+category 32/77 4659478: existing 42
+category 33/77 4805296: existing 14
+category 34/77 4880035: existing 31
+category 35/77 4040499: existing 34
+category 36/77 3919192: existing 0
+category 37/77 3768570: existing 0
+category 38/77 4021837: existing 0
+category 39/77 3696704: existing 0
+category 40/77 3551911: existing 153
+category 41/77 3551881: existing 332
+category 42/77 3758472: existing 3
+category 43/77 3551885: existing 628
+category 44/77 3551884: existing 35
+category 45/77 3744221: existing 81
+category 46/77 3696635: existing 45
+category 47/77 3696656: existing 0
+category 48/77 4872788: existing 0
+category 49/77 4825752: existing 52
+category 50/77 4698866: existing 11
+category 51/77 4659471: existing 30
+category 52/77 3698660: existing 171
+category 53/77 4880032: existing 11
+category 54/77 4783409: existing 14
+category 55/77 4021841: existing 0
+category 56/77 3700364: existing 0
+category 57/77 3696769: existing 26
+category 58/77 3696675: existing 19
+category 59/77 4890253: existing 7
+category 60/77 4152138: existing 852
+category 61/77 3551886: existing 220
+category 62/77 3588416: existing 22
+category 63/77 3696477: existing 130
+category 64/77 4980263: existing 2
+category 65/77 3696662: existing 0
+category 66/77 4982786: existing 18
+category 67/77 5006239: existing 6
+category 68/77 4880042: existing 8
+category 69/77 4659467: existing 10
+category 70/77 3551906: existing 640
+category 71/77 3698690: existing 440
+category 72/77 4550207: existing 20
+category 73/77 3698693: existing 0
+category 74/77 3698710: existing 13
+category 75/77 3696735: existing 2
+category 76/77 3591561: existing 40
+category 77/77 4890251: existing 0
 manifest: categories=77, imported=77, products=7018
+cleaned categories=57, products=7018
