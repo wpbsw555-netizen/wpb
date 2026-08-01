@@ -1,5 +1,7 @@
 (() => {
-  const DATA_URL = './tennis-shoes/catalog.json?v=' + Date.now();
+  const script = document.currentScript;
+  const ASSET_BASE = new URL('./tennis-shoes/', script.src);
+  const DATA_URL = new URL('catalog.json?v=' + Date.now(), ASSET_BASE).href;
   const STORAGE_KEY = 'qiqi-catalog-language';
   const PAGE_SIZE = 40;
   const TEXT = {
@@ -122,7 +124,9 @@
   }
 
   function imageUrl(item) {
-    return new URL(`./tennis-shoes/${item.image}?v=${Date.now()}`, document.currentScript.src).href;
+    const url = new URL(item.image, ASSET_BASE);
+    url.searchParams.set('v', String(Date.now()));
+    return url.href;
   }
 
   function renderProducts() {
@@ -167,7 +171,10 @@
       catalog = await response.json();
       if (!Array.isArray(catalog.categories)) catalog.categories = [];
       if (!Array.isArray(catalog.products)) catalog.products = [];
-      if (!catalog.categories.some(item => item.id === '3551883')) {
+      const current = catalog.categories.find(item => item.id === '3551883');
+      if (current) {
+        current.name = 'AIR JORDAN 3 乔丹3代';
+      } else {
         catalog.categories.unshift({ id: '3551883', name: 'AIR JORDAN 3 乔丹3代', imported: true });
       }
     } catch (error) {
