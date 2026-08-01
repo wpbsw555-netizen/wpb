@@ -1,0 +1,55 @@
+name: Clean Sneaker Text Overlays
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/remove_text_overlay_products.py'
+      - '.github/workflows/clean-sneaker-text-overlays.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: clean-sneaker-text-overlays
+  cancel-in-progress: false
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    env:
+      OCR_LANG: 'eng+chi_sim'
+      TEXT_SCAN_WORKERS: '4'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install OCR dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tesseract-ocr tesseract-ocr-eng tesseract-ocr-chi-sim
+          python -m pip install --upgrade pillow pytesseract
+
+      - name: Remove products with prominent text overlays
+        run: python scripts/remove_text_overlay_products.py
+
+      - name: Commit cleaned catalogs
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qiqishoes-com/assets/tennis-shoes
+          if ! git diff --cached --quiet; then
+            git commit -m "Remove text-overlay products from sneaker catalogs"
+            git pull --rebase origin main
+            git push
+          fi
