@@ -2,6 +2,20 @@
   const list = document.querySelector('#categoryList');
   if (!list) return;
 
+  const sizeStyle = document.createElement('style');
+  sizeStyle.textContent = `
+    @media (min-width:951px){
+      .sneaker-tools{grid-template-columns:minmax(0,1fr) 450px!important;padding:16px!important}
+      .category-title{font-size:19px!important}
+      .catalog-search{height:44px!important}
+      .category-chip{flex-basis:275px!important;min-height:80px!important;padding:10px!important}
+      .category-thumb{width:58px!important;height:58px!important;flex-basis:58px!important}
+      .category-copy strong{font-size:15px!important;max-height:40px!important}
+      .category-copy small{font-size:13px!important}
+    }
+  `;
+  document.head.appendChild(sizeStyle);
+
   function isZeroCount(text) {
     return /^0(?:\D|$)/.test(String(text || '').trim());
   }
