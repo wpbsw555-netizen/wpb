@@ -6,11 +6,20 @@
   <meta name="description" content="QIQI SHOES fashion catalog">
   <title>QIQI SHOES · Fashion</title>
   <link rel="stylesheet" href="../assets/styles.css?v=202608010126">
+  <style>
+    .brand.brand-image{position:relative;justify-content:center;min-height:96px;padding-top:0}
+    .brand-logo{display:block;width:96px;height:96px;border-radius:50%;object-fit:cover;box-shadow:0 6px 16px rgba(0,0,0,.24)}
+    .brand-text-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+    @media(max-width:950px){.brand.brand-image{min-height:76px}.brand-logo{width:76px;height:76px}}
+  </style>
 </head>
 <body data-department="fashion">
   <div class="site">
     <header class="top">
-      <a class="brand" href="../" aria-label="QIQI SHOES"><span class="brand-cn" id="brandCn">服饰</span><span class="brand-en" id="brandEn">FASHION</span></a>
+      <a class="brand brand-image" href="../" aria-label="QIQI SHOES">
+        <img class="brand-logo" src="../assets/accessories-logo.svg?v=202608012037" alt="QIQI SHOES">
+        <span class="brand-text-hidden" id="brandCn">服饰</span><span class="brand-text-hidden" id="brandEn">FASHION</span>
+      </a>
       <div class="top-right"><nav class="portal-tabs" aria-label="商品部门"><a class="portal-tab" href="https://yunnan0594.x.yupoo.com/categories/3551883" target="_blank" rel="noopener noreferrer">网球鞋链接</a><a class="portal-tab" data-department="fashion" href="../fashion/">时尚链接</a><a class="portal-tab" data-department="accessories" href="../accessories/">附件链接</a><a class="portal-tab" data-department="bags" href="../bags/">包包链接</a><a class="portal-tab" data-department="shoes" href="../shoes/">鞋子链接</a></nav><div class="langs"><button type="button" data-lang="zh">中文</button> | <button type="button" data-lang="en">英语</button> | <button type="button" data-lang="es">西班牙语</button></div></div>
     </header>
     <div class="rule"></div>
