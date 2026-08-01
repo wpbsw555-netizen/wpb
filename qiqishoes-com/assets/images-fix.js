@@ -110,6 +110,33 @@
     image.src = `${assetRoot}catalog/accessories/380.jpg`;
   }
 
+  function enableOrderGuideLink() {
+    const card = document.querySelector('.order-guide');
+    if (!card || card.dataset.guideLinkReady === '1') return;
+
+    const rootMatch = location.pathname.match(/^(.*\/qiqishoes-com\/)/);
+    const guideUrl = rootMatch
+      ? `${location.origin}${rootMatch[1]}order-guide/`
+      : new URL('../order-guide/', location.href).href;
+
+    const openGuide = () => {
+      location.href = guideUrl;
+    };
+
+    card.dataset.guideLinkReady = '1';
+    card.setAttribute('role', 'link');
+    card.setAttribute('tabindex', '0');
+    card.style.cursor = 'pointer';
+    card.style.textDecoration = 'none';
+    card.addEventListener('click', openGuide);
+    card.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openGuide();
+      }
+    });
+  }
+
   function patchCatalog() {
     rewriteOriginalLandingPages();
     patchDamagedThumbnail();
@@ -117,6 +144,7 @@
 
   applyHeaderLanguage(currentLanguage());
   setTimeout(restoreSavedLanguage, 0);
+  enableOrderGuideLink();
   patchCatalog();
   const grid = document.querySelector('#productGrid');
   if (grid) new MutationObserver(patchCatalog).observe(grid, { childList: true, subtree: true });
