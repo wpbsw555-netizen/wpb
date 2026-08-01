@@ -1,4 +1,4 @@
-name: Sync Yupoo Sneaker Catalog
+name: Sync Full Yupoo Sneaker Catalog
 
 on:
   workflow_dispatch:
@@ -6,8 +6,8 @@ on:
     branches: [main]
     paths:
       - 'scripts/sync_yupoo_tennis.py'
+      - 'scripts/sync_yupoo_all_categories.py'
       - '.github/workflows/sync-yupoo-tennis.yml'
-      - 'qiqishoes-com/tennis-shoes/**'
 
 permissions:
   contents: write
@@ -15,9 +15,17 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 350
+    env:
+      REFRESH_COMPLETE: '0'
+      MAX_CATEGORIES_PER_RUN: '0'
+      MAX_PAGES_PER_CATEGORY: '100'
+      IMAGE_WORKERS: '8'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -27,20 +35,20 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --upgrade requests beautifulsoup4 pillow
 
-      - name: Scrape, mirror and commit catalog
+      - name: Scrape all categories, mirror images and build local directories
         shell: bash
         run: |
           set +e
-          python scripts/sync_yupoo_tennis.py > yupoo-sync.log 2>&1
+          python scripts/sync_yupoo_all_categories.py > yupoo-sync.log 2>&1
           status=$?
           cat yupoo-sync.log
           mkdir -p qiqishoes-com/assets/tennis-shoes
           cp yupoo-sync.log qiqishoes-com/assets/tennis-shoes/workflow-output.log
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add qiqishoes-com scripts/sync_yupoo_tennis.py
+          git add qiqishoes-com/assets/tennis-shoes
           if ! git diff --cached --quiet; then
-            git commit -m "Sync local Yupoo sneaker catalog"
+            git commit -m "Sync all local Yupoo sneaker categories"
             git pull --rebase origin main
             git push
           fi
