@@ -1,0 +1,61 @@
+name: Patch Home Navigation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/patch_home_navigation.py'
+      - '.github/workflows/patch-home-navigation.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: patch-home-navigation
+  cancel-in-progress: true
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply direct home button patch
+        run: python scripts/patch_home_navigation.py
+
+      - name: Verify home button is present
+        shell: bash
+        run: |
+          grep -q 'data-portal-home="1"' qiqishoes-com/index.html
+          grep -q 'data-portal-home="1"' qiqishoes-com/fashion/index.html
+          grep -q 'data-portal-home="1"' qiqishoes-com/accessories/index.html
+          grep -q 'data-portal-home="1"' qiqishoes-com/bags/index.html
+          grep -q 'data-portal-home="1"' qiqishoes-com/shoes/index.html
+          grep -q 'data-home-tab="1"' qiqishoes-com/tennis-shoes/index.html
+          grep -q 'data-portal-home="1"' qiqishoes-com/order-guide/index.html
+          grep -q 'repeat(6,1fr)' qiqishoes-com/assets/styles.css
+
+      - name: Commit direct home navigation
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qiqishoes-com/index.html \
+                  qiqishoes-com/fashion/index.html \
+                  qiqishoes-com/accessories/index.html \
+                  qiqishoes-com/bags/index.html \
+                  qiqishoes-com/shoes/index.html \
+                  qiqishoes-com/tennis-shoes/index.html \
+                  qiqishoes-com/order-guide/index.html \
+                  qiqishoes-com/assets/styles.css
+          if ! git diff --cached --quiet; then
+            git commit -m 'Add direct home button to all catalog pages'
+            git pull --rebase origin main
+            git push
+          fi
