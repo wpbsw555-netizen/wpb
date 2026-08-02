@@ -15,7 +15,7 @@ permissions:
 
 env:
   OCR_CHUNK_SIZE: '180'
-  RUN_REQUEST: '2026-08-02T17:04:30+08:00'
+  RUN_REQUEST: '2026-08-02T17:18:00+08:00'
 
 concurrency:
   group: clean-sneaker-text-overlays-parallel
@@ -31,10 +31,37 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Mark cleanup as running
+        shell: bash
+        run: |
+          mkdir -p qiqishoes-com/assets/tennis-shoes
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          Path('qiqishoes-com/assets/tennis-shoes/text-overlay-cleanup-status.json').write_text(
+              json.dumps({
+                  'status': 'running',
+                  'startedAt': datetime.now(timezone.utc).isoformat(),
+                  'scope': 'all sneaker categories only'
+              }, ensure_ascii=False, indent=2),
+              encoding='utf-8'
+          )
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qiqishoes-com/assets/tennis-shoes/text-overlay-cleanup-status.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Mark sneaker text-overlay cleanup running'
+            git pull --rebase origin main
+            git push
+          fi
       - name: Build OCR batch matrix
         id: matrix
         run: python scripts/prepare_text_overlay_matrix.py
@@ -99,6 +126,26 @@ jobs:
           python-version: '3.12'
       - name: Apply cleanup results
         run: python scripts/apply_text_overlay_results.py
+      - name: Mark cleanup as completed
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          report_path = Path('qiqishoes-com/assets/tennis-shoes/text-overlay-cleanup-report.json')
+          report = json.loads(report_path.read_text(encoding='utf-8')) if report_path.exists() else {}
+          Path('qiqishoes-com/assets/tennis-shoes/text-overlay-cleanup-status.json').write_text(
+              json.dumps({
+                  'status': 'completed',
+                  'completedAt': datetime.now(timezone.utc).isoformat(),
+                  'scanned': report.get('scanned', 0),
+                  'removed': report.get('removed', 0),
+                  'scanErrors': report.get('scanErrors', 0)
+              }, ensure_ascii=False, indent=2),
+              encoding='utf-8'
+          )
+          PY
       - name: Commit cleaned sneaker catalogs
         shell: bash
         run: |
