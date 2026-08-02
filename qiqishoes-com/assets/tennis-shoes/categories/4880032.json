@@ -5,63 +5,80 @@
     "name": "New Balance 1000",
     "source": "https://yunnan0594.x.yupoo.com/categories/4880032"
   },
-  "total": 11,
+  "total": 10,
   "products": [
     {
       "id": "210576456",
       "title": "J版！新百伦 New New Balance 1000' 黑色 货号M1000LA 原装版本J.19号码36-46.5出货20",
-      "image": "images/210576456.jpg"
+      "image": "images/210576456.jpg",
+      "cleanOriginalSource": "https://photo.yupoo.com/yunnan0594/4452f185/ed001708.jpeg",
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "209726874",
       "title": "J版！新百伦 New New Balance 1000' 黑白字母色 货号M1000AP 原装版本J.19号码36-46.5出货20",
-      "image": "images/209726874.jpg"
-    },
-    {
-      "id": "209726827",
-      "title": "J版！新百伦 New New Balance 1000' 全白色 货号M1000BW 原装版本J.19号码36-46.5出货20",
-      "image": "images/209726827.jpg"
+      "image": "images/209726874.jpg",
+      "cleanOriginalSource": "https://photo.yupoo.com/yunnan0594/c14e3ea1/2a603d39.jpeg",
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "185655016",
       "title": "j版！新百伦 New New Balance 1000' 灰浅绿色 货号M1000KQ 原装版本J.19号码36-46.5出货21",
-      "image": "images/185655016.jpg"
+      "image": "images/185655016.jpg",
+      "cleanOriginalSource": "https://photo.yupoo.com/yunnan0594/d9f91b42/9f9c93dd.jpeg",
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "190227807",
       "title": "J版！新百伦 New New Balance 1000' 白银灰黑色 货号M1000AC1 原装版本J.19号码36-46.5出货21",
-      "image": "images/190227807.jpg"
+      "image": "images/190227807.jpg",
+      "cleanOriginalSource": "https://photo.yupoo.com/yunnan0594/4d1a1ab2/82f67c8a.jpeg",
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "175080757",
       "title": "H版！New Balance 1000 “Angora/Moonrock” NB x JFG 联名鞋国 黑红色 货号M1000TP 原装真标H，19号码35-45出货2",
-      "image": "images/175080757.jpg"
+      "image": "images/175080757.jpg",
+      "cleanOriginalSource": "https://photo.yupoo.com/yunnan0594/59b6b9dd/fb9f9283.jpeg",
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "175080548",
       "title": "H版！New Balance 1000 “Angora/Moonrock” NB x JFG 联名鞋国 灰银色 货号M1000AL1 原装真标H，19号码35-45出货21",
-      "image": "images/175080548.jpg"
+      "image": "images/175080548.jpg",
+      "cleanOriginalSource": "https://photo.yupoo.com/yunnan0594/2b8d8498/3fe15993.jpeg",
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "173665936",
       "title": "F-New Balance M1000 货号：M1000SL 尺码：36-46",
-      "image": "images/173665936.jpg"
+      "image": "images/173665936.jpg",
+      "cleanOriginalSource": "https://photo.yupoo.com/yunnan0594/5a9b01af/c714e275.jpg",
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "173665769",
       "title": "F-Joe Freshgoods x New Balance 1000“Black Ice”货号：M1000JF1 尺码：36-46",
-      "image": "images/173665769.jpg"
+      "image": "images/173665769.jpg",
+      "cleanOriginalSource": "https://photo.yupoo.com/yunnan0594/e442d556/3c4685d1.jpg",
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "173665635",
       "title": "F-Joe Freshgoods x New Balance 1000“Pink Mink”货号：M1000JG1 尺码：36-46",
-      "image": "images/173665635.jpg"
+      "image": "images/173665635.jpg",
+      "cleanOriginalSource": "https://photo.yupoo.com/yunnan0594/b22f5d4a/318cc5fe.jpg",
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "173665530",
       "title": "F-New Balance 1000 颜色：Angora/Moonrock-Almond Oil货号：M1000WA 尺码：36-46",
-      "image": "images/173665530.jpg"
+      "image": "images/173665530.jpg",
+      "cleanOriginalSource": "https://photo.yupoo.com/yunnan0594/520e9dc8/1b41ec5a.jpg",
+      "cleanOriginalSelection": "second album data-origin-src"
     }
   ],
-  "filteredAt": "2026-08-02T16:32:12.795395+00:00"
+  "filteredAt": "2026-08-02T16:32:12.795395+00:00",
+  "cleanOriginalsUpdatedAt": "2026-08-02T18:18:39.650219+00:00",
+  "cleanOriginalSelection": "second album data-origin-src"
 }

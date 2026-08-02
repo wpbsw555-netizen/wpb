@@ -2,19 +2,21 @@
   "generatedAt": "2026-08-02T16:32:13.055473+00:00",
   "source": "https://yunnan0594.x.yupoo.com/categories/3551885",
   "defaultCategory": "3551885",
-  "categoryCount": 57,
-  "importedCategoryCount": 57,
-  "totalProducts": 7022,
+  "categoryCount": 45,
+  "importedCategoryCount": 45,
+  "totalProducts": 3048,
   "categories": [
     {
       "id": "3551885",
       "name": "AIR JORDAN4 乔丹4代",
       "source": "https://yunnan0594.x.yupoo.com/categories/3551885",
       "imported": true,
-      "count": 629,
+      "count": 615,
       "data": "categories/3551885.json",
       "cover": "images/248246283.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4724949",
@@ -24,7 +26,9 @@
       "count": 11,
       "data": "categories/4724949.json",
       "cover": "images/246770183.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "587485",
@@ -34,548 +38,516 @@
       "count": 11,
       "data": "categories/587485.json",
       "cover": "images/246770183.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3551880",
       "name": "AIR JORDAN6 乔丹6代",
       "source": "https://yunnan0594.x.yupoo.com/categories/3551880",
       "imported": true,
-      "count": 119,
+      "count": 71,
       "data": "categories/3551880.json",
       "cover": "images/246999654.jpg",
-      "missingImages": 0
-    },
-    {
-      "id": "3588438",
-      "name": "AIR JORDAN10 乔丹10代",
-      "source": "https://yunnan0594.x.yupoo.com/categories/3588438",
-      "imported": true,
-      "count": 32,
-      "data": "categories/3588438.json",
-      "cover": "images/245304328.jpg",
-      "missingImages": 0
-    },
-    {
-      "id": "3696463",
-      "name": "AIR JORDAN13 乔丹13代",
-      "source": "https://yunnan0594.x.yupoo.com/categories/3696463",
-      "imported": true,
-      "count": 74,
-      "data": "categories/3696463.json",
-      "cover": "images/247897641.jpg",
-      "missingImages": 0
-    },
-    {
-      "id": "4896785",
-      "name": "X2版！普拉达",
-      "source": "https://yunnan0594.x.yupoo.com/categories/4896785",
-      "imported": true,
-      "count": 5,
-      "data": "categories/4896785.json",
-      "cover": "images/193537314.jpg",
-      "missingImages": 0
-    },
-    {
-      "id": "4855812",
-      "name": "NB740",
-      "source": "https://yunnan0594.x.yupoo.com/categories/4855812",
-      "imported": true,
-      "count": 9,
-      "data": "categories/4855812.json",
-      "cover": "images/191288037.jpg",
-      "missingImages": 0
-    },
-    {
-      "id": "4880047",
-      "name": "H版！巴黎世家",
-      "source": "https://yunnan0594.x.yupoo.com/categories/4880047",
-      "imported": true,
-      "count": 29,
-      "data": "categories/4880047.json",
-      "cover": "images/234108200.jpg",
-      "missingImages": 0
-    },
-    {
-      "id": "4746969",
-      "name": "新百伦 New Balance 1906R",
-      "source": "https://yunnan0594.x.yupoo.com/categories/4746969",
-      "imported": true,
-      "count": 10,
-      "data": "categories/4746969.json",
-      "cover": "images/209301682.jpg",
-      "missingImages": 0
-    },
-    {
-      "id": "4662713",
-      "name": "NIKE P-6000",
-      "source": "https://yunnan0594.x.yupoo.com/categories/4662713",
-      "imported": true,
-      "count": 6,
-      "data": "categories/4662713.json",
-      "cover": "images/244587224.jpg",
-      "missingImages": 0
-    },
-    {
-      "id": "3972909",
-      "name": "童鞋",
-      "source": "https://yunnan0594.x.yupoo.com/categories/3972909",
-      "imported": true,
-      "count": 6,
-      "data": "categories/3972909.json",
-      "cover": "images/179925292.jpg",
-      "missingImages": 0
-    },
-    {
-      "id": "4979109",
-      "name": "X2版科比系列",
-      "source": "https://yunnan0594.x.yupoo.com/categories/4979109",
-      "imported": true,
-      "count": 6,
-      "data": "categories/4979109.json",
-      "cover": "images/248016855.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "0",
       "name": "未分类相册",
       "source": "https://yunnan0594.x.yupoo.com/categories/0",
       "imported": true,
-      "count": 158,
+      "count": 7,
       "data": "categories/0.json",
-      "cover": "images/191862565.jpg",
-      "missingImages": 0
+      "cover": "images/212524020.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4040497",
       "name": "乔丹系列",
       "source": "https://yunnan0594.x.yupoo.com/categories/4040497",
       "imported": true,
-      "count": 1832,
+      "count": 683,
       "data": "categories/4040497.json",
-      "cover": "images/248246283.jpg",
-      "missingImages": 0
+      "cover": "images/248148615.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4023216",
       "name": "AIR JORDAN1 乔丹1代（中帮）",
       "source": "https://yunnan0594.x.yupoo.com/categories/4023216",
       "imported": true,
-      "count": 61,
+      "count": 26,
       "data": "categories/4023216.json",
       "cover": "images/181489632.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4381819",
       "name": "AIR JORDAN3.5 乔丹3.5代",
       "source": "https://yunnan0594.x.yupoo.com/categories/4381819",
       "imported": true,
-      "count": 12,
+      "count": 3,
       "data": "categories/4381819.json",
-      "cover": "images/200587612.jpg",
-      "missingImages": 0
-    },
-    {
-      "id": "3569088",
-      "name": "AIR JORDAN7 乔丹7代",
-      "source": "https://yunnan0594.x.yupoo.com/categories/3569088",
-      "imported": true,
-      "count": 1,
-      "data": "categories/3569088.json",
-      "cover": "images/126161414.jpg",
-      "missingImages": 0
+      "cover": "images/200587530.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3588473",
       "name": "AIR JORDAN11 乔丹11代",
       "source": "https://yunnan0594.x.yupoo.com/categories/3588473",
       "imported": true,
-      "count": 185,
+      "count": 26,
       "data": "categories/3588473.json",
       "cover": "images/247749164.jpg",
-      "missingImages": 0
-    },
-    {
-      "id": "4746968",
-      "name": "Air Jordan 23",
-      "source": "https://yunnan0594.x.yupoo.com/categories/4746968",
-      "imported": true,
-      "count": 8,
-      "data": "categories/4746968.json",
-      "cover": "images/187254252.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4903234",
       "name": "PK版 LV系列",
       "source": "https://yunnan0594.x.yupoo.com/categories/4903234",
       "imported": true,
-      "count": 7,
+      "count": 1,
       "data": "categories/4903234.json",
-      "cover": "images/225678770.jpg",
-      "missingImages": 0
-    },
-    {
-      "id": "4881045",
-      "name": "马拉松3代 36-45带半码",
-      "source": "https://yunnan0594.x.yupoo.com/categories/4881045",
-      "imported": true,
-      "count": 15,
-      "data": "categories/4881045.json",
-      "cover": "images/194236919.jpg",
-      "missingImages": 0
+      "cover": "images/223514721.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4659478",
       "name": "GO版本巴黎世家三代",
       "source": "https://yunnan0594.x.yupoo.com/categories/4659478",
       "imported": true,
-      "count": 42,
+      "count": 4,
       "data": "categories/4659478.json",
-      "cover": "images/184284605.jpg",
-      "missingImages": 0
+      "cover": "images/172741064.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4805296",
       "name": "空军一号",
       "source": "https://yunnan0594.x.yupoo.com/categories/4805296",
       "imported": true,
-      "count": 14,
+      "count": 1,
       "data": "categories/4805296.json",
-      "cover": "images/229092662.jpg",
-      "missingImages": 0
+      "cover": "images/191746317.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4880035",
       "name": "New Balance 9060",
       "source": "https://yunnan0594.x.yupoo.com/categories/4880035",
       "imported": true,
-      "count": 31,
+      "count": 2,
       "data": "categories/4880035.json",
-      "cover": "images/200353483.jpg",
-      "missingImages": 0
+      "cover": "images/224033787.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4040499",
       "name": "dunk 原装版系列",
       "source": "https://yunnan0594.x.yupoo.com/categories/4040499",
       "imported": true,
-      "count": 34,
+      "count": 3,
       "data": "categories/4040499.json",
-      "cover": "images/206763508.jpg",
-      "missingImages": 0
+      "cover": "images/160340300.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3551911",
       "name": "科比系列",
       "source": "https://yunnan0594.x.yupoo.com/categories/3551911",
       "imported": true,
-      "count": 153,
+      "count": 13,
       "data": "categories/3551911.json",
-      "cover": "images/247546652.jpg",
-      "missingImages": 0
+      "cover": "images/243635784.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3551881",
       "name": "AIR JORDAN 1 乔丹1代",
       "source": "https://yunnan0594.x.yupoo.com/categories/3551881",
       "imported": true,
-      "count": 332,
+      "count": 45,
       "data": "categories/3551881.json",
-      "cover": "images/246352550.jpg",
-      "missingImages": 0
+      "cover": "images/236010445.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3758472",
       "name": "AIR JORDAN2 乔丹2代",
       "source": "https://yunnan0594.x.yupoo.com/categories/3758472",
       "imported": true,
-      "count": 3,
+      "count": 1,
       "data": "categories/3758472.json",
-      "cover": "images/167365973.jpg",
-      "missingImages": 0
+      "cover": "images/167365943.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3551884",
       "name": "AIR JORDAN8 乔丹8代",
       "source": "https://yunnan0594.x.yupoo.com/categories/3551884",
       "imported": true,
-      "count": 35,
+      "count": 15,
       "data": "categories/3551884.json",
       "cover": "images/248148510.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3744221",
       "name": "AIR JORDAN 11 乔丹11代 低帮",
       "source": "https://yunnan0594.x.yupoo.com/categories/3744221",
       "imported": true,
-      "count": 81,
+      "count": 40,
       "data": "categories/3744221.json",
-      "cover": "images/239574455.jpg",
-      "missingImages": 0
+      "cover": "images/239309808.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3696635",
       "name": "AIR JORDAN14 乔丹14代",
       "source": "https://yunnan0594.x.yupoo.com/categories/3696635",
       "imported": true,
-      "count": 45,
+      "count": 24,
       "data": "categories/3696635.json",
       "cover": "images/245104838.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4825752",
       "name": "X2版 LV系列",
       "source": "https://yunnan0594.x.yupoo.com/categories/4825752",
       "imported": true,
-      "count": 52,
+      "count": 33,
       "data": "categories/4825752.json",
-      "cover": "images/234108079.jpg",
-      "missingImages": 0
+      "cover": "images/234108015.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4698866",
       "name": "OFF-WHITE",
       "source": "https://yunnan0594.x.yupoo.com/categories/4698866",
       "imported": true,
-      "count": 11,
+      "count": 9,
       "data": "categories/4698866.json",
       "cover": "images/243085974.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4659471",
       "name": "GO版本巴黎世家7代",
       "source": "https://yunnan0594.x.yupoo.com/categories/4659471",
       "imported": true,
-      "count": 30,
+      "count": 26,
       "data": "categories/4659471.json",
       "cover": "images/172739816.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3698660",
       "name": "dunk 系列",
       "source": "https://yunnan0594.x.yupoo.com/categories/3698660",
       "imported": true,
-      "count": 171,
+      "count": 147,
       "data": "categories/3698660.json",
       "cover": "images/244362013.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4880032",
       "name": "New Balance 1000",
       "source": "https://yunnan0594.x.yupoo.com/categories/4880032",
       "imported": true,
-      "count": 11,
+      "count": 10,
       "data": "categories/4880032.json",
       "cover": "images/210576456.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4783409",
       "name": "Max 95",
       "source": "https://yunnan0594.x.yupoo.com/categories/4783409",
       "imported": true,
-      "count": 14,
+      "count": 13,
       "data": "categories/4783409.json",
       "cover": "images/240990630.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3696769",
       "name": "哈达威系列",
       "source": "https://yunnan0594.x.yupoo.com/categories/3696769",
       "imported": true,
-      "count": 26,
+      "count": 23,
       "data": "categories/3696769.json",
       "cover": "images/243635632.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3696675",
       "name": "皮蓬系列",
       "source": "https://yunnan0594.x.yupoo.com/categories/3696675",
       "imported": true,
-      "count": 19,
+      "count": 17,
       "data": "categories/3696675.json",
-      "cover": "images/206403887.jpg",
-      "missingImages": 0
+      "cover": "images/180682403.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4890253",
       "name": "科比9代39-46",
       "source": "https://yunnan0594.x.yupoo.com/categories/4890253",
       "imported": true,
-      "count": 7,
+      "count": 6,
       "data": "categories/4890253.json",
       "cover": "images/195340477.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4152138",
       "name": "AIR JORDAN1 乔丹1代（低帮）",
       "source": "https://yunnan0594.x.yupoo.com/categories/4152138",
       "imported": true,
-      "count": 852,
+      "count": 351,
       "data": "categories/4152138.json",
       "cover": "images/247748962.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3551883",
       "name": "AIR JORDAN3 乔丹3代",
       "source": "https://yunnan0594.x.yupoo.com/categories/3551883",
       "imported": true,
-      "count": 260,
+      "count": 99,
       "data": "categories/3551883.json",
-      "cover": "images/244587301.jpg",
-      "missingImages": 0
+      "cover": "images/243084062.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3551886",
       "name": "AIR JORDAN5 乔丹5代",
       "source": "https://yunnan0594.x.yupoo.com/categories/3551886",
       "imported": true,
-      "count": 220,
+      "count": 106,
       "data": "categories/3551886.json",
       "cover": "images/246882821.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3588416",
       "name": "AIR JORDAN9 乔丹9代",
       "source": "https://yunnan0594.x.yupoo.com/categories/3588416",
       "imported": true,
-      "count": 22,
+      "count": 10,
       "data": "categories/3588416.json",
       "cover": "images/248148578.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3696477",
       "name": "AIR JORDAN12 乔丹12代",
       "source": "https://yunnan0594.x.yupoo.com/categories/3696477",
       "imported": true,
-      "count": 130,
+      "count": 53,
       "data": "categories/3696477.json",
       "cover": "images/246886040.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4980263",
       "name": "Air Jordan17",
       "source": "https://yunnan0594.x.yupoo.com/categories/4980263",
       "imported": true,
-      "count": 2,
+      "count": 1,
       "data": "categories/4980263.json",
       "cover": "images/241601040.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4982786",
       "name": "莫兰特3代",
       "source": "https://yunnan0594.x.yupoo.com/categories/4982786",
       "imported": true,
-      "count": 18,
+      "count": 4,
       "data": "categories/4982786.json",
       "cover": "images/206886807.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "5006239",
       "name": "XL版！Louis Vuitton LV",
       "source": "https://yunnan0594.x.yupoo.com/categories/5006239",
       "imported": true,
-      "count": 6,
+      "count": 2,
       "data": "categories/5006239.json",
-      "cover": "images/210256038.jpg",
-      "missingImages": 0
+      "cover": "images/210164864.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4880042",
       "name": "X4版！巴黎世家",
       "source": "https://yunnan0594.x.yupoo.com/categories/4880042",
       "imported": true,
-      "count": 8,
+      "count": 4,
       "data": "categories/4880042.json",
       "cover": "images/193784093.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4659467",
       "name": "GO版本巴黎世家7.5代",
       "source": "https://yunnan0594.x.yupoo.com/categories/4659467",
       "imported": true,
-      "count": 10,
+      "count": 5,
       "data": "categories/4659467.json",
-      "cover": "images/183312625.jpg",
-      "missingImages": 0
+      "cover": "images/172738772.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3551906",
       "name": "原装版系列",
       "source": "https://yunnan0594.x.yupoo.com/categories/3551906",
       "imported": true,
-      "count": 640,
+      "count": 346,
       "data": "categories/3551906.json",
-      "cover": "images/184759566.jpg",
-      "missingImages": 0
+      "cover": "images/176547398.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3698690",
       "name": "超级真标乔丹系列",
       "source": "https://yunnan0594.x.yupoo.com/categories/3698690",
       "imported": true,
-      "count": 440,
+      "count": 155,
       "data": "categories/3698690.json",
-      "cover": "images/175618522.jpg",
-      "missingImages": 0
+      "cover": "images/175525255.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "4550207",
       "name": "阿迪达斯",
       "source": "https://yunnan0594.x.yupoo.com/categories/4550207",
       "imported": true,
-      "count": 20,
+      "count": 4,
       "data": "categories/4550207.json",
-      "cover": "images/245804894.jpg",
-      "missingImages": 0
+      "cover": "images/224231744.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3698710",
       "name": "乔丹系列",
       "source": "https://yunnan0594.x.yupoo.com/categories/3698710",
       "imported": true,
-      "count": 13,
+      "count": 4,
       "data": "categories/3698710.json",
       "cover": "images/104954853.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3696735",
       "name": "hoka系列",
       "source": "https://yunnan0594.x.yupoo.com/categories/3696735",
       "imported": true,
-      "count": 2,
+      "count": 1,
       "data": "categories/3696735.json",
-      "cover": "images/194123754.jpg",
-      "missingImages": 0
+      "cover": "images/194013826.jpg",
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     },
     {
       "id": "3591561",
       "name": "拖鞋",
       "source": "https://yunnan0594.x.yupoo.com/categories/3591561",
       "imported": true,
-      "count": 42,
+      "count": 17,
       "data": "categories/3591561.json",
       "cover": "images/248246233.jpg",
-      "missingImages": 0
+      "missingImages": 0,
+      "cleanOriginals": true,
+      "cleanOriginalSelection": "second album data-origin-src"
     }
   ],
-  "sourceImagesUnmodifiedBySite": true
+  "sourceImagesUnmodifiedBySite": true,
+  "cleanOriginalReimportCompletedAt": "2026-08-02T18:18:41.502304+00:00",
+  "sourceImagePolicy": "second Yupoo album data-origin-src; captioned cover skipped"
 }

@@ -5,18 +5,17 @@
     "name": "Air Jordan17",
     "source": "https://yunnan0594.x.yupoo.com/categories/4980263"
   },
-  "total": 2,
+  "total": 1,
   "products": [
     {
       "id": "241601040",
       "title": "F1-Air Jordan 17 LOW SP货号：IV7640001尺码：41-47.5",
-      "image": "images/241601040.jpg"
-    },
-    {
-      "id": "206640691",
-      "title": "F1-Air Jordan17 RETRO LOW SP货号：1H0177 200尺码：41-47.5",
-      "image": "images/206640691.jpg"
+      "image": "images/241601040.jpg",
+      "cleanOriginalSource": "https://photo.yupoo.com/yunnan0594/04e95ab7d3/b224aaf1.jpg",
+      "cleanOriginalSelection": "second album data-origin-src"
     }
   ],
-  "filteredAt": "2026-08-02T16:32:12.942119+00:00"
+  "filteredAt": "2026-08-02T16:32:12.942119+00:00",
+  "cleanOriginalsUpdatedAt": "2026-08-02T18:18:40.436838+00:00",
+  "cleanOriginalSelection": "second album data-origin-src"
 }
