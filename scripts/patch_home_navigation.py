@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 
 ROOT = Path("qiqishoes-com")
-VERSION = "202608030330"
+VERSION = "202608030335"
 
 
 def write_if_changed(path: Path, content: str) -> bool:
