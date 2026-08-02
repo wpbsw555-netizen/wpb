@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import re
+import shutil
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
@@ -75,32 +76,27 @@ def album_url(product_id: str) -> str:
 
 def original_candidates(product_id: str) -> list[str]:
     url = album_url(product_id)
-    response = session().get(url, timeout=60, allow_redirects=True)
+    response = session().get(url, timeout=45, allow_redirects=True)
     response.raise_for_status()
     soup = BeautifulSoup(response.text, "html.parser")
     originals: list[str] = []
 
-    # Yupoo exposes the unmodified upload through data-origin-src.
     for image in soup.select("img[data-origin-src]"):
         candidate = absolute(response.url, image.get("data-origin-src"))
-        if not candidate or "photo.yupoo.com" not in candidate.lower():
-            continue
-        if candidate not in originals:
+        if candidate and "photo.yupoo.com" in candidate.lower() and candidate not in originals:
             originals.append(candidate)
 
-    # Fallback to the large derivative only when the original attribute is absent.
     if not originals:
         for image in soup.select("img[data-src]"):
             candidate = absolute(response.url, image.get("data-src"))
-            if not candidate or "photo.yupoo.com" not in candidate.lower():
-                continue
-            if candidate not in originals:
+            if candidate and "photo.yupoo.com" in candidate.lower() and candidate not in originals:
                 originals.append(candidate)
 
-    # The first album image is commonly a captioned cover. Try subsequent photos first.
+    # The first image is usually the captioned cover. Test later album photos first.
     if len(originals) > 1:
         originals = originals[1:] + originals[:1]
-    return originals[: max(1, int(os.getenv("CLEAN_MAX_CANDIDATES", "7")))]
+    limit = max(1, int(os.getenv("CLEAN_MAX_CANDIDATES", "3")))
+    return originals[:limit]
 
 
 def fetch_image(url: str, referer: str) -> bytes | None:
@@ -108,7 +104,7 @@ def fetch_image(url: str, referer: str) -> bytes | None:
         response = session().get(
             url,
             headers={**HEADERS, "Referer": referer},
-            timeout=60,
+            timeout=45,
             allow_redirects=True,
         )
         if not response.ok or len(response.content) < 1000:
@@ -128,21 +124,21 @@ def overlay_analysis(raw: bytes) -> dict:
     with Image.open(BytesIO(raw)) as source:
         image = source.convert("RGB")
         max_side = max(image.size)
-        if max_side > 1100:
-            scale = 1100 / max_side
+        if max_side > 820:
+            scale = 820 / max_side
             image = image.resize(
                 (max(1, round(image.width * scale)), max(1, round(image.height * scale))),
                 Image.Resampling.LANCZOS,
             )
-        elif max_side < 800:
-            scale = 800 / max_side
+        elif max_side < 620:
+            scale = 620 / max_side
             image = image.resize(
                 (max(1, round(image.width * scale)), max(1, round(image.height * scale))),
                 Image.Resampling.LANCZOS,
             )
 
         gray = ImageOps.grayscale(image)
-        gray = ImageEnhance.Contrast(ImageOps.autocontrast(gray)).enhance(1.7)
+        gray = ImageEnhance.Contrast(ImageOps.autocontrast(gray)).enhance(1.55)
         data = pytesseract.image_to_data(
             gray,
             lang="eng",
@@ -163,48 +159,35 @@ def overlay_analysis(raw: bytes) -> dict:
             confidence = float(data["conf"][index])
             box_width = int(data["width"][index])
             box_height = int(data["height"][index])
-            left = int(data["left"][index])
-            top = int(data["top"][index])
         except Exception:
             continue
-        if confidence < 12 or box_width <= 0 or box_height <= 0:
+        if confidence < 14 or box_width <= 0 or box_height <= 0:
             continue
 
         width_ratio = box_width / max(1, width)
         height_ratio = box_height / max(1, height)
         area_ratio = (box_width * box_height) / max(1, width * height)
         total_area += area_ratio
-
         is_strong = (
-            height_ratio >= 0.026
-            or width_ratio >= 0.12
-            or area_ratio >= 0.003
-            or (len(token) >= 5 and height_ratio >= 0.021)
+            height_ratio >= 0.027
+            or width_ratio >= 0.13
+            or area_ratio >= 0.0032
+            or (len(token) >= 5 and height_ratio >= 0.022)
         )
-        is_medium = (
-            height_ratio >= 0.016
-            and width_ratio >= 0.035
-            and len(token) >= 2
-        )
+        is_medium = height_ratio >= 0.017 and width_ratio >= 0.038 and len(token) >= 2
         if is_strong:
             strong += 1
         elif is_medium:
             medium += 1
-
         if is_strong or is_medium:
-            hits.append(
-                {
-                    "text": str(text)[:80],
-                    "confidence": round(confidence, 1),
-                    "left": left,
-                    "top": top,
-                    "widthRatio": round(width_ratio, 4),
-                    "heightRatio": round(height_ratio, 4),
-                    "areaRatio": round(area_ratio, 6),
-                }
-            )
+            hits.append({
+                "text": str(text)[:60],
+                "confidence": round(confidence, 1),
+                "widthRatio": round(width_ratio, 4),
+                "heightRatio": round(height_ratio, 4),
+                "areaRatio": round(area_ratio, 6),
+            })
 
-    # Small physical shoe logos are tolerated; large semi-transparent captions are not.
     clean = strong == 0 and medium <= 2 and total_area < 0.009
     score = strong * 1000 + medium * 100 + round(total_area * 10000)
     return {
@@ -213,7 +196,7 @@ def overlay_analysis(raw: bytes) -> dict:
         "strong": strong,
         "medium": medium,
         "textArea": round(total_area, 6),
-        "hits": hits[:12],
+        "hits": hits[:10],
     }
 
 
@@ -222,13 +205,12 @@ def save_clean_image(raw: bytes, destination: Path) -> None:
     with Image.open(BytesIO(raw)) as image:
         image.load()
         image = image.convert("RGB")
-        image.thumbnail((720, 720), Image.Resampling.LANCZOS)
-        image.save(destination, "JPEG", quality=80, optimize=True, progressive=True)
+        image.thumbnail((900, 900), Image.Resampling.LANCZOS)
+        image.save(destination, "JPEG", quality=86, optimize=True, progressive=True)
 
 
-def process_product(product: dict) -> dict:
+def process_product(product: dict, output_image_root: Path) -> dict:
     product_id = str(product.get("id") or "").strip()
-    destination = IMAGE_ROOT / f"{product_id}.jpg"
     referer = album_url(product_id)
     if not product_id:
         return {"kept": False, "reason": "missing-id", "product": product}
@@ -236,13 +218,9 @@ def process_product(product: dict) -> dict:
     try:
         candidates = original_candidates(product_id)
     except Exception as exc:
-        return {
-            "kept": False,
-            "reason": f"album-error:{type(exc).__name__}",
-            "product": product,
-        }
+        return {"kept": False, "reason": f"album-error:{type(exc).__name__}", "product": product}
 
-    best: tuple[int, bytes, str, dict] | None = None
+    best: tuple[int, dict] | None = None
     for candidate in candidates:
         raw = fetch_image(candidate, referer)
         if raw is None:
@@ -251,10 +229,10 @@ def process_product(product: dict) -> dict:
             analysis = overlay_analysis(raw)
         except Exception:
             continue
-        item = (int(analysis["score"]), raw, candidate, analysis)
-        if best is None or item[0] < best[0]:
-            best = item
+        if best is None or int(analysis["score"]) < best[0]:
+            best = (int(analysis["score"]), analysis)
         if analysis["clean"]:
+            destination = output_image_root / f"{product_id}.jpg"
             save_clean_image(raw, destination)
             cleaned = dict(product)
             cleaned["image"] = f"images/{product_id}.jpg"
@@ -266,141 +244,198 @@ def process_product(product: dict) -> dict:
                 "analysis": analysis,
             }
 
-    destination.unlink(missing_ok=True)
     return {
         "kept": False,
         "reason": "no-clean-original",
         "product": product,
-        "bestAnalysis": best[3] if best else None,
+        "bestAnalysis": best[1] if best else None,
     }
 
 
-def update_manifest_category(category_id: str, products: list[dict]) -> None:
+def catalog_tasks() -> list[dict]:
     manifest = read_json(MANIFEST_FILE, {})
     categories = manifest.get("categories") if isinstance(manifest.get("categories"), list) else []
-    updated: list[dict] = []
+    tasks: list[dict] = []
     for category in categories:
-        if str(category.get("id")) != category_id:
-            updated.append(category)
+        category_id = str(category.get("id") or "").strip()
+        if not category_id:
             continue
-        if products:
-            item = dict(category)
-            item["count"] = len(products)
-            item["cover"] = products[0].get("image")
-            item["missingImages"] = 0
-            item["cleanOriginals"] = True
-            updated.append(item)
-    manifest["categories"] = updated
-    manifest["categoryCount"] = len(updated)
-    manifest["importedCategoryCount"] = len(updated)
-    manifest["totalProducts"] = sum(int(item.get("count") or 0) for item in updated)
-    if updated and not any(str(item.get("id")) == str(manifest.get("defaultCategory")) for item in updated):
-        manifest["defaultCategory"] = updated[0].get("id")
-    if not updated:
-        manifest["defaultCategory"] = None
-    manifest["cleanOriginalReimportUpdatedAt"] = now()
-    write_json(MANIFEST_FILE, manifest)
+        payload = read_json(CATEGORY_ROOT / f"{category_id}.json", {})
+        products = payload.get("products") if isinstance(payload.get("products"), list) else []
+        for order, product in enumerate(products):
+            tasks.append({"categoryId": category_id, "order": order, "product": product})
+    return tasks
 
 
-def process_category(category_id: str) -> None:
-    path = CATEGORY_ROOT / f"{category_id}.json"
-    payload = read_json(path, {})
-    products = payload.get("products") if isinstance(payload.get("products"), list) else []
+def process_shard(shard_index: int, shard_count: int, output_dir: Path) -> None:
+    all_tasks = catalog_tasks()
+    tasks = [task for index, task in enumerate(all_tasks) if index % shard_count == shard_index]
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_images = output_dir / "images"
     workers = max(1, min(6, int(os.getenv("CLEAN_IMAGE_WORKERS", "4"))))
+    results: list[dict] = []
+    kept = 0
+    removed = 0
 
-    results: dict[str, dict] = {}
-    kept_count = 0
-    removed_count = 0
-    errors = 0
     with ThreadPoolExecutor(max_workers=workers) as executor:
-        futures = {executor.submit(process_product, product): product for product in products}
-        for index, future in enumerate(as_completed(futures), start=1):
-            original = futures[future]
-            product_id = str(original.get("id") or "")
+        futures = {
+            executor.submit(process_product, task["product"], output_images): task
+            for task in tasks
+        }
+        for completed, future in enumerate(as_completed(futures), start=1):
+            task = futures[future]
             try:
                 result = future.result()
             except Exception as exc:
-                result = {"kept": False, "reason": f"worker-error:{type(exc).__name__}", "product": original}
-                errors += 1
-            results[product_id] = result
+                result = {
+                    "kept": False,
+                    "reason": f"worker-error:{type(exc).__name__}",
+                    "product": task["product"],
+                }
+            record = {
+                "categoryId": task["categoryId"],
+                "order": task["order"],
+                "productId": str(task["product"].get("id") or ""),
+                **result,
+            }
+            results.append(record)
             if result.get("kept"):
-                kept_count += 1
+                kept += 1
             else:
-                removed_count += 1
-            if index % 25 == 0 or index == len(products):
+                removed += 1
+            if completed % 25 == 0 or completed == len(tasks):
                 print(
-                    f"category={category_id} progress={index}/{len(products)} "
-                    f"kept={kept_count} removed={removed_count} errors={errors}",
+                    f"shard={shard_index}/{shard_count} progress={completed}/{len(tasks)} "
+                    f"kept={kept} removed={removed}",
                     flush=True,
                 )
 
-    kept_products = [
-        results[str(product.get("id") or "")]["product"]
-        for product in products
-        if results.get(str(product.get("id") or ""), {}).get("kept")
-    ]
+    write_json(output_dir / "result.json", {
+        "generatedAt": now(),
+        "shardIndex": shard_index,
+        "shardCount": shard_count,
+        "totalCatalogTasks": len(all_tasks),
+        "taskCount": len(tasks),
+        "kept": kept,
+        "removed": removed,
+        "results": results,
+    })
 
-    if kept_products:
+
+def merge_parts(parts_root: Path) -> None:
+    all_tasks = catalog_tasks()
+    expected = {(task["categoryId"], str(task["product"].get("id") or "")) for task in all_tasks}
+    result_map: dict[tuple[str, str], dict] = {}
+    for result_file in parts_root.rglob("result.json"):
+        payload = read_json(result_file, {})
+        for record in payload.get("results") or []:
+            key = (str(record.get("categoryId") or ""), str(record.get("productId") or ""))
+            if key[0] and key[1]:
+                result_map[key] = record
+
+    missing = expected - set(result_map)
+    if missing:
+        sample = sorted(missing)[:10]
+        raise RuntimeError(f"Missing {len(missing)} shard results; sample={sample}")
+
+    image_sources: dict[str, Path] = {}
+    for image_path in parts_root.rglob("*.jpg"):
+        image_sources[image_path.stem] = image_path
+
+    manifest = read_json(MANIFEST_FILE, {})
+    categories = manifest.get("categories") if isinstance(manifest.get("categories"), list) else []
+    updated_categories: list[dict] = []
+    updated_payloads: dict[str, dict] = {}
+    kept_ids: set[str] = set()
+    removed_total = 0
+
+    stage = ROOT / ".clean-original-merge-images"
+    shutil.rmtree(stage, ignore_errors=True)
+    stage.mkdir(parents=True, exist_ok=True)
+
+    for category in categories:
+        category_id = str(category.get("id") or "")
+        path = CATEGORY_ROOT / f"{category_id}.json"
+        payload = read_json(path, {})
+        products = payload.get("products") if isinstance(payload.get("products"), list) else []
+        kept_products: list[dict] = []
+        for product in products:
+            product_id = str(product.get("id") or "")
+            record = result_map[(category_id, product_id)]
+            if not record.get("kept"):
+                removed_total += 1
+                continue
+            source_image = image_sources.get(product_id)
+            if source_image is None:
+                raise RuntimeError(f"Missing clean image artifact for product {product_id}")
+            shutil.copy2(source_image, stage / f"{product_id}.jpg")
+            kept_ids.add(product_id)
+            kept_products.append(record["product"])
+
+        if not kept_products:
+            continue
         payload["products"] = kept_products
         payload["total"] = len(kept_products)
         payload["cleanOriginalsUpdatedAt"] = now()
-        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    else:
-        path.unlink(missing_ok=True)
+        updated_payloads[category_id] = payload
+        item = dict(category)
+        item["count"] = len(kept_products)
+        item["cover"] = kept_products[0].get("image")
+        item["missingImages"] = 0
+        item["cleanOriginals"] = True
+        updated_categories.append(item)
 
-    update_manifest_category(category_id, kept_products)
+    shutil.rmtree(IMAGE_ROOT, ignore_errors=True)
+    stage.rename(IMAGE_ROOT)
 
-    status = read_json(STATUS_FILE, {})
-    completed = status.get("completedCategories") if isinstance(status.get("completedCategories"), list) else []
-    if category_id not in completed:
-        completed.append(category_id)
-    status.update(
-        {
-            "status": "running",
-            "updatedAt": now(),
-            "completedCategories": completed,
-            "completedCategoryCount": len(completed),
-            "lastCategory": category_id,
-            "lastCategoryBefore": len(products),
-            "lastCategoryKept": len(kept_products),
-            "lastCategoryRemoved": len(products) - len(kept_products),
-        }
-    )
-    write_json(STATUS_FILE, status)
+    existing_category_files = list(CATEGORY_ROOT.glob("*.json"))
+    for path in existing_category_files:
+        if path.stem not in updated_payloads:
+            path.unlink(missing_ok=True)
+    for category_id, payload in updated_payloads.items():
+        write_json(CATEGORY_ROOT / f"{category_id}.json", payload)
 
-
-def finalize() -> None:
-    manifest = read_json(MANIFEST_FILE, {})
-    categories = manifest.get("categories") if isinstance(manifest.get("categories"), list) else []
-    total = sum(int(item.get("count") or 0) for item in categories)
-    status = read_json(STATUS_FILE, {})
-    status.update(
-        {
-            "status": "completed",
-            "completedAt": now(),
-            "categoryCount": len(categories),
-            "totalProducts": total,
-            "defaultCategory": manifest.get("defaultCategory"),
-            "policy": "album data-origin-src originals only; large English/digit overlays rejected",
-        }
-    )
-    write_json(STATUS_FILE, status)
-    manifest["cleanOriginalReimportCompletedAt"] = status["completedAt"]
-    manifest["sourceImagePolicy"] = "Yupoo album data-origin-src; no large English/digit overlay"
+    manifest["categories"] = updated_categories
+    manifest["categoryCount"] = len(updated_categories)
+    manifest["importedCategoryCount"] = len(updated_categories)
+    manifest["totalProducts"] = sum(int(item.get("count") or 0) for item in updated_categories)
+    if updated_categories and not any(str(item.get("id")) == str(manifest.get("defaultCategory")) for item in updated_categories):
+        manifest["defaultCategory"] = updated_categories[0].get("id")
+    if not updated_categories:
+        manifest["defaultCategory"] = None
+    manifest["cleanOriginalReimportCompletedAt"] = now()
+    manifest["sourceImagePolicy"] = "Yupoo album data-origin-src; large English/digit overlays rejected"
     write_json(MANIFEST_FILE, manifest)
+
+    status = read_json(STATUS_FILE, {})
+    status.update({
+        "status": "completed",
+        "completedAt": now(),
+        "categoryCount": len(updated_categories),
+        "totalProducts": manifest["totalProducts"],
+        "removedProducts": removed_total,
+        "defaultCategory": manifest.get("defaultCategory"),
+        "policy": "12-way sharded album data-origin-src import; large English/digit overlays rejected",
+    })
+    write_json(STATUS_FILE, status)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--category")
-    parser.add_argument("--finalize", action="store_true")
+    parser.add_argument("--shard-index", type=int)
+    parser.add_argument("--shard-count", type=int)
+    parser.add_argument("--output-dir")
+    parser.add_argument("--merge-parts")
     args = parser.parse_args()
-    if args.finalize:
-        finalize()
+
+    if args.merge_parts:
+        merge_parts(Path(args.merge_parts))
         return
-    if not args.category:
-        raise SystemExit("--category is required")
-    process_category(str(args.category))
+    if args.shard_index is None or args.shard_count is None or not args.output_dir:
+        raise SystemExit("Use --shard-index N --shard-count N --output-dir PATH, or --merge-parts PATH")
+    if not 0 <= args.shard_index < args.shard_count:
+        raise SystemExit("Invalid shard index")
+    process_shard(args.shard_index, args.shard_count, Path(args.output_dir))
 
 
 if __name__ == "__main__":
