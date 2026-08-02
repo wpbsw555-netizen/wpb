@@ -1,8 +1,10 @@
 {
-  "status": "running",
+  "status": "completed",
   "source": "https://yunnan0594.x.yupoo.com/categories/3551885",
-  "startedAt": "2026-08-02T16:23:56.601320+00:00",
-  "scope": "all categories, directories and source images",
-  "imagePolicy": "no text or numbers added by this site",
-  "emptyCategoryPolicy": "remove"
+  "completedAt": "2026-08-02T16:32:13.172923+00:00",
+  "categoryCount": 57,
+  "totalProducts": 7022,
+  "defaultCategory": "3551885",
+  "imagePolicy": "source appearance preserved; no text or numbers added by this site",
+  "emptyCategoryPolicy": "removed"
 }
