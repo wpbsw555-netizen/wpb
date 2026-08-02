@@ -1,4 +1,4 @@
-name: Clean Sneaker Text Overlays
+name: Clean Sneaker Text Overlays Strict
 
 on:
   workflow_dispatch:
@@ -6,19 +6,20 @@ on:
     branches: [main]
     paths:
       - 'scripts/prepare_text_overlay_matrix.py'
-      - 'scripts/scan_text_overlay_chunk.py'
+      - 'scripts/scan_text_overlay_chunk_strict.py'
       - 'scripts/apply_text_overlay_results.py'
+      - 'scripts/apply_text_overlay_results_strict.py'
       - '.github/workflows/clean-sneaker-text-overlays.yml'
 
 permissions:
   contents: write
 
 env:
-  OCR_CHUNK_SIZE: '180'
-  RUN_REQUEST: '2026-08-02T17:18:00+08:00'
+  OCR_CHUNK_SIZE: '120'
+  RUN_REQUEST: '2026-08-02T17:31:00+08:00'
 
 concurrency:
-  group: clean-sneaker-text-overlays-parallel
+  group: clean-sneaker-text-overlays-strict
   cancel-in-progress: true
 
 jobs:
@@ -37,7 +38,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Mark cleanup as running
+      - name: Mark strict cleanup as running
         shell: bash
         run: |
           mkdir -p qiqishoes-com/assets/tennis-shoes
@@ -48,6 +49,7 @@ jobs:
           Path('qiqishoes-com/assets/tennis-shoes/text-overlay-cleanup-status.json').write_text(
               json.dumps({
                   'status': 'running',
+                  'mode': 'strict-any-visible-latin-or-digit',
                   'startedAt': datetime.now(timezone.utc).isoformat(),
                   'scope': 'all sneaker categories only'
               }, ensure_ascii=False, indent=2),
@@ -58,11 +60,11 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add qiqishoes-com/assets/tennis-shoes/text-overlay-cleanup-status.json
           if ! git diff --cached --quiet; then
-            git commit -m 'Mark sneaker text-overlay cleanup running'
+            git commit -m 'Mark strict sneaker image cleanup running'
             git pull --rebase origin main
             git push
           fi
-      - name: Build OCR batch matrix
+      - name: Build strict OCR batch matrix
         id: matrix
         run: python scripts/prepare_text_overlay_matrix.py
 
@@ -70,10 +72,10 @@ jobs:
     needs: prepare
     if: ${{ needs.prepare.outputs.batch_count != '0' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    timeout-minutes: 90
     strategy:
       fail-fast: false
-      max-parallel: 16
+      max-parallel: 20
       matrix: ${{ fromJson(needs.prepare.outputs.matrix) }}
     steps:
       - name: Checkout
@@ -87,65 +89,45 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq tesseract-ocr tesseract-ocr-eng
           python -m pip install --quiet pillow pytesseract
-      - name: Scan category batch
+      - name: Strictly scan category batch
         run: |
           mkdir -p scan-output
-          python scripts/scan_text_overlay_chunk.py \
+          python scripts/scan_text_overlay_chunk_strict.py \
             --category '${{ matrix.category }}' \
             --start '${{ matrix.start }}' \
             --end '${{ matrix.end }}' \
             --output 'scan-output/${{ matrix.category }}-${{ matrix.start }}.json'
-      - name: Upload scan result
+      - name: Upload strict scan result
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: scan-${{ matrix.category }}-${{ matrix.start }}
+          name: strict-scan-${{ matrix.category }}-${{ matrix.start }}
           path: scan-output/*.json
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 2
 
   apply:
     needs: [prepare, scan]
     if: ${{ always() && needs.prepare.outputs.batch_count != '0' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
-      - name: Checkout latest repository
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Download every scan result
+      - name: Download every strict scan result
         uses: actions/download-artifact@v4
         with:
-          pattern: scan-*
+          pattern: strict-scan-*
           path: scan-results
           merge-multiple: true
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Apply cleanup results
-        run: python scripts/apply_text_overlay_results.py
-      - name: Mark cleanup as completed
-        shell: bash
-        run: |
-          python - <<'PY'
-          import json
-          from datetime import datetime, timezone
-          from pathlib import Path
-          report_path = Path('qiqishoes-com/assets/tennis-shoes/text-overlay-cleanup-report.json')
-          report = json.loads(report_path.read_text(encoding='utf-8')) if report_path.exists() else {}
-          Path('qiqishoes-com/assets/tennis-shoes/text-overlay-cleanup-status.json').write_text(
-              json.dumps({
-                  'status': 'completed',
-                  'completedAt': datetime.now(timezone.utc).isoformat(),
-                  'scanned': report.get('scanned', 0),
-                  'removed': report.get('removed', 0),
-                  'scanErrors': report.get('scanErrors', 0)
-              }, ensure_ascii=False, indent=2),
-              encoding='utf-8'
-          )
-          PY
+      - name: Apply strict cleanup and delete image files
+        run: python scripts/apply_text_overlay_results_strict.py
       - name: Commit cleaned sneaker catalogs
         shell: bash
         run: |
@@ -153,7 +135,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add qiqishoes-com/assets/tennis-shoes
           if ! git diff --cached --quiet; then
-            git commit -m 'Remove text-overlay products from sneaker catalogs'
+            git commit -m 'Strictly remove text-overlay sneaker products'
             git pull --rebase origin main
             git push
           fi
