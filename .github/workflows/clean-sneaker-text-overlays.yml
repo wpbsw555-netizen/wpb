@@ -1,12 +1,12 @@
-name: Clean Sneaker Text Overlays Strict
+name: Clean Sneaker Text Overlays Fast Sharded
 
 on:
   workflow_dispatch:
   push:
     branches: [main]
     paths:
-      - 'scripts/prepare_text_overlay_matrix.py'
       - 'scripts/scan_text_overlay_chunk_strict.py'
+      - 'scripts/scan_text_overlay_shard_strict.py'
       - 'scripts/apply_text_overlay_results.py'
       - 'scripts/apply_text_overlay_results_strict.py'
       - '.github/workflows/clean-sneaker-text-overlays.yml'
@@ -15,30 +15,24 @@ permissions:
   contents: write
 
 env:
-  OCR_CHUNK_SIZE: '80'
-  RUN_REQUEST: '2026-08-02T22:36:30+08:00'
+  SHARD_COUNT: '8'
+  OCR_WORKERS: '4'
+  RUN_REQUEST: '2026-08-02T23:38:00+08:00'
 
 concurrency:
   group: clean-sneaker-text-overlays-strict
   cancel-in-progress: true
 
 jobs:
-  prepare:
+  start:
     runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.matrix.outputs.matrix }}
-      batch_count: ${{ steps.matrix.outputs.batch_count }}
-      product_total: ${{ steps.matrix.outputs.product_total }}
     steps:
-      - name: Checkout
+      - name: Checkout latest main
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Mark strict cleanup as running
+      - name: Mark sharded cleanup running
         shell: bash
         run: |
           mkdir -p qiqishoes-com/assets/tennis-shoes
@@ -49,7 +43,7 @@ jobs:
           Path('qiqishoes-com/assets/tennis-shoes/text-overlay-cleanup-status.json').write_text(
               json.dumps({
                   'status': 'running',
-                  'mode': 'strict-fast-any-visible-latin-or-digit',
+                  'mode': 'strict-fast-8-shards-4-workers',
                   'startedAt': datetime.now(timezone.utc).isoformat(),
                   'scope': 'all sneaker categories only'
               }, ensure_ascii=False, indent=2),
@@ -60,25 +54,22 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add qiqishoes-com/assets/tennis-shoes/text-overlay-cleanup-status.json
           if ! git diff --cached --quiet; then
-            git commit -m 'Mark fast strict sneaker cleanup running'
+            git commit -m 'Mark fast sharded sneaker cleanup running'
             git pull --rebase origin main
             git push
           fi
-      - name: Build strict OCR batch matrix
-        id: matrix
-        run: python scripts/prepare_text_overlay_matrix.py
 
   scan:
-    needs: prepare
-    if: ${{ needs.prepare.outputs.batch_count != '0' }}
+    needs: start
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 100
     strategy:
       fail-fast: false
-      max-parallel: 40
-      matrix: ${{ fromJson(needs.prepare.outputs.matrix) }}
+      max-parallel: 8
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
     steps:
-      - name: Checkout
+      - name: Checkout cleanup code and catalog
         uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -87,42 +78,40 @@ jobs:
       - name: Install OCR dependencies
         shell: bash
         run: |
-          if ! command -v tesseract >/dev/null 2>&1; then
-            sudo apt-get update -qq
-            sudo apt-get install -y -qq tesseract-ocr tesseract-ocr-eng
-          fi
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq tesseract-ocr tesseract-ocr-eng
           python -m pip install --quiet pillow pytesseract
-      - name: Strictly scan category batch
+      - name: Scan one large shard with four workers
         run: |
           mkdir -p scan-output
-          python scripts/scan_text_overlay_chunk_strict.py \
-            --category '${{ matrix.category }}' \
-            --start '${{ matrix.start }}' \
-            --end '${{ matrix.end }}' \
-            --output 'scan-output/${{ matrix.category }}-${{ matrix.start }}.json'
-      - name: Upload strict scan result
+          python scripts/scan_text_overlay_shard_strict.py \
+            --shard '${{ matrix.shard }}' \
+            --shard-count '${{ env.SHARD_COUNT }}' \
+            --output 'scan-output/shard-${{ matrix.shard }}.json'
+      - name: Upload shard result
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: strict-scan-${{ matrix.category }}-${{ matrix.start }}
-          path: scan-output/*.json
+          name: strict-shard-${{ matrix.shard }}
+          path: scan-output/shard-${{ matrix.shard }}.json
           if-no-files-found: error
           retention-days: 2
 
   apply:
-    needs: [prepare, scan]
-    if: ${{ always() && needs.prepare.outputs.batch_count != '0' }}
+    needs: scan
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - name: Checkout repository
+      - name: Checkout latest main
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
-      - name: Download every strict scan result
+      - name: Download all shard results
         uses: actions/download-artifact@v4
         with:
-          pattern: strict-scan-*
+          pattern: strict-shard-*
           path: scan-results
           merge-multiple: true
       - name: Set up Python
@@ -136,7 +125,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add qiqishoes-com/assets/tennis-shoes
+          git add -A qiqishoes-com/assets/tennis-shoes
           if ! git diff --cached --quiet; then
             git commit -m 'Strictly remove text-overlay sneaker products'
             git pull --rebase origin main
