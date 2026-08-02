@@ -10,9 +10,9 @@
   const STORAGE_KEY = 'qiqi-catalog-language';
   const SUPPORTED_LANGUAGES = new Set(['zh', 'en', 'es']);
   const PORTAL_LABELS = {
-    zh: ['网球鞋链接', '时尚链接', '附件链接', '包包链接', '鞋子链接'],
-    en: ['Tennis Shoes', 'Fashion', 'Accessories', 'Bags', 'Shoes'],
-    es: ['Tenis', 'Moda', 'Accesorios', 'Bolsos', 'Zapatos']
+    zh: ['首页', '网球鞋链接', '时尚链接', '附件链接', '包包链接', '鞋子链接'],
+    en: ['Home', 'Tennis Shoes', 'Fashion', 'Accessories', 'Bags', 'Shoes'],
+    es: ['Inicio', 'Tenis', 'Moda', 'Accesorios', 'Bolsos', 'Zapatos']
   };
   const LANGUAGE_LABELS = {
     zh: { zh: '中文', en: '英语', es: '西班牙语' },
@@ -25,6 +25,38 @@
     if (value.startsWith('en')) return 'en';
     if (value.startsWith('es')) return 'es';
     return 'zh';
+  }
+
+  function siteHomeUrl() {
+    const rootMatch = location.pathname.match(/^(.*\/qiqishoes-com\/)/);
+    return rootMatch
+      ? `${location.origin}${rootMatch[1]}`
+      : new URL('../', location.href).href;
+  }
+
+  function ensureHomePortal() {
+    const tabs = document.querySelector('.portal-tabs');
+    if (!tabs) return;
+
+    let home = tabs.querySelector('[data-portal-home="1"]');
+    if (!home) {
+      home = document.createElement('a');
+      home.className = 'portal-tab';
+      home.dataset.portalHome = '1';
+      home.href = siteHomeUrl();
+      tabs.prepend(home);
+    }
+
+    home.removeAttribute('target');
+    home.removeAttribute('rel');
+    home.target = '_self';
+
+    if (!document.querySelector('#portal-six-column-layout')) {
+      const style = document.createElement('style');
+      style.id = 'portal-six-column-layout';
+      style.textContent = '@media (min-width:951px){.portal-tabs{grid-template-columns:repeat(6,1fr)!important}}';
+      document.head.appendChild(style);
+    }
   }
 
   function savedLanguage() {
@@ -61,6 +93,7 @@
   }
 
   function applyHeaderLanguage(language = currentLanguage()) {
+    ensureHomePortal();
     const portalLabels = PORTAL_LABELS[language] || PORTAL_LABELS.zh;
     document.querySelectorAll('.portal-tabs .portal-tab').forEach((link, index) => {
       if (portalLabels[index]) link.textContent = portalLabels[index];
@@ -155,11 +188,13 @@
   }
 
   function patchCatalog() {
+    ensureHomePortal();
     rewriteOriginalLandingPages();
     patchDamagedThumbnail();
     forceSamePageSneakerNavigation();
   }
 
+  ensureHomePortal();
   applyHeaderLanguage(currentLanguage());
   setTimeout(restoreSavedLanguage, 0);
   enableOrderGuideLink();
