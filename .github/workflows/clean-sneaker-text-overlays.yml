@@ -5,52 +5,108 @@ on:
   push:
     branches: [main]
     paths:
-      - 'scripts/remove_text_overlay_products.py'
+      - 'scripts/prepare_text_overlay_matrix.py'
+      - 'scripts/scan_text_overlay_chunk.py'
+      - 'scripts/apply_text_overlay_results.py'
       - '.github/workflows/clean-sneaker-text-overlays.yml'
 
 permissions:
   contents: write
 
+env:
+  OCR_CHUNK_SIZE: '180'
+  RUN_REQUEST: '2026-08-02T16:58:00+08:00'
+
 concurrency:
-  group: clean-sneaker-text-overlays
-  cancel-in-progress: false
+  group: clean-sneaker-text-overlays-parallel
+  cancel-in-progress: true
 
 jobs:
-  clean:
+  prepare:
     runs-on: ubuntu-latest
-    timeout-minutes: 330
-    env:
-      OCR_LANG: 'eng+chi_sim'
-      TEXT_SCAN_WORKERS: '4'
-      RUN_REQUEST: '2026-08-01T23:21:00+08:00'
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+      batch_count: ${{ steps.matrix.outputs.batch_count }}
+      product_total: ${{ steps.matrix.outputs.product_total }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Build OCR batch matrix
+        id: matrix
+        run: python scripts/prepare_text_overlay_matrix.py
 
-      - name: Install OCR dependencies
+  scan:
+    needs: prepare
+    if: ${{ needs.prepare.outputs.batch_count != '0' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      max-parallel: 16
+      matrix: ${{ fromJson(needs.prepare.outputs.matrix) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install OCR
         run: |
-          sudo apt-get update
-          sudo apt-get install -y tesseract-ocr tesseract-ocr-eng tesseract-ocr-chi-sim
-          python -m pip install --upgrade pillow pytesseract
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq tesseract-ocr tesseract-ocr-eng
+          python -m pip install --quiet pillow pytesseract
+      - name: Scan category batch
+        run: |
+          mkdir -p scan-output
+          python scripts/scan_text_overlay_chunk.py \
+            --category '${{ matrix.category }}' \
+            --start '${{ matrix.start }}' \
+            --end '${{ matrix.end }}' \
+            --output 'scan-output/${{ matrix.category }}-${{ matrix.start }}.json'
+      - name: Upload scan result
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: scan-${{ matrix.category }}-${{ matrix.start }}
+          path: scan-output/*.json
+          if-no-files-found: warn
+          retention-days: 2
 
-      - name: Remove products with prominent text overlays
-        run: python scripts/remove_text_overlay_products.py
-
-      - name: Commit cleaned catalogs
+  apply:
+    needs: [prepare, scan]
+    if: ${{ always() && needs.prepare.outputs.batch_count != '0' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout latest repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download every scan result
+        uses: actions/download-artifact@v4
+        with:
+          pattern: scan-*
+          path: scan-results
+          merge-multiple: true
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply cleanup results
+        run: python scripts/apply_text_overlay_results.py
+      - name: Commit cleaned sneaker catalogs
         shell: bash
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add qiqishoes-com/assets/tennis-shoes
           if ! git diff --cached --quiet; then
-            git commit -m "Remove text-overlay products from sneaker catalogs"
+            git commit -m 'Remove text-overlay products from sneaker catalogs'
             git pull --rebase origin main
             git push
           fi
