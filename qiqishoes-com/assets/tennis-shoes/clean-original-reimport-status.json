@@ -1,12 +1,11 @@
 {
-  "status": "failed",
-  "startedAt": "2026-08-02T17:43:32.781312+00:00",
+  "status": "running",
+  "startedAt": "2026-08-02T18:16:39.055030+00:00",
   "source": "https://yunnan0594.x.yupoo.com/categories/3551885",
   "totalCategoryCount": 57,
   "totalProductsBefore": 7022,
   "shardCount": 12,
-  "mode": "12-way parallel full-catalog original-image reimport",
-  "policy": "Use Yupoo album data-origin-src originals; reject large English/digit overlays",
-  "scope": "sneaker catalog only",
-  "failedAt": "2026-08-02T18:16:23.139905+00:00"
+  "mode": "12-way fast second-photo original reimport",
+  "policy": "Skip the captioned first album image and use the second data-origin-src original",
+  "scope": "sneaker catalog only"
 }
