@@ -1,6 +1,10 @@
 {
-  "status": "running",
-  "mode": "strict-fast-8-shards-4-workers",
-  "startedAt": "2026-08-02T15:38:37.422191+00:00",
-  "scope": "all sneaker categories only"
+  "status": "completed",
+  "completedAt": "2026-08-02T16:13:30.296838+00:00",
+  "scope": "all sneaker categories only",
+  "mode": "strict-any-visible-latin-or-digit",
+  "scanned": 0,
+  "removed": 0,
+  "categoriesChanged": 0,
+  "deletedImageFiles": 840
 }
