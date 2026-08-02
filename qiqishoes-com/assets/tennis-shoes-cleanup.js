@@ -2,10 +2,38 @@
   const list = document.querySelector('#categoryList');
   if (!list) return;
 
+  function currentLanguage() {
+    const value = (document.documentElement.lang || 'zh').toLowerCase();
+    if (value.startsWith('en')) return 'en';
+    if (value.startsWith('es')) return 'es';
+    return 'zh';
+  }
+
+  function homeLabel() {
+    return { zh: '首页', en: 'Home', es: 'Inicio' }[currentLanguage()] || '首页';
+  }
+
+  function ensureHomeTab() {
+    const tabs = document.querySelector('.sneaker-tabs');
+    if (!tabs) return;
+
+    let home = tabs.querySelector('[data-home-tab="1"]');
+    if (!home) {
+      home = document.createElement('a');
+      home.className = 'sneaker-tab';
+      home.dataset.homeTab = '1';
+      home.href = '../';
+      home.target = '_self';
+      tabs.prepend(home);
+    }
+    home.textContent = homeLabel();
+  }
+
   const sizeStyle = document.createElement('style');
   sizeStyle.textContent = `
     .sneaker-image-fallback{display:none!important}
     @media (min-width:951px){
+      .sneaker-tabs{grid-template-columns:repeat(6,1fr)!important}
       .sneaker-tools{grid-template-columns:minmax(0,1fr) 450px!important;padding:16px!important}
       .category-title{font-size:19px!important}
       .catalog-search{height:44px!important}
@@ -16,6 +44,12 @@
     }
   `;
   document.head.appendChild(sizeStyle);
+  ensureHomeTab();
+
+  new MutationObserver(ensureHomeTab).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['lang']
+  });
 
   function isZeroCount(text) {
     return /^0(?:\D|$)/.test(String(text || '').trim());
@@ -105,6 +139,7 @@
     scheduled = true;
     queueMicrotask(() => {
       scheduled = false;
+      ensureHomeTab();
       cleanAndSortCategories();
     });
   }).observe(list, { childList: true, subtree: true });
