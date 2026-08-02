@@ -26,7 +26,7 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: Mark 12-way clean-original import running
+      - name: Mark fast clean-original import running
         shell: bash
         run: |
           python - <<'PY'
@@ -42,8 +42,8 @@ jobs:
               'totalCategoryCount': len(manifest.get('categories') or []),
               'totalProductsBefore': int(manifest.get('totalProducts') or 0),
               'shardCount': 12,
-              'mode': '12-way parallel full-catalog original-image reimport',
-              'policy': 'Use Yupoo album data-origin-src originals; reject large English/digit overlays',
+              'mode': '12-way fast second-photo original reimport',
+              'policy': 'Skip the captioned first album image and use the second data-origin-src original',
               'scope': 'sneaker catalog only'
           }
           (root / 'clean-original-reimport-status.json').write_text(
@@ -54,7 +54,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add qiqishoes-com/assets/tennis-shoes/clean-original-reimport-status.json
           if ! git diff --cached --quiet; then
-            git commit -m 'Mark 12-way clean original reimport running'
+            git commit -m 'Mark fast second-photo original reimport running'
             git pull --rebase origin main
             git push
           fi
@@ -62,15 +62,14 @@ jobs:
   shard:
     needs: prepare
     runs-on: ubuntu-latest
-    timeout-minutes: 300
+    timeout-minutes: 180
     strategy:
       fail-fast: false
       max-parallel: 12
       matrix:
         shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     env:
-      CLEAN_IMAGE_WORKERS: '4'
-      CLEAN_MAX_CANDIDATES: '3'
+      FAST_IMAGE_WORKERS: '12'
     steps:
       - name: Checkout latest main
         uses: actions/checkout@v4
@@ -83,11 +82,8 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install image-check dependencies
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq tesseract-ocr tesseract-ocr-eng
-          python -m pip install --quiet requests beautifulsoup4 pillow pytesseract
+      - name: Install download dependencies
+        run: python -m pip install --quiet requests beautifulsoup4 pillow
 
       - name: Process catalog shard
         shell: bash
@@ -123,7 +119,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install merge dependencies
-        run: python -m pip install --quiet requests beautifulsoup4 pillow pytesseract
+        run: python -m pip install --quiet requests beautifulsoup4 pillow
 
       - name: Download every shard
         uses: actions/download-artifact@v4
@@ -155,14 +151,14 @@ jobs:
           print(json.dumps(status, ensure_ascii=False, indent=2))
           PY
 
-      - name: Commit clean original catalog
+      - name: Commit fast clean original catalog
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A qiqishoes-com/assets/tennis-shoes
           if ! git diff --cached --quiet; then
-            git commit -m 'Complete 12-way clean Yupoo original-image reimport'
+            git commit -m 'Complete fast clean Yupoo original-image reimport'
             git pull --rebase origin main
             git push
           fi
@@ -179,7 +175,7 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: Record parallel reimport failure
+      - name: Record fast reimport failure
         shell: bash
         run: |
           python - <<'PY'
@@ -193,14 +189,14 @@ jobs:
               status = {}
           status['status'] = 'failed'
           status['failedAt'] = datetime.now(timezone.utc).isoformat()
-          status['mode'] = '12-way parallel full-catalog original-image reimport'
+          status['mode'] = '12-way fast second-photo original reimport'
           path.write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding='utf-8')
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add qiqishoes-com/assets/tennis-shoes/clean-original-reimport-status.json
           if ! git diff --cached --quiet; then
-            git commit -m 'Record parallel clean original reimport failure'
+            git commit -m 'Record fast clean original reimport failure'
             git pull --rebase origin main || true
             git push || true
           fi
