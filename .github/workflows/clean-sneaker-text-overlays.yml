@@ -16,7 +16,7 @@ permissions:
 
 env:
   OCR_CHUNK_SIZE: '120'
-  RUN_REQUEST: '2026-08-02T17:31:00+08:00'
+  RUN_REQUEST: '2026-08-02T18:54:00+08:00'
 
 concurrency:
   group: clean-sneaker-text-overlays-strict
@@ -38,6 +38,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: 'pip'
       - name: Mark strict cleanup as running
         shell: bash
         run: |
@@ -49,7 +50,7 @@ jobs:
           Path('qiqishoes-com/assets/tennis-shoes/text-overlay-cleanup-status.json').write_text(
               json.dumps({
                   'status': 'running',
-                  'mode': 'strict-any-visible-latin-or-digit',
+                  'mode': 'strict-fast-any-visible-latin-or-digit',
                   'startedAt': datetime.now(timezone.utc).isoformat(),
                   'scope': 'all sneaker categories only'
               }, ensure_ascii=False, indent=2),
@@ -60,7 +61,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add qiqishoes-com/assets/tennis-shoes/text-overlay-cleanup-status.json
           if ! git diff --cached --quiet; then
-            git commit -m 'Mark strict sneaker image cleanup running'
+            git commit -m 'Mark fast strict sneaker cleanup running'
             git pull --rebase origin main
             git push
           fi
@@ -72,7 +73,7 @@ jobs:
     needs: prepare
     if: ${{ needs.prepare.outputs.batch_count != '0' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       max-parallel: 20
@@ -84,10 +85,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install OCR
+          cache: 'pip'
+      - name: Install OCR only when missing
+        shell: bash
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq tesseract-ocr tesseract-ocr-eng
+          if ! command -v tesseract >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq tesseract-ocr tesseract-ocr-eng
+          fi
           python -m pip install --quiet pillow pytesseract
       - name: Strictly scan category batch
         run: |
