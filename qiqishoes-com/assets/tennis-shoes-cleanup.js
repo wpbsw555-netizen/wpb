@@ -4,8 +4,6 @@
 
   const sizeStyle = document.createElement('style');
   sizeStyle.textContent = `
-    .sneaker-name{display:none!important}
-    .sneaker-id{margin-top:9px!important}
     @media (min-width:951px){
       .sneaker-tools{grid-template-columns:minmax(0,1fr) 450px!important;padding:16px!important}
       .category-title{font-size:19px!important}
