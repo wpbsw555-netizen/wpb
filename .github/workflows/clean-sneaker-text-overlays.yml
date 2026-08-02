@@ -1,133 +1,63 @@
-name: Clean Sneaker Text Overlays Fast Sharded
+name: Purge Sneaker Catalog
 
 on:
   workflow_dispatch:
   push:
     branches: [main]
     paths:
-      - 'scripts/scan_text_overlay_chunk_strict.py'
-      - 'scripts/scan_text_overlay_shard_strict.py'
-      - 'scripts/apply_text_overlay_results.py'
-      - 'scripts/apply_text_overlay_results_strict.py'
       - '.github/workflows/clean-sneaker-text-overlays.yml'
 
 permissions:
   contents: write
-
-env:
-  SHARD_COUNT: '8'
-  OCR_WORKERS: '4'
-  RUN_REQUEST: '2026-08-02T23:38:00+08:00'
 
 concurrency:
   group: clean-sneaker-text-overlays-strict
   cancel-in-progress: true
 
 jobs:
-  start:
+  purge:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout latest main
         uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
-      - name: Mark sharded cleanup running
+
+      - name: Remove every sneaker product, image and category
         shell: bash
         run: |
+          rm -rf qiqishoes-com/assets/tennis-shoes
           mkdir -p qiqishoes-com/assets/tennis-shoes
           python - <<'PY'
           import json
           from datetime import datetime, timezone
           from pathlib import Path
-          Path('qiqishoes-com/assets/tennis-shoes/text-overlay-cleanup-status.json').write_text(
-              json.dumps({
-                  'status': 'running',
-                  'mode': 'strict-fast-8-shards-4-workers',
-                  'startedAt': datetime.now(timezone.utc).isoformat(),
-                  'scope': 'all sneaker categories only'
-              }, ensure_ascii=False, indent=2),
+
+          payload = {
+              'generatedAt': datetime.now(timezone.utc).isoformat(),
+              'cleared': True,
+              'defaultCategory': None,
+              'categoryCount': 0,
+              'importedCategoryCount': 0,
+              'totalProducts': 0,
+              'categories': []
+          }
+          Path('qiqishoes-com/assets/tennis-shoes/catalog.json').write_text(
+              json.dumps(payload, ensure_ascii=False, indent=2),
               encoding='utf-8'
           )
           PY
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add qiqishoes-com/assets/tennis-shoes/text-overlay-cleanup-status.json
-          if ! git diff --cached --quiet; then
-            git commit -m 'Mark fast sharded sneaker cleanup running'
-            git pull --rebase origin main
-            git push
-          fi
 
-  scan:
-    needs: start
-    runs-on: ubuntu-latest
-    timeout-minutes: 100
-    strategy:
-      fail-fast: false
-      max-parallel: 8
-      matrix:
-        shard: [0, 1, 2, 3, 4, 5, 6, 7]
-    steps:
-      - name: Checkout cleanup code and catalog
-        uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Install OCR dependencies
-        shell: bash
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq tesseract-ocr tesseract-ocr-eng
-          python -m pip install --quiet pillow pytesseract
-      - name: Scan one large shard with four workers
-        run: |
-          mkdir -p scan-output
-          python scripts/scan_text_overlay_shard_strict.py \
-            --shard '${{ matrix.shard }}' \
-            --shard-count '${{ env.SHARD_COUNT }}' \
-            --output 'scan-output/shard-${{ matrix.shard }}.json'
-      - name: Upload shard result
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: strict-shard-${{ matrix.shard }}
-          path: scan-output/shard-${{ matrix.shard }}.json
-          if-no-files-found: error
-          retention-days: 2
-
-  apply:
-    needs: scan
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    steps:
-      - name: Checkout latest main
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 0
-      - name: Download all shard results
-        uses: actions/download-artifact@v4
-        with:
-          pattern: strict-shard-*
-          path: scan-results
-          merge-multiple: true
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Apply strict cleanup and delete image files
-        run: python scripts/apply_text_overlay_results_strict.py
-      - name: Commit cleaned sneaker catalogs
+      - name: Commit empty sneaker catalog
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A qiqishoes-com/assets/tennis-shoes
           if ! git diff --cached --quiet; then
-            git commit -m 'Strictly remove text-overlay sneaker products'
+            git commit -m 'Remove all sneaker products images and categories'
             git pull --rebase origin main
             git push
           fi
