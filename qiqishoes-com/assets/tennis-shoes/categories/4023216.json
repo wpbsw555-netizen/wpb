@@ -5,7 +5,7 @@
     "name": "AIR JORDAN1 乔丹1代（中帮）",
     "source": "https://yunnan0594.x.yupoo.com/categories/4023216"
   },
-  "total": 61,
+  "total": 55,
   "products": [
     {
       "id": "181489632",
@@ -53,11 +53,6 @@
       "image": "images/153006585.jpg"
     },
     {
-      "id": "153006111",
-      "title": "Air jordan 1 mid se 米白灰绒 fc货号：FB9899-100 尺码：36-46 .80",
-      "image": "images/153006111.jpg"
-    },
-    {
       "id": "152935320",
       "title": "“Brown Elephant”货号:DZ4129-102 尺码：36-46",
       "image": "images/152935320.jpg"
@@ -71,16 +66,6 @@
       "id": "151776501",
       "title": "AIR JORDAN 1 MID 咖色 货号:BQ6472-103 尺码：36-46",
       "image": "images/151776501.jpg"
-    },
-    {
-      "id": "151601642",
-      "title": "乔1 软粉 36-45",
-      "image": "images/151601642.jpg"
-    },
-    {
-      "id": "151601292",
-      "title": "乔1 黑白紫 36-45",
-      "image": "images/151601292.jpg"
     },
     {
       "id": "151601030",
@@ -138,11 +123,6 @@
       "image": "images/143562514.jpg"
     },
     {
-      "id": "143562393",
-      "title": "Air Jordan 1 Mid WMNS Strawberries and Cream 颜色: White/Sea Coral-Atmosphere-Sail 货号: BQ6472-186 尺码：3",
-      "image": "images/143562393.jpg"
-    },
-    {
       "id": "143306941",
       "title": "air Jordan 1 min 黑脚趾中帮 货号：307383-102 尺码：36-46 c",
       "image": "images/143306941.jpg"
@@ -171,11 +151,6 @@
       "id": "138622447",
       "title": "Jordan Air Jordan 1 Mid\"Flight Club\" 中帮 粉色 36-46 f cf",
       "image": "images/138622447.jpg"
-    },
-    {
-      "id": "135360548",
-      "title": "jordan 1 mid",
-      "image": "images/135360548.jpg"
     },
     {
       "id": "135261084",
@@ -298,11 +273,6 @@
       "image": "images/122852539.jpg"
     },
     {
-      "id": "122557835",
-      "title": "真标 FH15 多彩拼接 乔丹 1代中帮 Air Jordan 1 Mid 'Multi-Color' 36-46 cf",
-      "image": "images/122557835.jpg"
-    },
-    {
       "id": "118503097",
       "title": "原装版 Air Jordan1 Mid 黑白紫 36-46",
       "image": "images/118503097.jpg"
@@ -312,5 +282,6 @@
       "title": "原装版 Air Jordan1 Mid(GS) 黑白粉36-40",
       "image": "images/118503095.jpg"
     }
-  ]
+  ],
+  "textOverlayCleanedAt": "2026-08-02T09:06:09.060469+00:00"
 }

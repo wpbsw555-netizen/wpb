@@ -5,7 +5,7 @@
     "name": "童鞋",
     "source": "https://yunnan0594.x.yupoo.com/categories/3972909"
   },
-  "total": 6,
+  "total": 5,
   "products": [
     {
       "id": "179925292",
@@ -16,11 +16,6 @@
       "id": "179925214",
       "title": "通货ys-AIR FORCE 1'07 LV8货号：DH2920 111 尺码：24-35",
       "image": "images/179925214.jpg"
-    },
-    {
-      "id": "179818034",
-      "title": "特价65 空军白色24-35",
-      "image": "images/179818034.jpg"
     },
     {
       "id": "177346174",
@@ -37,5 +32,6 @@
       "title": "乔13 童鞋集合图28-35",
       "image": "images/107194584.jpg"
     }
-  ]
+  ],
+  "textOverlayCleanedAt": "2026-08-02T09:06:09.060063+00:00"
 }

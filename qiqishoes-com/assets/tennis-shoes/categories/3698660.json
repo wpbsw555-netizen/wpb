@@ -5,7 +5,7 @@
     "name": "dunk 系列",
     "source": "https://yunnan0594.x.yupoo.com/categories/3698660"
   },
-  "total": 171,
+  "total": 150,
   "products": [
     {
       "id": "244362013",
@@ -38,11 +38,6 @@
       "image": "images/221427505.jpg"
     },
     {
-      "id": "218337501",
-      "title": "F-NIKE DUNK LOW货号：IM6670-202尺码：36-47",
-      "image": "images/218337501.jpg"
-    },
-    {
       "id": "217742040",
       "title": "F-Nike Dunk Low \"Panda Monium\" 货号：IB2263-300尺码：36-47",
       "image": "images/217742040.jpg"
@@ -58,24 +53,9 @@
       "image": "images/213723233.jpg"
     },
     {
-      "id": "213587692",
-      "title": "5K版！2025 Supreme x Nike Dunk Low SB 黑海洋雾兰色 94字 货号HQ8487-400 原装版本5K1，30号码40-47.5出货33",
-      "image": "images/213587692.jpg"
-    },
-    {
       "id": "213587086",
       "title": "5K版！Supreme x Nike SB Dunk Low “Black/Red” 全黑红色 磨砂皮 94字 原装版本5K1，30号码7-13出货33",
       "image": "images/213587086.jpg"
-    },
-    {
-      "id": "213435829",
-      "title": "5K版！Supreme x Nike SB Dunk Low 白灰94字样 货号：HQ8487-100 原装版本5K，30号码40-47.5出货33",
-      "image": "images/213435829.jpg"
-    },
-    {
-      "id": "212957823",
-      "title": "5K版！Supreme x Nike SB Dunk Low “Camper Green” 限量 黄军绿色 94字 货号：HQ8487-300 原装版本5K1. 30号码7-13出货33",
-      "image": "images/212957823.jpg"
     },
     {
       "id": "212957709",
@@ -103,11 +83,6 @@
       "image": "images/208864172.jpg"
     },
     {
-      "id": "208370306",
-      "title": "F-W NIKE SB DUNK LOW PRO货号：FJ1674 001尺码：36-46",
-      "image": "images/208370306.jpg"
-    },
-    {
       "id": "208370243",
       "title": "F-W NIKE SB DUNK LOW PRO货号：FJ1674 700尺码：36-46",
       "image": "images/208370243.jpg"
@@ -116,16 +91,6 @@
       "id": "208370184",
       "title": "F-W NIKE SB DUNK LOW PRO QS货号：HJ4132 100尺码：36-46",
       "image": "images/208370184.jpg"
-    },
-    {
-      "id": "208370122",
-      "title": "F-W NIKE SB DUNK LOW PRO货号：FJ1674 401尺码：36-46",
-      "image": "images/208370122.jpg"
-    },
-    {
-      "id": "208030078",
-      "title": "F-W NIKE SB DUNK LOW PRO货号：FZ1278 200尺码：36-46",
-      "image": "images/208030078.jpg"
     },
     {
       "id": "208030032",
@@ -163,16 +128,6 @@
       "image": "images/207741605.jpg"
     },
     {
-      "id": "207404705",
-      "title": "F-W NIKE DUNK LOW货号：IB3079 400尺码：36-46",
-      "image": "images/207404705.jpg"
-    },
-    {
-      "id": "207404631",
-      "title": "F-W NIKE DUNK LOW RETRO货号：HF5441 111尺码：36-46",
-      "image": "images/207404631.jpg"
-    },
-    {
       "id": "207404550",
       "title": "F-W NIKE SB DUNK LOW PRO货号：HF3063 001尺码：36-46",
       "image": "images/207404550.jpg"
@@ -181,11 +136,6 @@
       "id": "207194998",
       "title": "F-W NIKE DUNK LOW PRM货号：HJ9112 110尺码：36-46",
       "image": "images/207194998.jpg"
-    },
-    {
-      "id": "207194962",
-      "title": "F-NIKE DUNK LOW货号：HJ7673 001尺码：36-46",
-      "image": "images/207194962.jpg"
     },
     {
       "id": "207194898",
@@ -223,16 +173,6 @@
       "image": "images/179925214.jpg"
     },
     {
-      "id": "179818034",
-      "title": "特价65 空军白色24-35",
-      "image": "images/179818034.jpg"
-    },
-    {
-      "id": "178544945",
-      "title": "5K！耐克《Wizard of Oz 》x Nike SB Dunk Low 最新联名 经典童话 绿野仙踪鞋款 货号FZ1291-600 原装版本5K1。35号码40-47.5出货",
-      "image": "images/178544945.jpg"
-    },
-    {
       "id": "177346174",
       "title": "sb dunk 童 059-1-10尺码：27.5-35",
       "image": "images/177346174.jpg"
@@ -261,11 +201,6 @@
       "id": "164885251",
       "title": "Nike Dunk Low “Teddy Bear”商品货号：DZ5350-288 QS尺码：36-47.5",
       "image": "images/164885251.jpg"
-    },
-    {
-      "id": "164036195",
-      "title": "超级 Futura Laboratories x Nike SB Dunk Low货号：HF6061-400 尺码：qs 36-47.5",
-      "image": "images/164036195.jpg"
     },
     {
       "id": "163585943",
@@ -301,11 +236,6 @@
       "id": "152149881",
       "title": "5K1版！耐克Rayssa Leal x Nike Dunk SB Low hua笑脸串珠 滑手联名 堀米雄斗 紫白鸳鸯 货号FZ5251-001 原装版本5K1，30号码36-47.5出货33",
       "image": "images/152149881.jpg"
-    },
-    {
-      "id": "152813961",
-      "title": "5K1版！耐克Nike SB Dunk Low “De La Soul” 巴洛克棕 军绿棕色 货号789841-332 原装版本5K1。32号码40-47.5出货35",
-      "image": "images/152813961.jpg"
     },
     {
       "id": "131973901",
@@ -513,11 +443,6 @@
       "image": "images/132752323.jpg"
     },
     {
-      "id": "132505744",
-      "title": "Nike Dunk Low\"BlackSuede\" 低帮 黑白色 36-47 丰 ，qs货号：dv3054001",
-      "image": "images/132505744.jpg"
-    },
-    {
       "id": "130938422",
       "title": "Nike Dunk Low\"Year of the Rabbit\"兔年 低帮 橙棕色 36-46 m",
       "image": "images/130938422.jpg"
@@ -531,16 +456,6 @@
       "id": "129805697",
       "title": "Nike SB Dunk Low Pro PRM\"Pink Pig\"粉猪 36-47 cf",
       "image": "images/129805697.jpg"
-    },
-    {
-      "id": "129252486",
-      "title": "Nike Dunk Low“Teddy Bear”玩具熊 低帮休闲板鞋 女款粉色 36-47 qs",
-      "image": "images/129252486.jpg"
-    },
-    {
-      "id": "128462454",
-      "title": "Nike Dunk Low \"Year of the Rabbit\"兔子36-46",
-      "image": "images/128462454.jpg"
     },
     {
       "id": "127201925",
@@ -601,16 +516,6 @@
       "id": "124610701",
       "title": "黑白熊猫 Nike Dunk SB Low 36-46",
       "image": "images/124610701.jpg"
-    },
-    {
-      "id": "121871872",
-      "title": "原盒真标纯原 Nike Dunk SB Low藤原豆腐店 原盒 15",
-      "image": "images/121871872.jpg"
-    },
-    {
-      "id": "122091224",
-      "title": "真标 Nike Dunk Low\"MiamiHurricanes\"低帮休闲板鞋 橙绿 35.5-47 Y",
-      "image": "images/122091224.jpg"
     },
     {
       "id": "122348483",
@@ -696,11 +601,6 @@
       "id": "121040678",
       "title": "Nike SB Dunk Low Pro ''Sour Apple''青苹果 复古耐磨 低帮休闲板鞋 男女同款 米绿 货号：DM0807-300 尺码36-45带半码",
       "image": "images/121040678.jpg"
-    },
-    {
-      "id": "121040707",
-      "title": "Sean Cliver x Nike SB Dunk Low Pro QS''Holiday Special'' 白蓝金 蓝色情人节 冰雪奇缘 货号：DC9936-100 尺码35.5-45带半码",
-      "image": "images/121040707.jpg"
     },
     {
       "id": "121040737",
@@ -838,11 +738,6 @@
       "image": "images/121041118.jpg"
     },
     {
-      "id": "121041089",
-      "title": "NIke Dunk Low 低帮休闲板鞋灰白银冰雪节 货号：DO2326-001 尺码：36-45带半码",
-      "image": "images/121041089.jpg"
-    },
-    {
       "id": "121041065",
       "title": "NIke Dunk Low 低帮休闲板鞋白紫 货号：DD1391 104 尺码：36-45带半码",
       "image": "images/121041065.jpg"
@@ -862,5 +757,6 @@
       "title": "NIke Dunk Low 低帮休闲板鞋黑白熊猫 货号：DD1503-101 尺码：35.5-45带半码",
       "image": "images/121040959.jpg"
     }
-  ]
+  ],
+  "textOverlayCleanedAt": "2026-08-02T09:06:09.055379+00:00"
 }
