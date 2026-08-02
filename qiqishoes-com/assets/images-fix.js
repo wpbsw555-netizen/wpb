@@ -44,11 +44,28 @@
     }
   }
 
+  function forceSamePageSneakerNavigation() {
+    document.querySelectorAll('.portal-tabs .portal-tab[href*="tennis-shoes"]').forEach((link) => {
+      link.removeAttribute('target');
+      link.removeAttribute('rel');
+      link.target = '_self';
+
+      if (link.dataset.samePageReady === '1') return;
+      link.dataset.samePageReady = '1';
+      link.addEventListener('click', (event) => {
+        if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        window.location.href = link.href;
+      });
+    });
+  }
+
   function applyHeaderLanguage(language = currentLanguage()) {
     const portalLabels = PORTAL_LABELS[language] || PORTAL_LABELS.zh;
     document.querySelectorAll('.portal-tabs .portal-tab').forEach((link, index) => {
       if (portalLabels[index]) link.textContent = portalLabels[index];
     });
+    forceSamePageSneakerNavigation();
 
     const languageLabels = LANGUAGE_LABELS[language] || LANGUAGE_LABELS.zh;
     document.querySelectorAll('.langs [data-lang]').forEach((button) => {
@@ -140,6 +157,7 @@
   function patchCatalog() {
     rewriteOriginalLandingPages();
     patchDamagedThumbnail();
+    forceSamePageSneakerNavigation();
   }
 
   applyHeaderLanguage(currentLanguage());
