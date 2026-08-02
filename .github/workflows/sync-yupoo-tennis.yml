@@ -16,12 +16,100 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  reimport:
+  prepare:
     runs-on: ubuntu-latest
-    timeout-minutes: 350
+    timeout-minutes: 10
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Mark 12-way clean-original import running
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          root = Path('qiqishoes-com/assets/tennis-shoes')
+          manifest = json.loads((root / 'catalog.json').read_text(encoding='utf-8'))
+          status = {
+              'status': 'running',
+              'startedAt': datetime.now(timezone.utc).isoformat(),
+              'source': 'https://yunnan0594.x.yupoo.com/categories/3551885',
+              'totalCategoryCount': len(manifest.get('categories') or []),
+              'totalProductsBefore': int(manifest.get('totalProducts') or 0),
+              'shardCount': 12,
+              'mode': '12-way parallel full-catalog original-image reimport',
+              'policy': 'Use Yupoo album data-origin-src originals; reject large English/digit overlays',
+              'scope': 'sneaker catalog only'
+          }
+          (root / 'clean-original-reimport-status.json').write_text(
+              json.dumps(status, ensure_ascii=False, indent=2), encoding='utf-8'
+          )
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qiqishoes-com/assets/tennis-shoes/clean-original-reimport-status.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Mark 12-way clean original reimport running'
+            git pull --rebase origin main
+            git push
+          fi
+
+  shard:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     env:
       CLEAN_IMAGE_WORKERS: '4'
-      CLEAN_MAX_CANDIDATES: '7'
+      CLEAN_MAX_CANDIDATES: '3'
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install image-check dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq tesseract-ocr tesseract-ocr-eng
+          python -m pip install --quiet requests beautifulsoup4 pillow pytesseract
+
+      - name: Process catalog shard
+        shell: bash
+        run: |
+          python scripts/reimport_clean_yupoo_originals.py \
+            --shard-index '${{ matrix.shard }}' \
+            --shard-count 12 \
+            --output-dir '/tmp/clean-original-${{ matrix.shard }}'
+
+      - name: Upload clean-image shard
+        uses: actions/upload-artifact@v4
+        with:
+          name: clean-original-shard-${{ matrix.shard }}
+          path: /tmp/clean-original-${{ matrix.shard }}
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 1
+
+  merge:
+    needs: shard
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
     steps:
       - name: Checkout latest main
         uses: actions/checkout@v4
@@ -34,93 +122,64 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install clean-image dependencies
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq tesseract-ocr tesseract-ocr-eng
-          python -m pip install --quiet requests beautifulsoup4 pillow pytesseract
+      - name: Install merge dependencies
+        run: python -m pip install --quiet requests beautifulsoup4 pillow pytesseract
 
-      - name: Mark clean-original reimport running
-        shell: bash
+      - name: Download every shard
+        uses: actions/download-artifact@v4
+        with:
+          pattern: clean-original-shard-*
+          path: /tmp/clean-original-parts
+
+      - name: Merge clean originals and rebuild catalog
         run: |
+          python scripts/reimport_clean_yupoo_originals.py --merge-parts /tmp/clean-original-parts
           python - <<'PY'
           import json
-          from datetime import datetime, timezone
           from pathlib import Path
+          from PIL import Image
           root = Path('qiqishoes-com/assets/tennis-shoes')
-          manifest = json.loads((root / 'catalog.json').read_text(encoding='utf-8'))
-          categories = manifest.get('categories') or []
-          status = {
-              'status': 'running',
-              'startedAt': datetime.now(timezone.utc).isoformat(),
-              'source': 'https://yunnan0594.x.yupoo.com/categories/3551885',
-              'totalCategoryCount': len(categories),
-              'completedCategoryCount': 0,
-              'completedCategories': [],
-              'policy': 'Use Yupoo album data-origin-src originals; reject large English/digit overlays',
-              'scope': 'sneaker catalog only'
-          }
-          (root / 'clean-original-reimport-status.json').write_text(
-              json.dumps(status, ensure_ascii=False, indent=2), encoding='utf-8'
-          )
+          status = json.loads((root / 'clean-original-reimport-status.json').read_text(encoding='utf-8'))
+          assert status.get('status') == 'completed', status
+          catalog = json.loads((root / 'catalog.json').read_text(encoding='utf-8'))
+          assert int(catalog.get('categoryCount') or 0) > 0, catalog
+          assert int(catalog.get('totalProducts') or 0) > 0, catalog
+          checked = 0
+          for image_path in (root / 'images').glob('*.jpg'):
+              with Image.open(image_path) as image:
+                  image.verify()
+              checked += 1
+              if checked >= 20:
+                  break
+          assert checked > 0
+          print(json.dumps(status, ensure_ascii=False, indent=2))
           PY
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add qiqishoes-com/assets/tennis-shoes/clean-original-reimport-status.json
-          if ! git diff --cached --quiet; then
-            git commit -m 'Mark clean Yupoo original reimport running'
-            git pull --rebase origin main
-            git push
-          fi
 
-      - name: Build category order
+      - name: Commit clean original catalog
         shell: bash
         run: |
-          python - <<'PY' > /tmp/clean-category-ids.txt
-          import json
-          from pathlib import Path
-          manifest = json.loads(Path('qiqishoes-com/assets/tennis-shoes/catalog.json').read_text(encoding='utf-8'))
-          ids = [str(item.get('id')) for item in manifest.get('categories', []) if item.get('id')]
-          ordered = ['3551885'] + [value for value in ids if value != '3551885']
-          print('\n'.join(ordered))
-          PY
-          echo "Categories to process: $(wc -l < /tmp/clean-category-ids.txt)"
-
-      - name: Replace every category with clean original images
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-
-          while IFS= read -r category_id; do
-            [ -n "$category_id" ] || continue
-            echo "===== CLEAN ORIGINAL CATEGORY $category_id ====="
-            python scripts/reimport_clean_yupoo_originals.py --category "$category_id"
-
-            git add -A qiqishoes-com/assets/tennis-shoes
-            if ! git diff --cached --quiet; then
-              git commit -m "Replace sneaker category $category_id with clean originals"
-              git pull --rebase origin main
-              git push
-            fi
-          done < /tmp/clean-category-ids.txt
-
-      - name: Finalize clean-original catalog
-        shell: bash
-        run: |
-          python scripts/reimport_clean_yupoo_originals.py --finalize
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A qiqishoes-com/assets/tennis-shoes
           if ! git diff --cached --quiet; then
-            git commit -m 'Complete clean Yupoo original-image reimport'
+            git commit -m 'Complete 12-way clean Yupoo original-image reimport'
             git pull --rebase origin main
             git push
           fi
 
-      - name: Record reimport failure
-        if: failure()
+  failure:
+    if: ${{ always() && needs.merge.result != 'success' }}
+    needs: [prepare, shard, merge]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Record parallel reimport failure
         shell: bash
         run: |
           python - <<'PY'
@@ -134,13 +193,14 @@ jobs:
               status = {}
           status['status'] = 'failed'
           status['failedAt'] = datetime.now(timezone.utc).isoformat()
+          status['mode'] = '12-way parallel full-catalog original-image reimport'
           path.write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding='utf-8')
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add qiqishoes-com/assets/tennis-shoes/clean-original-reimport-status.json
           if ! git diff --cached --quiet; then
-            git commit -m 'Record clean Yupoo original reimport failure'
+            git commit -m 'Record parallel clean original reimport failure'
             git pull --rebase origin main || true
             git push || true
           fi
