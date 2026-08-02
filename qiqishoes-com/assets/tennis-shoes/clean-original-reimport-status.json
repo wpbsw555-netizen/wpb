@@ -1,5 +1,5 @@
 {
-  "status": "running",
+  "status": "failed",
   "startedAt": "2026-08-02T17:43:32.781312+00:00",
   "source": "https://yunnan0594.x.yupoo.com/categories/3551885",
   "totalCategoryCount": 57,
@@ -7,5 +7,6 @@
   "shardCount": 12,
   "mode": "12-way parallel full-catalog original-image reimport",
   "policy": "Use Yupoo album data-origin-src originals; reject large English/digit overlays",
-  "scope": "sneaker catalog only"
+  "scope": "sneaker catalog only",
+  "failedAt": "2026-08-02T18:16:23.139905+00:00"
 }
