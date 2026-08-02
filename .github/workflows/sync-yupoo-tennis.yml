@@ -1,14 +1,144 @@
-name: Sneaker Catalog Sync (Disabled)
+name: Import Requested Yupoo Sneaker Catalog
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/sync_yupoo_tennis.py'
+      - 'scripts/sync_yupoo_all_categories.py'
+      - 'scripts/sync_requested_yupoo_catalog.py'
+      - '.github/workflows/sync-yupoo-tennis.yml'
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: requested-yupoo-sneaker-import
+  cancel-in-progress: true
 
 jobs:
-  disabled:
-    if: ${{ false }}
+  import:
     runs-on: ubuntu-latest
+    timeout-minutes: 350
+    env:
+      REFRESH_COMPLETE: '0'
+      MAX_CATEGORIES_PER_RUN: '0'
+      MAX_PAGES_PER_CATEGORY: '100'
+      IMAGE_WORKERS: '10'
     steps:
-      - run: echo "Sneaker catalog synchronization is disabled because the catalog was cleared."
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install importer dependencies
+        run: python -m pip install --upgrade requests beautifulsoup4 pillow
+
+      - name: Mark import running
+        shell: bash
+        run: |
+          mkdir -p qiqishoes-com/assets/tennis-shoes
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          path = Path('qiqishoes-com/assets/tennis-shoes/import-status.json')
+          path.write_text(json.dumps({
+              'status': 'running',
+              'source': 'https://yunnan0594.x.yupoo.com/categories/3551885',
+              'startedAt': datetime.now(timezone.utc).isoformat(),
+              'scope': 'all categories, directories and source images',
+              'imagePolicy': 'no text or numbers added by this site',
+              'emptyCategoryPolicy': 'remove'
+          }, ensure_ascii=False, indent=2), encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qiqishoes-com/assets/tennis-shoes/import-status.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Mark requested Yupoo import running'
+            git pull --rebase origin main
+            git push
+          fi
+
+      - name: Reset old sneaker data
+        shell: bash
+        run: |
+          rm -rf qiqishoes-com/assets/tennis-shoes/categories
+          rm -rf qiqishoes-com/assets/tennis-shoes/images
+          rm -f qiqishoes-com/assets/tennis-shoes/catalog.json
+          rm -f qiqishoes-com/assets/tennis-shoes/sync-report.txt
+          mkdir -p qiqishoes-com/assets/tennis-shoes/categories
+          mkdir -p qiqishoes-com/assets/tennis-shoes/images
+
+      - name: Import all categories and source images
+        shell: bash
+        run: |
+          set -o pipefail
+          python scripts/sync_requested_yupoo_catalog.py 2>&1 | tee requested-yupoo-import.log
+          cp requested-yupoo-import.log qiqishoes-com/assets/tennis-shoes/workflow-output.log
+
+      - name: Mark import completed
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          root = Path('qiqishoes-com/assets/tennis-shoes')
+          manifest = json.loads((root / 'catalog.json').read_text(encoding='utf-8'))
+          (root / 'import-status.json').write_text(json.dumps({
+              'status': 'completed',
+              'source': 'https://yunnan0594.x.yupoo.com/categories/3551885',
+              'completedAt': datetime.now(timezone.utc).isoformat(),
+              'categoryCount': int(manifest.get('categoryCount') or 0),
+              'totalProducts': int(manifest.get('totalProducts') or 0),
+              'defaultCategory': manifest.get('defaultCategory'),
+              'imagePolicy': 'source appearance preserved; no text or numbers added by this site',
+              'emptyCategoryPolicy': 'removed'
+          }, ensure_ascii=False, indent=2), encoding='utf-8')
+          PY
+
+      - name: Commit imported catalog
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A qiqishoes-com/assets/tennis-shoes
+          if ! git diff --cached --quiet; then
+            git commit -m 'Import requested Yupoo sneaker catalog'
+            git pull --rebase origin main
+            git push
+          fi
+
+      - name: Record import failure
+        if: failure()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          root = Path('qiqishoes-com/assets/tennis-shoes')
+          root.mkdir(parents=True, exist_ok=True)
+          (root / 'import-status.json').write_text(json.dumps({
+              'status': 'failed',
+              'source': 'https://yunnan0594.x.yupoo.com/categories/3551885',
+              'failedAt': datetime.now(timezone.utc).isoformat()
+          }, ensure_ascii=False, indent=2), encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qiqishoes-com/assets/tennis-shoes/import-status.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Record requested Yupoo import failure'
+            git pull --rebase origin main
+            git push
+          fi
