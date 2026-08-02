@@ -1,6 +1,6 @@
 {
   "status": "running",
-  "mode": "strict-any-visible-latin-or-digit",
-  "startedAt": "2026-08-02T10:54:39.285942+00:00",
+  "mode": "strict-fast-any-visible-latin-or-digit",
+  "startedAt": "2026-08-02T14:39:00.285116+00:00",
   "scope": "all sneaker categories only"
 }
