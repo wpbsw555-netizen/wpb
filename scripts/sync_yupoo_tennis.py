@@ -14,7 +14,7 @@ from PIL import Image, ImageFile
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-SOURCE = "https://yunnan0594.x.yupoo.com/categories/3551883"
+SOURCE = "https://yunnan0594.x.yupoo.com/categories/3551885"
 SITE_ROOT = Path("qiqishoes-com")
 ASSET_ROOT = SITE_ROOT / "assets" / "tennis-shoes"
 IMAGE_ROOT = ASSET_ROOT / "images"
@@ -143,7 +143,7 @@ def parse_categories(soup: BeautifulSoup, base_url: str) -> list[dict]:
                 "id": category_id,
                 "name": name,
                 "source": absolute(base_url, anchor["href"]),
-                "imported": category_id == "3551883",
+                "imported": category_id == "3551885",
             },
         )
     return list(categories.values())
@@ -284,8 +284,6 @@ def main() -> None:
         report.append(f"page {page}: parsed={len(found)}, new={new_count}, total={len(products)}")
         if page > 1 and new_count == 0:
             break
-        if len(products) >= 258:
-            break
 
     output_products = []
     for index, record in enumerate(products.values(), start=1):
@@ -306,22 +304,23 @@ def main() -> None:
         elif not destination.exists():
             report.append(f"image {record['id']}: missing")
 
-        output_products.append(
-            {
-                "id": record["id"],
-                "title": record["title"],
-                "image": f"images/{record['id']}.jpg",
-                "source": record["source"],
-            }
-        )
+        if destination.exists():
+            output_products.append(
+                {
+                    "id": record["id"],
+                    "title": record["title"],
+                    "image": f"images/{record['id']}.jpg",
+                    "source": record["source"],
+                }
+            )
 
     payload = {
         "generatedAt": datetime.now(timezone.utc).isoformat(),
-        "sourceCategory": "3551883",
+        "sourceCategory": "3551885",
         "title": {
-            "zh": "AIR JORDAN 3 乔丹3代",
-            "en": "AIR JORDAN 3",
-            "es": "AIR JORDAN 3",
+            "zh": "AIR JORDAN 4 乔丹4代",
+            "en": "AIR JORDAN 4",
+            "es": "AIR JORDAN 4",
         },
         "total": len(output_products),
         "categories": categories,
