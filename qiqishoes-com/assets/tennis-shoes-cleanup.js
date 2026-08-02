@@ -4,6 +4,7 @@
 
   const sizeStyle = document.createElement('style');
   sizeStyle.textContent = `
+    .sneaker-image-fallback{display:none!important}
     @media (min-width:951px){
       .sneaker-tools{grid-template-columns:minmax(0,1fr) 450px!important;padding:16px!important}
       .category-title{font-size:19px!important}
