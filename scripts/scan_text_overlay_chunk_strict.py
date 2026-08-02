@@ -20,26 +20,22 @@ def clean_token(value: str) -> str:
     return "".join(ch for ch in str(value or "").strip() if ch.isalnum())
 
 
-def image_variants(source: Image.Image) -> list[Image.Image]:
+def prepare_images(source: Image.Image) -> tuple[Image.Image, Image.Image]:
+    """Prepare a fast grayscale pass and an RGB fallback pass."""
     image = source.convert("RGB")
     max_side = max(image.size)
-    if max_side < 1050:
-        scale = 1050 / max_side
-        image = image.resize(
-            (max(1, round(image.width * scale)), max(1, round(image.height * scale))),
-            Image.Resampling.LANCZOS,
-        )
-    elif max_side > 1400:
-        scale = 1400 / max_side
+    target = 900
+    if max_side != target:
+        scale = target / max_side
         image = image.resize(
             (max(1, round(image.width * scale)), max(1, round(image.height * scale))),
             Image.Resampling.LANCZOS,
         )
 
-    rgb = ImageEnhance.Contrast(ImageOps.autocontrast(image)).enhance(1.35)
     gray = ImageOps.grayscale(image)
-    gray = ImageEnhance.Contrast(ImageOps.autocontrast(gray)).enhance(1.8)
-    return [rgb, gray]
+    gray = ImageEnhance.Contrast(ImageOps.autocontrast(gray)).enhance(1.65)
+    rgb = ImageEnhance.Contrast(ImageOps.autocontrast(image)).enhance(1.25)
+    return gray, rgb
 
 
 def scan_variant(image: Image.Image, variant: int) -> list[dict]:
@@ -49,6 +45,7 @@ def scan_variant(image: Image.Image, variant: int) -> list[dict]:
         lang="eng",
         config="--oem 1 --psm 11",
         output_type=Output.DICT,
+        timeout=25,
     )
     hits: list[dict] = []
     count = len(data.get("text", []))
@@ -65,23 +62,19 @@ def scan_variant(image: Image.Image, variant: int) -> list[dict]:
             box_height = int(data["height"][index])
         except Exception:
             continue
-        if box_width <= 0 or box_height <= 0 or confidence < 18:
+        if box_width <= 0 or box_height <= 0 or confidence < 16:
             continue
 
         width_ratio = box_width / max(1, width)
         height_ratio = box_height / max(1, height)
         area_ratio = (box_width * box_height) / max(1, width * height)
         digits = len(DIGIT_RE.findall(token))
-
-        # Strict mode requested by the customer: one clearly visible Latin/digit
-        # token is enough. The thresholds are deliberately lower than the first
-        # pass so semi-transparent captions like Air Jordan / style codes match.
         visible = (
-            height_ratio >= 0.017
-            or width_ratio >= 0.038
-            or area_ratio >= 0.00075
-            or (digits >= 1 and height_ratio >= 0.013)
-            or (len(token) >= 3 and confidence >= 28 and height_ratio >= 0.012)
+            height_ratio >= 0.015
+            or width_ratio >= 0.034
+            or area_ratio >= 0.0006
+            or (digits >= 1 and height_ratio >= 0.011)
+            or (len(token) >= 3 and confidence >= 25 and height_ratio >= 0.010)
         )
         if not visible:
             continue
@@ -105,34 +98,48 @@ def scan_variant(image: Image.Image, variant: int) -> list[dict]:
     return hits
 
 
-def analyse(image_path: Path) -> dict:
-    try:
-        with Image.open(image_path) as source:
-            all_hits: list[dict] = []
-            for variant, image in enumerate(image_variants(source)):
-                all_hits.extend(scan_variant(image, variant))
-    except Exception as exc:
-        return {"remove": False, "error": f"{type(exc).__name__}: {exc}", "hits": []}
+def strong_enough(hits: list[dict]) -> bool:
+    strong = [
+        hit for hit in hits
+        if hit["confidence"] >= 22
+        or hit["heightRatio"] >= 0.019
+        or hit["widthRatio"] >= 0.052
+        or hit["digits"] >= 1
+    ]
+    return bool(strong or len(hits) >= 2)
 
+
+def deduplicate(all_hits: list[dict]) -> list[dict]:
     unique: dict[tuple[str, int, int], dict] = {}
     for hit in all_hits:
-        key = (str(hit.get("token", "")).lower(), int(hit.get("left", 0) / 20), int(hit.get("top", 0) / 20))
+        key = (
+            str(hit.get("token", "")).lower(),
+            int(hit.get("left", 0) / 20),
+            int(hit.get("top", 0) / 20),
+        )
         previous = unique.get(key)
         if previous is None or float(hit.get("confidence", 0)) > float(previous.get("confidence", 0)):
             unique[key] = hit
-    hits = list(unique.values())
+    return list(unique.values())
 
-    strong = [
-        hit for hit in hits
-        if hit["confidence"] >= 24
-        or hit["heightRatio"] >= 0.022
-        or hit["widthRatio"] >= 0.06
-        or hit["digits"] >= 2
-    ]
-    remove = bool(strong or len(hits) >= 2)
+
+def analyse(image_path: Path) -> dict:
+    try:
+        with Image.open(image_path) as source:
+            gray, rgb = prepare_images(source)
+            gray_hits = scan_variant(gray, 0)
+            # Most captioned images are detected here, so skip the second OCR pass.
+            if strong_enough(gray_hits):
+                hits = deduplicate(gray_hits)
+            else:
+                hits = deduplicate(gray_hits + scan_variant(rgb, 1))
+    except Exception as exc:
+        return {"remove": False, "error": f"{type(exc).__name__}: {exc}", "hits": []}
+
+    remove = strong_enough(hits)
     return {
         "remove": remove,
-        "mode": "strict-any-visible-latin-or-digit",
+        "mode": "strict-fast-any-visible-latin-or-digit",
         "hits": sorted(hits, key=lambda item: (-item["heightRatio"], -item["confidence"]))[:30],
         "reason": "visible-latin-or-digit-overlay" if remove else "none-detected",
     }
@@ -179,7 +186,7 @@ def main() -> None:
                 "category": str(args.category),
                 "start": args.start,
                 "end": args.end,
-                "mode": "strict",
+                "mode": "strict-fast",
                 "scanned": len(results),
                 "removed": removed,
                 "errors": errors,
@@ -191,7 +198,7 @@ def main() -> None:
         encoding="utf-8",
     )
     print(
-        f"STRICT category={args.category} range={args.start}:{args.end} "
+        f"STRICT-FAST category={args.category} range={args.start}:{args.end} "
         f"scanned={len(results)} removed={removed} errors={errors}"
     )
 
