@@ -1,0 +1,23 @@
+(() => {
+  const parts = [0, 1, 2, 3].map(index => `../scripts/home-hero-final.part${index}`);
+
+  Promise.all(parts.map(async url => {
+    const response = await fetch(url, { cache: 'force-cache' });
+    if (!response.ok) throw new Error(`Unable to load ${url}: ${response.status}`);
+    return response.text();
+  }))
+    .then(values => {
+      const base64 = values.join('').replace(/\s+/g, '');
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let index = 0; index < binary.length; index += 1) {
+        bytes[index] = binary.charCodeAt(index);
+      }
+      const objectUrl = URL.createObjectURL(new Blob([bytes], { type: 'image/jpeg' }));
+      document.documentElement.style.setProperty('--hero-image', `url("${objectUrl}")`);
+      document.documentElement.classList.add('hero-image-ready');
+    })
+    .catch(error => {
+      console.error('Homepage hero image failed to load', error);
+    });
+})();
