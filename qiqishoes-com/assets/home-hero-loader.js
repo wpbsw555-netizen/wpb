@@ -1,8 +1,13 @@
 (() => {
-  const parts = [0, 1, 2, 3].map(index => `../scripts/home-hero-final.part${index}`);
+  const script = document.currentScript;
+  if (!script) return;
+
+  const parts = [0, 1, 2, 3].map(index =>
+    new URL(`../../scripts/home-hero-final.part${index}`, script.src).href
+  );
 
   Promise.all(parts.map(async url => {
-    const response = await fetch(url, { cache: 'force-cache' });
+    const response = await fetch(url, { cache: 'no-cache' });
     if (!response.ok) throw new Error(`Unable to load ${url}: ${response.status}`);
     return response.text();
   }))
