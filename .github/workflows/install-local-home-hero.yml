@@ -11,6 +11,9 @@ on:
 permissions:
   contents: write
 
+env:
+  RUN_REQUEST: '2026-08-03T23:48:00+08:00'
+
 concurrency:
   group: install-local-home-hero
   cancel-in-progress: true
@@ -47,7 +50,7 @@ jobs:
 
           path = Path('qiqishoes-com/index.html')
           text = path.read_text(encoding='utf-8')
-          local_url = 'url("./assets/home-hero-final.jpg?v=202608032355")'
+          local_url = 'url("./assets/home-hero-final.jpg?v=202608032348")'
 
           text = re.sub(
               r'url\("https://static\.flexdog\.hu/flexdog-e/products/images/1ccabe62-9ed5-4d98-b414-410aaf6bfc6a\.jpg\?quality=90&width=(?:1600|1200)"\)',
