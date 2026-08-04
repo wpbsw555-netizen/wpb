@@ -2,8 +2,16 @@
   const script = document.currentScript;
   if (!script) return;
 
-  const parts = [0, 1, 2].map(index =>
-    new URL(`../../scripts/home-hero-aj4-mini.part${index}`, script.src).href
+  const names = [
+    'home-hero-aj4-mini.part0a',
+    'home-hero-aj4-mini.part0b',
+    'home-hero-aj4-mini.part0c',
+    'home-hero-aj4-mini.part0d',
+    'home-hero-aj4-mini.part1',
+    'home-hero-aj4-mini.part2'
+  ];
+  const parts = names.map(name =>
+    new URL(`../../scripts/${name}`, script.src).href
   );
 
   Promise.all(parts.map(async url => {
