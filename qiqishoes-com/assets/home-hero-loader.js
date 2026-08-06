@@ -1,12 +1,14 @@
 (() => {
+  'use strict';
+
   const script = document.currentScript;
   if (!script) return;
 
   const IMAGE_PARTS = [0, 1, 2, 3].map(index =>
-    `https://cdn.jsdelivr.net/gh/wpbsw555-netizen/wpb@28bb6dcae30af7529a4bd97d137aed60f10f2a56/scripts/home-hero-final.part${index}`
+    `https://raw.githubusercontent.com/wpbsw555-netizen/wpb/28bb6dcae30af7529a4bd97d137aed60f10f2a56/scripts/home-hero-final.part${index}`
   );
 
-  const copy = {
+  const COPY = {
     zh: {
       badge: 'HOT SELLING',
       title: '黑色 AJ4',
@@ -33,67 +35,74 @@
     }
   };
 
-  function currentLanguage() {
+  function language() {
     const value = (document.documentElement.lang || 'zh').toLowerCase();
     if (value.startsWith('en')) return 'en';
     if (value.startsWith('es')) return 'es';
     return 'zh';
   }
 
-  function addStyles() {
-    if (document.getElementById('hero-showcase-style')) return;
+  function addLayout() {
+    const hero = document.querySelector('.hero');
+    if (!hero) return null;
+
+    document.getElementById('hero-clear-layout-style')?.remove();
+    hero.querySelector('.hero-product')?.remove();
+
     const style = document.createElement('style');
-    style.id = 'hero-showcase-style';
+    style.id = 'hero-clear-layout-style';
     style.textContent = `
       .hero{
         display:grid!important;
-        grid-template-columns:minmax(0,1.08fr) minmax(430px,.92fr)!important;
+        grid-template-columns:minmax(0,54%) minmax(0,46%)!important;
         min-height:620px!important;
         background:#fff!important;
+        overflow:hidden!important;
       }
-      .hero::before{display:none!important;background-image:none!important}
+      .hero::before{content:none!important;display:none!important;background:none!important;filter:none!important}
       .hero-content{
+        grid-column:1!important;
         width:auto!important;
         max-width:none!important;
         min-height:620px!important;
-        padding:52px 44px!important;
+        padding:52px 46px!important;
         background:#fff!important;
       }
-      .hero-showcase{
+      .hero-product{
+        grid-column:2;
         position:relative;
         z-index:4;
         min-width:0;
+        padding:30px 42px 34px 22px;
         display:flex;
         flex-direction:column;
         justify-content:center;
-        gap:16px;
-        padding:30px 48px 28px 10px;
-        background:linear-gradient(145deg,#fff 0%,#f5f5f5 100%);
+        background:linear-gradient(145deg,#fafafa 0%,#ededed 100%);
+        color:#111;
       }
       .hero-shoe-wrap{
-        min-height:330px;
+        min-height:335px;
         display:flex;
         align-items:center;
         justify-content:center;
-        overflow:visible;
+        overflow:hidden;
       }
       .hero-shoe{
         display:block;
         width:100%;
-        max-width:610px;
+        max-width:650px;
         height:auto;
-        max-height:390px;
+        max-height:385px;
         object-fit:contain;
         image-rendering:auto;
-        transform:translateZ(0);
-        filter:drop-shadow(0 20px 22px rgba(0,0,0,.18));
+        filter:none!important;
+        opacity:1!important;
+        transform:none!important;
       }
       .hero-sales{
-        position:relative;
-        width:100%;
+        margin-top:12px;
         padding:17px 18px 18px;
-        color:#111;
-        background:rgba(255,255,255,.98);
+        background:#fff;
         border:2px solid #111;
         box-shadow:7px 7px 0 #111;
       }
@@ -106,41 +115,32 @@
       .hero-sales-button{display:flex;min-height:44px;align-items:center;justify-content:center;background:#20bd63;color:#fff;text-decoration:none;font-size:13px;font-weight:900;border:2px solid #111;box-shadow:4px 4px 0 #111;transition:.18s}
       .hero-sales-button:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 #111}
       @media(max-width:980px){
-        .hero{grid-template-columns:1fr!important;min-height:0!important}
-        .hero-content{min-height:530px!important;padding:46px 34px!important}
-        .hero-showcase{padding:30px 42px 38px!important}
-        .hero-shoe-wrap{min-height:300px}
-        .hero-shoe{max-width:680px;max-height:none}
+        .hero{grid-template-columns:minmax(0,56%) minmax(0,44%)!important;min-height:680px!important}
+        .hero-content{min-height:680px!important;padding:42px 32px!important}
+        .hero-product{padding:26px 31px 29px 14px}
+        .hero-shoe-wrap{min-height:310px}
+        .hero-shoe{max-height:345px}
       }
-      @media(max-width:560px){
-        .hero{min-height:0!important}
-        .hero-content{min-height:0!important;padding:36px 22px 34px!important;background:#fff!important}
-        .hero-showcase{padding:8px 18px 30px!important;gap:10px}
-        .hero-shoe-wrap{min-height:220px}
-        .hero-shoe{width:112%;max-width:none;filter:drop-shadow(0 13px 14px rgba(0,0,0,.16))}
-        .hero-sales{padding:15px 15px 16px;box-shadow:5px 5px 0 #111}
-        .hero-sales-title{font-size:21px}
-        .hero-sales-text{font-size:11px!important}
+      @media(max-width:720px){
+        .hero{display:block!important;min-height:auto!important}
+        .hero-content{width:100%!important;min-height:auto!important;padding:36px 22px 34px!important;background:#fff!important}
+        .hero-product{width:100%;padding:22px 22px 30px;background:linear-gradient(180deg,#fafafa,#ededed)}
+        .hero-shoe-wrap{min-height:260px}
+        .hero-shoe{width:100%;max-height:320px}
+        .hero-sales{margin-top:8px}
+        .hero::after{right:9px;top:18px;bottom:auto;font-size:10px;letter-spacing:3px}
       }
     `;
     document.head.appendChild(style);
-  }
 
-  function installShowcase(imageUrl) {
-    const hero = document.querySelector('.hero');
-    if (!hero) return;
-
-    hero.querySelectorAll('.hero-sales,.hero-showcase').forEach(node => node.remove());
-    addStyles();
-
-    const showcase = document.createElement('section');
-    showcase.className = 'hero-showcase';
-    showcase.setAttribute('aria-label', 'Featured product');
-    showcase.innerHTML = `
+    const product = document.createElement('section');
+    product.className = 'hero-product';
+    product.setAttribute('aria-label', 'Featured product');
+    product.innerHTML = `
       <div class="hero-shoe-wrap">
-        <img class="hero-shoe" decoding="async" fetchpriority="high" alt="" />
+        <img class="hero-shoe" decoding="async" fetchpriority="high" alt="">
       </div>
-      <aside class="hero-sales">
+      <div class="hero-sales">
         <div class="hero-sales-top">
           <span class="hero-sales-badge"></span>
           <strong class="hero-sales-title"></strong>
@@ -148,21 +148,18 @@
         <div class="hero-sales-points"></div>
         <p class="hero-sales-text"></p>
         <a class="hero-sales-button" href="https://wa.me/8613159065939?text=Hello%2C%20I%20want%20the%20latest%20price%20and%20shipping%20quote%20for%20the%20black%20AJ4." target="_blank" rel="noopener noreferrer"></a>
-      </aside>
+      </div>
     `;
-
-    hero.appendChild(showcase);
-    const image = showcase.querySelector('.hero-shoe');
-    image.src = imageUrl;
+    hero.appendChild(product);
 
     const applyCopy = () => {
-      const t = copy[currentLanguage()];
-      showcase.querySelector('.hero-sales-badge').textContent = t.badge;
-      showcase.querySelector('.hero-sales-title').textContent = t.title;
-      showcase.querySelector('.hero-sales-points').innerHTML = t.points.map(item => `<span>${item}</span>`).join('');
-      showcase.querySelector('.hero-sales-text').textContent = t.text;
-      showcase.querySelector('.hero-sales-button').textContent = t.button;
-      image.alt = t.alt;
+      const t = COPY[language()];
+      product.querySelector('.hero-sales-badge').textContent = t.badge;
+      product.querySelector('.hero-sales-title').textContent = t.title;
+      product.querySelector('.hero-sales-points').innerHTML = t.points.map(point => `<span>${point}</span>`).join('');
+      product.querySelector('.hero-sales-text').textContent = t.text;
+      product.querySelector('.hero-sales-button').textContent = t.button;
+      product.querySelector('.hero-shoe').alt = t.alt;
     };
 
     applyCopy();
@@ -171,25 +168,35 @@
       attributeFilter: ['lang']
     });
 
-    const sneakerCard = document.querySelector('.dept.sneakers');
-    if (sneakerCard) sneakerCard.style.setProperty('--image', `url("${imageUrl}")`);
+    return product;
   }
 
+  const product = addLayout();
+  if (!product) return;
+
   Promise.all(IMAGE_PARTS.map(async url => {
-    const response = await fetch(url, { cache: 'force-cache' });
+    const response = await fetch(url, { cache: 'no-store' });
     if (!response.ok) throw new Error(`Unable to load ${url}: ${response.status}`);
     return response.text();
   }))
-    .then(values => {
-      const base64 = values.join('').replace(/\s+/g, '');
+    .then(parts => {
+      const base64 = parts.join('').replace(/\s+/g, '');
       const binary = atob(base64);
       const bytes = new Uint8Array(binary.length);
-      for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
-      const imageUrl = URL.createObjectURL(new Blob([bytes], { type: 'image/jpeg' }));
-      installShowcase(imageUrl);
+      for (let index = 0; index < binary.length; index += 1) {
+        bytes[index] = binary.charCodeAt(index);
+      }
+
+      const objectUrl = URL.createObjectURL(new Blob([bytes], { type: 'image/jpeg' }));
+      const image = product.querySelector('.hero-shoe');
+      image.src = objectUrl;
+
+      const sneakerCard = document.querySelector('.dept.sneakers');
+      if (sneakerCard) sneakerCard.style.setProperty('--image', `url("${objectUrl}")`);
+
       document.documentElement.classList.add('hero-image-ready');
     })
     .catch(error => {
-      console.error('Homepage high-resolution AJ4 image failed to load', error);
+      console.error('Homepage AJ4 image failed to load', error);
     });
 })();
