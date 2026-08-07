@@ -1,0 +1,8 @@
+/
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/assets/home-hero-loader.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/assets/aj4-hero.part*
+  Cache-Control: no-cache, no-store, must-revalidate
