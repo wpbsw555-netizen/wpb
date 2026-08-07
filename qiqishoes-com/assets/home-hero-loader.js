@@ -7,7 +7,6 @@
   const IMAGE_PARTS = [0, 1, 2, 3, 4].map(index =>
     new URL(`./aj4-hero.part${index}`, script.src).href
   );
-  const FALLBACK_IMAGE = new URL('./tennis-shoes/images/248246283.jpg', script.src).href;
 
   const COPY = {
     zh: {
@@ -43,93 +42,114 @@
     return 'zh';
   }
 
-  function addLayout() {
+  function installLayout() {
     const hero = document.querySelector('.hero');
     if (!hero) return null;
 
-    document.getElementById('hero-clear-layout-style')?.remove();
+    document.getElementById('hero-aj4-reference-style')?.remove();
     hero.querySelector('.hero-product')?.remove();
 
     const style = document.createElement('style');
-    style.id = 'hero-clear-layout-style';
+    style.id = 'hero-aj4-reference-style';
     style.textContent = `
       .hero{
         display:grid!important;
-        grid-template-columns:minmax(0,54%) minmax(0,46%)!important;
-        min-height:620px!important;
-        background:#fff!important;
+        grid-template-columns:minmax(0,40%) minmax(0,60%)!important;
+        min-height:690px!important;
         overflow:hidden!important;
+        background:#fff!important;
+        color:#111!important;
+        border:1px solid #ddd!important;
       }
-      .hero::before{content:none!important;display:none!important;background:none!important;filter:none!important}
+      .hero::before{content:none!important;display:none!important;background:none!important}
       .hero-content{
         grid-column:1!important;
         width:auto!important;
         max-width:none!important;
-        min-height:620px!important;
-        padding:52px 46px!important;
+        min-height:690px!important;
+        padding:54px 24px 48px 38px!important;
         background:#fff!important;
+        justify-content:center!important;
       }
+      .hero h1{
+        margin:23px 0 18px!important;
+        font-size:clamp(62px,7vw,112px)!important;
+        line-height:.84!important;
+        letter-spacing:-6px!important;
+      }
+      .hero p{font-size:16px!important;line-height:1.75!important;margin:22px 0 30px!important}
       .hero-product{
         grid-column:2;
         position:relative;
         z-index:4;
         min-width:0;
-        padding:30px 42px 34px 22px;
+        padding:18px 48px 34px 20px;
         display:flex;
         flex-direction:column;
         justify-content:center;
-        background:linear-gradient(145deg,#fafafa 0%,#ededed 100%);
-        color:#111;
+        background:#fff;
       }
       .hero-shoe-wrap{
-        min-height:335px;
+        height:390px;
         display:flex;
-        align-items:center;
+        align-items:flex-end;
         justify-content:center;
         overflow:hidden;
+        background:#fff;
       }
       .hero-shoe{
         display:block;
-        width:100%;
-        max-width:650px;
+        width:min(100%,760px);
+        max-height:390px;
         height:auto;
-        max-height:385px;
         object-fit:contain;
         image-rendering:auto;
-        filter:none!important;
-        opacity:1!important;
-        transform:none!important;
+        opacity:0;
+        transition:opacity .18s ease;
       }
+      .hero-shoe.loaded{opacity:1}
       .hero-sales{
-        margin-top:12px;
-        padding:17px 18px 18px;
+        margin-top:8px;
+        width:100%;
+        padding:19px 20px 20px;
         background:#fff;
         border:2px solid #111;
-        box-shadow:7px 7px 0 #111;
+        box-shadow:8px 8px 0 #111;
       }
-      .hero-sales-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
-      .hero-sales-badge{display:inline-flex;background:var(--acid);color:#000;padding:8px 11px;font-size:11px;font-weight:900;letter-spacing:1.6px;transform:rotate(-1deg)}
-      .hero-sales-title{font-size:24px;line-height:1;font-weight:950;letter-spacing:-1px;text-transform:uppercase}
-      .hero-sales-points{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 11px}
-      .hero-sales-points span{padding:6px 9px;border:1px solid #111;background:#fff;font-size:11px;font-weight:800}
-      .hero-sales-text{margin:0 0 12px!important;color:#333!important;font-size:12px!important;line-height:1.55!important}
-      .hero-sales-button{display:flex;min-height:44px;align-items:center;justify-content:center;background:#20bd63;color:#fff;text-decoration:none;font-size:13px;font-weight:900;border:2px solid #111;box-shadow:4px 4px 0 #111;transition:.18s}
+      .hero-sales-top{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:14px}
+      .hero-sales-badge{display:inline-flex;background:var(--acid);color:#000;padding:10px 14px;font-size:12px;font-weight:900;letter-spacing:1.8px}
+      .hero-sales-title{font-size:29px;line-height:1;font-weight:950;letter-spacing:-1px;text-transform:uppercase}
+      .hero-sales-points{display:flex;gap:9px;flex-wrap:wrap;margin:0 0 13px}
+      .hero-sales-points span{padding:8px 11px;border:1px solid #111;background:#fff;font-size:12px;font-weight:800}
+      .hero-sales-text{margin:0 0 14px!important;color:#333!important;font-size:13px!important;line-height:1.55!important}
+      .hero-sales-button{display:flex;min-height:53px;align-items:center;justify-content:center;background:#20bd63;color:#fff;text-decoration:none;font-size:16px;font-weight:900;border:2px solid #111;box-shadow:4px 4px 0 #111;transition:.18s}
+      .hero-sales-button::before{content:'◉';margin-right:10px;font-size:18px}
       .hero-sales-button:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 #111}
-      @media(max-width:980px){
-        .hero{grid-template-columns:minmax(0,56%) minmax(0,44%)!important;min-height:680px!important}
-        .hero-content{min-height:680px!important;padding:42px 32px!important}
-        .hero-product{padding:26px 31px 29px 14px}
-        .hero-shoe-wrap{min-height:310px}
-        .hero-shoe{max-height:345px}
+
+      @media(max-width:1100px){
+        .hero{grid-template-columns:minmax(0,44%) minmax(0,56%)!important}
+        .hero-content{padding:48px 25px 44px 30px!important}
+        .hero-product{padding:20px 34px 30px 12px}
+        .hero-shoe-wrap{height:350px}
+        .hero-shoe{max-height:350px}
       }
-      @media(max-width:720px){
+      @media(max-width:820px){
         .hero{display:block!important;min-height:auto!important}
-        .hero-content{width:100%!important;min-height:auto!important;padding:36px 22px 34px!important;background:#fff!important}
-        .hero-product{width:100%;padding:22px 22px 30px;background:linear-gradient(180deg,#fafafa,#ededed)}
-        .hero-shoe-wrap{min-height:260px}
-        .hero-shoe{width:100%;max-height:320px}
-        .hero-sales{margin-top:8px}
-        .hero::after{right:9px;top:18px;bottom:auto;font-size:10px;letter-spacing:3px}
+        .hero-content{width:100%!important;min-height:auto!important;padding:42px 28px 32px!important}
+        .hero-product{width:100%;padding:8px 28px 38px!important}
+        .hero-shoe-wrap{height:auto;min-height:290px}
+        .hero-shoe{width:100%;max-height:none}
+        .hero-sales{margin-top:10px}
+      }
+      @media(max-width:560px){
+        .hero-content{padding:34px 20px 26px!important}
+        .hero h1{font-size:58px!important;letter-spacing:-3px!important}
+        .hero-product{padding:4px 16px 28px!important}
+        .hero-shoe-wrap{min-height:220px}
+        .hero-sales{padding:15px 15px 16px;box-shadow:5px 5px 0 #111}
+        .hero-sales-title{font-size:22px}
+        .hero-sales-text{font-size:11px!important}
+        .hero-sales-button{font-size:14px;min-height:48px}
       }
     `;
     document.head.appendChild(style);
@@ -154,8 +174,6 @@
     hero.appendChild(product);
 
     const image = product.querySelector('.hero-shoe');
-    image.src = FALLBACK_IMAGE;
-
     const applyCopy = () => {
       const t = COPY[language()];
       product.querySelector('.hero-sales-badge').textContent = t.badge;
@@ -172,37 +190,32 @@
       attributeFilter: ['lang']
     });
 
-    return product;
+    return { product, image };
   }
 
-  const product = addLayout();
-  if (!product) return;
+  const view = installLayout();
+  if (!view) return;
 
   Promise.all(IMAGE_PARTS.map(async url => {
-    const response = await fetch(url, { cache: 'no-store' });
+    const response = await fetch(`${url}?v=20260807-final`, { cache: 'no-store' });
     if (!response.ok) throw new Error(`Unable to load ${url}: ${response.status}`);
     return response.text();
   }))
     .then(parts => {
-      const base64 = parts.join('').replace(/\s+/g, '');
-      const binary = atob(base64);
-      const bytes = new Uint8Array(binary.length);
-      for (let index = 0; index < binary.length; index += 1) {
-        bytes[index] = binary.charCodeAt(index);
-      }
+      let base64 = parts.join('').replace(/\s+/g, '');
+      while (base64.length % 4) base64 += '=';
 
-      const objectUrl = URL.createObjectURL(new Blob([bytes], { type: 'image/webp' }));
-      const image = product.querySelector('.hero-shoe');
-      image.src = objectUrl;
+      const dataUrl = `data:image/webp;base64,${base64}`;
+      view.image.onload = () => view.image.classList.add('loaded');
+      view.image.onerror = () => console.error('AJ4 image data could not be decoded');
+      view.image.src = dataUrl;
 
       const sneakerCard = document.querySelector('.dept.sneakers');
-      if (sneakerCard) sneakerCard.style.setProperty('--image', `url("${objectUrl}")`);
+      if (sneakerCard) sneakerCard.style.setProperty('--image', `url("${dataUrl}")`);
 
       document.documentElement.classList.add('hero-image-ready');
     })
     .catch(error => {
       console.error('Homepage AJ4 image failed to load', error);
-      const sneakerCard = document.querySelector('.dept.sneakers');
-      if (sneakerCard) sneakerCard.style.setProperty('--image', `url("${FALLBACK_IMAGE}")`);
     });
 })();
