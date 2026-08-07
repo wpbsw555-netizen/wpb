@@ -4,9 +4,10 @@
   const script = document.currentScript;
   if (!script) return;
 
-  const IMAGE_PARTS = [0, 1, 2, 3].map(index =>
-    `https://raw.githubusercontent.com/wpbsw555-netizen/wpb/28bb6dcae30af7529a4bd97d137aed60f10f2a56/scripts/home-hero-final.part${index}`
+  const IMAGE_PARTS = [0, 1, 2, 3, 4].map(index =>
+    new URL(`./aj4-hero.part${index}`, script.src).href
   );
+  const FALLBACK_IMAGE = new URL('./tennis-shoes/images/248246283.jpg', script.src).href;
 
   const COPY = {
     zh: {
@@ -152,6 +153,9 @@
     `;
     hero.appendChild(product);
 
+    const image = product.querySelector('.hero-shoe');
+    image.src = FALLBACK_IMAGE;
+
     const applyCopy = () => {
       const t = COPY[language()];
       product.querySelector('.hero-sales-badge').textContent = t.badge;
@@ -159,7 +163,7 @@
       product.querySelector('.hero-sales-points').innerHTML = t.points.map(point => `<span>${point}</span>`).join('');
       product.querySelector('.hero-sales-text').textContent = t.text;
       product.querySelector('.hero-sales-button').textContent = t.button;
-      product.querySelector('.hero-shoe').alt = t.alt;
+      image.alt = t.alt;
     };
 
     applyCopy();
@@ -187,7 +191,7 @@
         bytes[index] = binary.charCodeAt(index);
       }
 
-      const objectUrl = URL.createObjectURL(new Blob([bytes], { type: 'image/jpeg' }));
+      const objectUrl = URL.createObjectURL(new Blob([bytes], { type: 'image/webp' }));
       const image = product.querySelector('.hero-shoe');
       image.src = objectUrl;
 
@@ -198,5 +202,7 @@
     })
     .catch(error => {
       console.error('Homepage AJ4 image failed to load', error);
+      const sneakerCard = document.querySelector('.dept.sneakers');
+      if (sneakerCard) sneakerCard.style.setProperty('--image', `url("${FALLBACK_IMAGE}")`);
     });
 })();
