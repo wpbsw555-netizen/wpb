@@ -4,12 +4,14 @@ on:
   push:
     branches: [main]
     paths:
-      - 'qiqishoes-com/**'
+      - 'qiqishoes-com/index.html'
+      - 'qiqishoes-com/assets/aj4-black-500.webp'
+      - 'qiqishoes-com/assets/home-hero-loader.js'
       - '.github/workflows/verify-qiqi-home.yml'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   verify:
@@ -17,6 +19,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Wait for Cloudflare Pages deployment
         shell: bash
@@ -48,7 +52,7 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
-          import os, time
+          import json, os, time
           from selenium import webdriver
           from selenium.webdriver.common.by import By
           from selenium.webdriver.chrome.options import Options
@@ -94,14 +98,42 @@ jobs:
 
               os.makedirs('verification-artifacts', exist_ok=True)
               driver.save_screenshot('verification-artifacts/qiqi-home.png')
+              result = {
+                  'status': 'verified',
+                  'url': 'https://qiqishoes-com.pages.dev/',
+                  'imageSrc': src,
+                  'imageNaturalWidth': natural_w,
+                  'imageNaturalHeight': natural_h,
+                  'imageRenderedWidth': round(rect['w'], 1),
+                  'imageRenderedHeight': round(rect['h'], 1),
+                  'hotSelling': True,
+                  'catalog': True,
+                  'languages': ['zh', 'en', 'es'],
+                  'whatsapp': '+86 13159065939',
+                  'verifiedAtUtc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+              }
+              with open('/tmp/verification.json','w',encoding='utf-8') as f:
+                  json.dump(result,f,ensure_ascii=False,indent=2)
               print('VERIFIED_RENDER')
-              print('image_src=', src)
-              print('natural_size=', natural_w, natural_h)
-              print('rendered_rect=', rect)
-              print('whatsapp=', wa)
+              print(json.dumps(result, ensure_ascii=False))
           finally:
               driver.quit()
           PY
+
+      - name: Record successful live verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp /tmp/verification.json .github/qiqi-home-live-verification.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/qiqi-home-live-verification.json
+          if git diff --cached --quiet; then
+            echo 'Verification record unchanged.'
+            exit 0
+          fi
+          git commit -m 'Record successful live QIQI homepage verification'
+          git push
 
       - name: Upload verification screenshot
         if: always()
