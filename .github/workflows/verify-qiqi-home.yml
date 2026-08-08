@@ -1,0 +1,112 @@
+name: Verify QIQI homepage
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'qiqishoes-com/**'
+      - '.github/workflows/verify-qiqi-home.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Wait for Cloudflare Pages deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          ok=0
+          for attempt in $(seq 1 30); do
+            home_code=$(curl -L -sS --max-time 20 -o /tmp/home.html -w '%{http_code}' 'https://qiqishoes-com.pages.dev/?verify=20260808') || home_code=000
+            image_code=$(curl -L -sS --max-time 20 -o /tmp/aj4.webp -w '%{http_code}' 'https://qiqishoes-com.pages.dev/assets/aj4-black-500.webp?v=202608080735') || image_code=000
+            echo "attempt=$attempt home=$home_code image=$image_code"
+            if [ "$home_code" = "200" ] && [ "$image_code" = "200" ] && grep -q 'aj4-black-500.webp' /tmp/home.html && file /tmp/aj4.webp | grep -qi 'Web/P'; then
+              ok=1
+              break
+            fi
+            sleep 20
+          done
+          test "$ok" = "1"
+          grep -q 'HOT SELLING' /tmp/home.html
+          grep -q '8613159065939' /tmp/home.html
+          grep -q 'data-lang="en"' /tmp/home.html
+          grep -q 'data-lang="es"' /tmp/home.html
+          file /tmp/aj4.webp
+          ls -lh /tmp/aj4.webp
+
+      - name: Install browser verifier
+        run: python -m pip install --quiet selenium
+
+      - name: Verify rendered homepage
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os, time
+          from selenium import webdriver
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.chrome.options import Options
+          from selenium.webdriver.support.ui import WebDriverWait
+          from selenium.webdriver.support import expected_conditions as EC
+
+          url = 'https://qiqishoes-com.pages.dev/?verify=20260808-render'
+          options = Options()
+          options.add_argument('--headless=new')
+          options.add_argument('--no-sandbox')
+          options.add_argument('--disable-dev-shm-usage')
+          options.add_argument('--window-size=1440,1100')
+          driver = webdriver.Chrome(options=options)
+          try:
+              driver.get(url)
+              wait = WebDriverWait(driver, 20)
+              img = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '.hero-shoe')))
+              wait.until(lambda d: d.execute_script('return arguments[0].complete && arguments[0].naturalWidth > 0', img))
+              natural_w = driver.execute_script('return arguments[0].naturalWidth', img)
+              natural_h = driver.execute_script('return arguments[0].naturalHeight', img)
+              rect = driver.execute_script('const r=arguments[0].getBoundingClientRect();return {w:r.width,h:r.height,x:r.x,y:r.y};', img)
+              src = img.get_attribute('src')
+              assert natural_w >= 400 and natural_h >= 250, (natural_w, natural_h)
+              assert rect['w'] >= 300 and rect['h'] >= 200, rect
+              assert 'aj4-black-500.webp' in src, src
+
+              sales = driver.find_element(By.CSS_SELECTOR, '.hero-sales')
+              assert sales.is_displayed()
+              assert driver.find_element(By.CSS_SELECTOR, '.hero-sales-badge').text.strip() == 'HOT SELLING'
+              assert 'AJ4' in driver.find_element(By.CSS_SELECTOR, '.hero-sales-title').text
+              wa = driver.find_element(By.CSS_SELECTOR, '.hero-sales-button').get_attribute('href')
+              assert 'wa.me/8613159065939' in wa, wa
+              catalog = driver.find_element(By.CSS_SELECTOR, '.dept.sneakers')
+              assert catalog.is_displayed()
+              assert '/tennis-shoes/' in catalog.get_attribute('href')
+
+              driver.find_element(By.CSS_SELECTOR, '[data-lang="en"]').click()
+              wait.until(lambda d: d.find_element(By.CSS_SELECTOR, '.hero-sales-title').text == 'BLACK AJ4')
+              driver.find_element(By.CSS_SELECTOR, '[data-lang="es"]').click()
+              wait.until(lambda d: d.find_element(By.CSS_SELECTOR, '.hero-sales-title').text == 'AJ4 NEGRO')
+              driver.find_element(By.CSS_SELECTOR, '[data-lang="zh"]').click()
+              wait.until(lambda d: 'AJ4' in d.find_element(By.CSS_SELECTOR, '.hero-sales-title').text)
+
+              os.makedirs('verification-artifacts', exist_ok=True)
+              driver.save_screenshot('verification-artifacts/qiqi-home.png')
+              print('VERIFIED_RENDER')
+              print('image_src=', src)
+              print('natural_size=', natural_w, natural_h)
+              print('rendered_rect=', rect)
+              print('whatsapp=', wa)
+          finally:
+              driver.quit()
+          PY
+
+      - name: Upload verification screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qiqi-home-verification
+          path: verification-artifacts/qiqi-home.png
+          if-no-files-found: warn
