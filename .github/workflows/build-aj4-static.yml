@@ -34,3 +34,4 @@ jobs:
           git add qiqishoes-com/assets/aj4-black.webp
           git commit -m 'Add real static black AJ4 WebP asset'
           git push
+# trigger static asset rebuild 2026-08-08
