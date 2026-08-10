@@ -1,0 +1,32 @@
+name: Build Fashion Card
+
+on:
+  push:
+    paths:
+      - 'qiqishoes-com/assets/fashion-hellstar.part*'
+      - '.github/workflows/build-fashion-card.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Decode uploaded Hellstar image
+        run: |
+          cat qiqishoes-com/assets/fashion-hellstar.part0 qiqishoes-com/assets/fashion-hellstar.part1 qiqishoes-com/assets/fashion-hellstar.part2 qiqishoes-com/assets/fashion-hellstar.part3 | tr -d '\n\r ' | base64 -d > qiqishoes-com/assets/catalog/fashion/3.jpg
+          test -s qiqishoes-com/assets/catalog/fashion/3.jpg
+          file qiqishoes-com/assets/catalog/fashion/3.jpg
+      - name: Commit homepage fashion card image
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qiqishoes-com/assets/catalog/fashion/3.jpg
+          git diff --cached --quiet && exit 0
+          git commit -m 'Replace homepage fashion card with Hellstar image'
+          git push
