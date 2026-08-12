@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'qiqishoes-com/assets/catalog/accessories/rolex-watch-home-20260813.b64'
+      - 'qiqishoes-com/assets/catalog/accessories/rolex-watch-card-300.b64'
       - '.github/workflows/apply-accessories-watch-image.yml'
   workflow_dispatch:
 
@@ -19,20 +19,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Decode actual uploaded watch photo
+      - name: Decode compact watch photo
         run: |
-          base64 -d qiqishoes-com/assets/catalog/accessories/rolex-watch-home-20260813.b64 > qiqishoes-com/assets/catalog/accessories/rolex-watch-home-20260813.jpg
-          file qiqishoes-com/assets/catalog/accessories/rolex-watch-home-20260813.jpg
-          test -s qiqishoes-com/assets/catalog/accessories/rolex-watch-home-20260813.jpg
+          base64 -d qiqishoes-com/assets/catalog/accessories/rolex-watch-card-300.b64 > qiqishoes-com/assets/catalog/accessories/rolex-watch-card-300.jpg
+          file qiqishoes-com/assets/catalog/accessories/rolex-watch-card-300.jpg
+          test -s qiqishoes-com/assets/catalog/accessories/rolex-watch-card-300.jpg
 
       - name: Point homepage accessories card to fresh image
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
           p = Path('qiqishoes-com/index.html')
           s = p.read_text()
-          import re
-          s2, n = re.subn(r'\.dept\.accessories\{--image:url\("[^\"]+"\)\}', '.dept.accessories{--image:url("./assets/catalog/accessories/rolex-watch-home-20260813.jpg?v=202608130442")}', s, count=1)
+          s2, n = re.subn(r'\.dept\.accessories\{--image:url\("[^\"]+"\)\}', '.dept.accessories{--image:url("./assets/catalog/accessories/rolex-watch-card-300.jpg?v=202608130442")}', s, count=1)
           if n != 1:
               raise SystemExit(f'Expected one accessories image rule, replaced {n}')
           p.write_text(s2)
@@ -42,10 +42,10 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add qiqishoes-com/index.html qiqishoes-com/assets/catalog/accessories/rolex-watch-home-20260813.jpg
+          git add qiqishoes-com/index.html qiqishoes-com/assets/catalog/accessories/rolex-watch-card-300.jpg
           if git diff --cached --quiet; then
             echo 'No changes to commit'
             exit 0
           fi
-          git commit -m 'Fix homepage accessories card with actual watch photo'
+          git commit -m 'Fix accessories card with compact watch photo'
           git push
