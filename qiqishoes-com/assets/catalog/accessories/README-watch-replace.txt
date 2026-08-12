@@ -1,0 +1,1 @@
+Replacing 16511.jpg with the exact uploaded watch photo; no site behavior changes.
