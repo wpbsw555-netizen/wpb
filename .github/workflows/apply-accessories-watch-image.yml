@@ -1,0 +1,51 @@
+name: Apply Accessories Watch Image
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'qiqishoes-com/assets/catalog/accessories/rolex-watch-home-20260813.b64'
+      - '.github/workflows/apply-accessories-watch-image.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Decode actual uploaded watch photo
+        run: |
+          base64 -d qiqishoes-com/assets/catalog/accessories/rolex-watch-home-20260813.b64 > qiqishoes-com/assets/catalog/accessories/rolex-watch-home-20260813.jpg
+          file qiqishoes-com/assets/catalog/accessories/rolex-watch-home-20260813.jpg
+          test -s qiqishoes-com/assets/catalog/accessories/rolex-watch-home-20260813.jpg
+
+      - name: Point homepage accessories card to fresh image
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('qiqishoes-com/index.html')
+          s = p.read_text()
+          import re
+          s2, n = re.subn(r'\.dept\.accessories\{--image:url\("[^\"]+"\)\}', '.dept.accessories{--image:url("./assets/catalog/accessories/rolex-watch-home-20260813.jpg?v=202608130442")}', s, count=1)
+          if n != 1:
+              raise SystemExit(f'Expected one accessories image rule, replaced {n}')
+          p.write_text(s2)
+          PY
+
+      - name: Commit final accessories image fix
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qiqishoes-com/index.html qiqishoes-com/assets/catalog/accessories/rolex-watch-home-20260813.jpg
+          if git diff --cached --quiet; then
+            echo 'No changes to commit'
+            exit 0
+          fi
+          git commit -m 'Fix homepage accessories card with actual watch photo'
+          git push
