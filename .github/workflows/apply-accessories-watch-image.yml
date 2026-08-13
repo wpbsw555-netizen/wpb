@@ -8,48 +8,32 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  apply:
+  verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Render watch as a real image element
+      - name: Verify live direct accessories image
+        shell: bash
         run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re
-
-          p = Path('qiqishoes-com/index.html')
-          s = p.read_text()
-
-          css_re = r'\.dept\.accessories\{--image:url\("[^\"]+"\)\}'
-          css_new = '.dept.accessories{--image:none}.dept.accessories::before{z-index:1;background:linear-gradient(0deg,rgba(0,0,0,.88),rgba(0,0,0,.05) 72%)}.dept.accessories .dept-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;z-index:0;transition:.3s}.dept.accessories:hover .dept-bg{transform:scale(1.05)}.dept.accessories .dept-copy{z-index:2}'
-          s, n = re.subn(css_re, css_new, s, count=1)
-          if n != 1:
-              raise SystemExit(f'Expected one accessories CSS rule, replaced {n}')
-
-          old = '<a class="dept accessories" href="./accessories/"><span class="dept-copy">'
-          new = '<a class="dept accessories" href="./accessories/"><img class="dept-bg" src="./assets/catalog/accessories/rolex-watch-card-300.jpg?v=202608140340" alt="" loading="eager" decoding="async"><span class="dept-copy">'
-          if old not in s:
-              raise SystemExit('Expected accessories card HTML not found')
-          s = s.replace(old, new, 1)
-
-          p.write_text(s)
-          PY
-
-      - name: Commit direct image rendering fix
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add qiqishoes-com/index.html
-          if git diff --cached --quiet; then
-            echo 'No changes to commit'
-            exit 0
-          fi
-          git commit -m 'Render accessories watch with direct img element'
-          git push
+          set -euo pipefail
+          HOME_URL='https://qiqishoes-com.pages.dev/'
+          IMG_URL='https://qiqishoes-com.pages.dev/assets/catalog/accessories/rolex-watch-card-300.jpg?v=202608140340'
+          for i in $(seq 1 24); do
+            echo "Attempt $i"
+            home=$(curl -fsSL --max-time 20 "$HOME_URL" || true)
+            code=$(curl -L -sS -o /tmp/watch.jpg -w '%{http_code}' --max-time 20 "$IMG_URL" || true)
+            if [[ "$code" == "200" ]] && grep -q '<img class="dept-bg" src="./assets/catalog/accessories/rolex-watch-card-300.jpg?v=202608140340"' <<<"$home" && [[ -s /tmp/watch.jpg ]]; then
+              type=$(file -b --mime-type /tmp/watch.jpg)
+              size=$(stat -c '%s' /tmp/watch.jpg)
+              echo "image mime=$type size=$size"
+              if [[ "$type" == "image/jpeg" ]] && [[ "$size" -gt 10000 ]]; then
+                echo 'LIVE_DIRECT_ACCESSORIES_IMAGE_OK'
+                exit 0
+              fi
+            fi
+            sleep 15
+          done
+          echo 'Live direct accessories image did not update in time'
+          exit 1
