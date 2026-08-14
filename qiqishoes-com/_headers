@@ -6,3 +6,6 @@
 
 /assets/aj4-hero.part*
   Cache-Control: no-cache, no-store, must-revalidate
+
+/assets/catalog/accessories/rolex-accessories-home-20260815.jpg
+  Cache-Control: no-cache, no-store, must-revalidate
