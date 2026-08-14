@@ -1,40 +1,21 @@
 name: Verify Accessories Card Live
-
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'qiqishoes-com/index.html'
-      - 'qiqishoes-com/assets/catalog/accessories/rolex-accessories-home-20260815.jpg'
-      - '.github/workflows/verify-accessories-card-live.yml'
   workflow_dispatch:
-
 permissions:
   contents: read
-
 jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Wait for Cloudflare and verify final static image
+      - name: Verify final static image
         shell: bash
         run: |
           set -euo pipefail
           HOME_URL='https://qiqishoes-com.pages.dev/'
           IMG_URL='https://qiqishoes-com.pages.dev/assets/catalog/accessories/rolex-accessories-home-20260815.jpg'
-          for i in $(seq 1 30); do
-            echo "Attempt $i"
-            home=$(curl -fsSL --max-time 20 "$HOME_URL" || true)
-            code=$(curl -L -sS -o /tmp/watch.jpg -w '%{http_code}' --max-time 20 "$IMG_URL" || true)
-            if [[ "$code" == "200" ]] && grep -q 'rolex-accessories-home-20260815.jpg' <<<"$home" && [[ -s /tmp/watch.jpg ]]; then
-              type=$(file -b --mime-type /tmp/watch.jpg)
-              size=$(stat -c '%s' /tmp/watch.jpg)
-              if [[ "$type" == "image/jpeg" ]] && [[ "$size" -gt 20000 ]]; then
-                echo "LIVE_STATIC_ACCESSORIES_IMAGE_OK mime=$type size=$size"
-                exit 0
-              fi
-            fi
-            sleep 15
-          done
-          echo 'Final static accessories image did not update in time'
-          exit 1
+          home=$(curl -fsSL --max-time 30 "$HOME_URL")
+          curl -fsSL --max-time 30 "$IMG_URL" -o /tmp/watch.jpg
+          grep -q 'rolex-accessories-home-20260815.jpg' <<<"$home"
+          test "$(file -b --mime-type /tmp/watch.jpg)" = 'image/jpeg'
+          test "$(stat -c '%s' /tmp/watch.jpg)" -gt 20000
+          echo LIVE_STATIC_ACCESSORIES_IMAGE_OK
