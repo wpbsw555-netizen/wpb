@@ -8,32 +8,35 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  verify:
+  apply:
     runs-on: ubuntu-latest
     steps:
-      - name: Verify live direct accessories image
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Force a fresh accessories image URL
         shell: bash
         run: |
           set -euo pipefail
-          HOME_URL='https://qiqishoes-com.pages.dev/'
-          IMG_URL='https://qiqishoes-com.pages.dev/assets/catalog/accessories/rolex-watch-card-300.jpg?v=202608140340'
-          for i in $(seq 1 24); do
-            echo "Attempt $i"
-            home=$(curl -fsSL --max-time 20 "$HOME_URL" || true)
-            code=$(curl -L -sS -o /tmp/watch.jpg -w '%{http_code}' --max-time 20 "$IMG_URL" || true)
-            if [[ "$code" == "200" ]] && grep -q '<img class="dept-bg" src="./assets/catalog/accessories/rolex-watch-card-300.jpg?v=202608140340"' <<<"$home" && [[ -s /tmp/watch.jpg ]]; then
-              type=$(file -b --mime-type /tmp/watch.jpg)
-              size=$(stat -c '%s' /tmp/watch.jpg)
-              echo "image mime=$type size=$size"
-              if [[ "$type" == "image/jpeg" ]] && [[ "$size" -gt 10000 ]]; then
-                echo 'LIVE_DIRECT_ACCESSORIES_IMAGE_OK'
-                exit 0
-              fi
-            fi
-            sleep 15
-          done
-          echo 'Live direct accessories image did not update in time'
-          exit 1
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('qiqishoes-com/index.html')
+          s = p.read_text()
+          old = './assets/catalog/accessories/rolex-watch-card-300.jpg?v=202608140340'
+          new = './assets/catalog/accessories/rolex-watch-card-300.jpg?v=202608141051'
+          if old not in s:
+              raise SystemExit('Old accessories image URL not found')
+          p.write_text(s.replace(old, new, 1))
+          PY
+
+      - name: Commit cache-busting image URL
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qiqishoes-com/index.html
+          git commit -m 'Bust accessories watch image cache'
+          git push
