@@ -18,25 +18,25 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          cat > /tmp/verify_watch.py <<'PY'
+          from pathlib import Path
+          import re, base64, sys
+          s = Path('/tmp/home.html').read_text(errors='ignore')
+          m = re.search(r'<img class="dept-bg" src="data:image/jpeg;base64,([A-Za-z0-9+/=]+)"', s)
+          if not m:
+              sys.exit(2)
+          raw = base64.b64decode(m.group(1), validate=True)
+          if len(raw) < 10000 or not raw.startswith(b'\xff\xd8\xff') or not raw.endswith(b'\xff\xd9'):
+              sys.exit(3)
+          Path('/tmp/watch.jpg').write_bytes(raw)
+          print('LIVE_EMBEDDED_ACCESSORIES_IMAGE_OK', len(raw))
+          PY
+
           HOME_URL='https://qiqishoes-com.pages.dev/'
           for i in $(seq 1 24); do
             echo "Attempt $i"
             if curl -fsSL --max-time 20 "$HOME_URL" -o /tmp/home.html; then
-              python - <<'PY'
-              from pathlib import Path
-              import re, base64, sys
-              s = Path('/tmp/home.html').read_text(errors='ignore')
-              m = re.search(r'<img class="dept-bg" src="data:image/jpeg;base64,([A-Za-z0-9+/=]+)"', s)
-              if not m:
-                  sys.exit(2)
-              raw = base64.b64decode(m.group(1), validate=True)
-              if len(raw) < 10000 or not raw.startswith(b'\xff\xd8\xff') or not raw.endswith(b'\xff\xd9'):
-                  sys.exit(3)
-              Path('/tmp/watch.jpg').write_bytes(raw)
-              print('LIVE_EMBEDDED_ACCESSORIES_IMAGE_OK', len(raw))
-              PY
-              rc=$?
-              if [[ $rc -eq 0 ]]; then
+              if python /tmp/verify_watch.py; then
                 file /tmp/watch.jpg
                 exit 0
               fi
