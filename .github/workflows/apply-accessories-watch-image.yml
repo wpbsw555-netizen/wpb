@@ -1,36 +1,26 @@
 name: Apply Accessories Watch Image
-
 on:
   workflow_dispatch:
-
 permissions:
   contents: write
-
 jobs:
   apply:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Use final static accessories image
-        shell: bash
+      - name: Use static accessories image
         run: |
-          set -euo pipefail
           python - <<'PY'
           from pathlib import Path
           import re
-          p = Path('qiqishoes-com/index.html')
-          s = p.read_text()
-          static = './assets/catalog/accessories/rolex-accessories-home-20260815.jpg'
-          s2, n = re.subn(r'<img class="dept-bg" src="(?:data:image/jpeg;base64,[^"]+|\./assets/catalog/accessories/[^"]+)" alt="[^"]*" loading="eager" decoding="(?:async|sync)">', f'<img class="dept-bg" src="{static}" alt="Accessories watch" loading="eager" decoding="sync">', s, count=1)
-          if n != 1:
-              raise SystemExit(f'Expected one accessories image element, replaced {n}')
-          p.write_text(s2)
+          p=Path('qiqishoes-com/index.html')
+          s=p.read_text()
+          static='./assets/catalog/accessories/rolex-accessories-home-20260815.jpg'
+          s,n=re.subn(r'<img class="dept-bg" src="[^"]+" alt="[^"]*" loading="eager" decoding="(?:async|sync)">',f'<img class="dept-bg" src="{static}" alt="Accessories watch" loading="eager" decoding="sync">',s,count=1)
+          if n!=1: raise SystemExit(n)
+          p.write_text(s)
           PY
-      - name: Commit
-        run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add qiqishoes-com/index.html
-          if ! git diff --cached --quiet; then git commit -m 'Use final static accessories watch image' && git push; fi
+          git diff --cached --quiet || (git commit -m 'Use static accessories image' && git push)
