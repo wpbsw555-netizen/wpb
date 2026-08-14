@@ -2,25 +2,9 @@ name: Apply Accessories Watch Image
 on:
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 jobs:
-  apply:
+  noop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Use static accessories image
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re
-          p=Path('qiqishoes-com/index.html')
-          s=p.read_text()
-          static='./assets/catalog/accessories/rolex-accessories-home-20260815.jpg'
-          s,n=re.subn(r'<img class="dept-bg" src="[^"]+" alt="[^"]*" loading="eager" decoding="(?:async|sync)">',f'<img class="dept-bg" src="{static}" alt="Accessories watch" loading="eager" decoding="sync">',s,count=1)
-          if n!=1: raise SystemExit(n)
-          p.write_text(s)
-          PY
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add qiqishoes-com/index.html
-          git diff --cached --quiet || (git commit -m 'Use static accessories image' && git push)
+      - run: echo 'Homepage now uses a static accessories image asset.'
