@@ -1,10 +1,57 @@
 name: Apply Accessories Watch Image
+
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-accessories-watch-image.yml'
   workflow_dispatch:
+
 permissions:
-  contents: read
+  contents: write
+
 jobs:
-  noop:
+  apply:
     runs-on: ubuntu-latest
     steps:
-      - run: echo 'Homepage now uses a static accessories image asset.'
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create real accessories image file
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 -d qiqishoes-com/assets/catalog/accessories/rolex-watch-card-300.b64 > qiqishoes-com/assets/catalog/accessories/rolex-accessories-home-20260815.jpg
+          test -s qiqishoes-com/assets/catalog/accessories/rolex-accessories-home-20260815.jpg
+          test "$(file -b --mime-type qiqishoes-com/assets/catalog/accessories/rolex-accessories-home-20260815.jpg)" = "image/jpeg"
+
+      - name: Point homepage card to real static image
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('qiqishoes-com/index.html')
+          s = p.read_text()
+          static = './assets/catalog/accessories/rolex-accessories-home-20260815.jpg'
+          pattern = r'<img class="dept-bg" src="[^"]+" alt="[^"]*" loading="eager" decoding="(?:async|sync)">'
+          replacement = f'<img class="dept-bg" src="{static}" alt="Accessories watch" loading="eager" decoding="sync">'
+          s2, n = re.subn(pattern, replacement, s, count=1)
+          if n != 1:
+              raise SystemExit(f'Expected one accessories image element, replaced {n}')
+          p.write_text(s2)
+          PY
+
+      - name: Commit final static image fix
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qiqishoes-com/index.html qiqishoes-com/assets/catalog/accessories/rolex-accessories-home-20260815.jpg
+          if git diff --cached --quiet; then
+            echo 'No changes to commit'
+            exit 0
+          fi
+          git commit -m 'Fix accessories card with real static image'
+          git push
