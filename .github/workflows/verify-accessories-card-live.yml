@@ -14,25 +14,32 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Wait for Cloudflare and verify final static image
+      - name: Wait for Cloudflare and verify neutral accessories image
         shell: bash
         run: |
           set -euo pipefail
           HOME_URL='https://qiqishoes-com.pages.dev/'
-          IMG_URL='https://qiqishoes-com.pages.dev/assets/catalog/accessories/rolex-accessories-home-20260815.jpg'
+          IMG_URL='https://qiqishoes-com.pages.dev/assets/catalog/accessories/acc-home-card-20260815.jpg?v=202608152040'
           for i in $(seq 1 30); do
             echo "Attempt $i"
             home=$(curl -fsSL --max-time 20 "$HOME_URL" || true)
             code=$(curl -L -sS -o /tmp/watch.jpg -w '%{http_code}' --max-time 20 "$IMG_URL" || true)
-            if [[ "$code" == "200" ]] && grep -q 'rolex-accessories-home-20260815.jpg' <<<"$home" && [[ -s /tmp/watch.jpg ]]; then
+            if [[ "$code" == "200" ]] && grep -q 'acc-home-card-20260815.jpg?v=202608152040' <<<"$home" && [[ -s /tmp/watch.jpg ]]; then
               type=$(file -b --mime-type /tmp/watch.jpg)
               size=$(stat -c '%s' /tmp/watch.jpg)
               if [[ "$type" == "image/jpeg" ]] && [[ "$size" -gt 10000 ]]; then
-                echo "LIVE_STATIC_ACCESSORIES_IMAGE_OK mime=$type size=$size"
+                python -m pip install --quiet pillow
+                python - <<'PY'
+from PIL import Image
+im = Image.open('/tmp/watch.jpg')
+im.verify()
+print('PIL_DECODE_OK')
+PY
+                echo "LIVE_NEUTRAL_ACCESSORIES_IMAGE_OK mime=$type size=$size"
                 exit 0
               fi
             fi
             sleep 15
           done
-          echo 'Final static accessories image did not update in time'
+          echo 'Neutral accessories image did not update in time'
           exit 1
