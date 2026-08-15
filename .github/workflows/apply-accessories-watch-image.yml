@@ -27,7 +27,7 @@ jobs:
             qiqishoes-com/assets/catalog/accessories/rolex-clean.part1 \
             qiqishoes-com/assets/catalog/accessories/rolex-clean.part2 \
             qiqishoes-com/assets/catalog/accessories/rolex-clean.part3 \
-            | tr -d '\r\n' > /tmp/rolex-clean.b64
+            | tr -cd 'A-Za-z0-9+/=' > /tmp/rolex-clean.b64
           base64 -d /tmp/rolex-clean.b64 > qiqishoes-com/assets/catalog/accessories/accessories-card-clean-20260815.jpg
           test "$(stat -c '%s' qiqishoes-com/assets/catalog/accessories/accessories-card-clean-20260815.jpg)" = "23757"
           echo 'c66faaad6e8058e6849bc19e6adbcc6baf8c55552742b14aa55b67acd8409cf2  qiqishoes-com/assets/catalog/accessories/accessories-card-clean-20260815.jpg' | sha256sum -c -
