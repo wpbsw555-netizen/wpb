@@ -18,15 +18,23 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create neutral accessories image asset
+      - name: Rebuild clean Rolex image
         shell: bash
         run: |
           set -euo pipefail
-          cp qiqishoes-com/assets/catalog/accessories/rolex-accessories-home-20260815.jpg qiqishoes-com/assets/catalog/accessories/acc-home-card-20260815.jpg
-          test -s qiqishoes-com/assets/catalog/accessories/acc-home-card-20260815.jpg
-          test "$(file -b --mime-type qiqishoes-com/assets/catalog/accessories/acc-home-card-20260815.jpg)" = "image/jpeg"
+          cat \
+            qiqishoes-com/assets/catalog/accessories/rolex-clean.part0 \
+            qiqishoes-com/assets/catalog/accessories/rolex-clean.part1 \
+            qiqishoes-com/assets/catalog/accessories/rolex-clean.part2 \
+            qiqishoes-com/assets/catalog/accessories/rolex-clean.part3 \
+            | tr -d '\r\n' > /tmp/rolex-clean.b64
+          base64 -d /tmp/rolex-clean.b64 > qiqishoes-com/assets/catalog/accessories/accessories-card-clean-20260815.jpg
+          test "$(stat -c '%s' qiqishoes-com/assets/catalog/accessories/accessories-card-clean-20260815.jpg)" = "23757"
+          echo 'c66faaad6e8058e6849bc19e6adbcc6baf8c55552742b14aa55b67acd8409cf2  qiqishoes-com/assets/catalog/accessories/accessories-card-clean-20260815.jpg' | sha256sum -c -
+          python -m pip install --quiet pillow
+          python -c "from PIL import Image; p='qiqishoes-com/assets/catalog/accessories/accessories-card-clean-20260815.jpg'; im=Image.open(p); print(im.format, im.size, im.mode); im.verify()"
 
-      - name: Point homepage card to neutral static image with fallback
+      - name: Use clean image on accessories card
         shell: bash
         run: |
           set -euo pipefail
@@ -35,22 +43,21 @@ jobs:
           import re
           p = Path('qiqishoes-com/index.html')
           s = p.read_text()
-          pattern = r'<img class="dept-bg" src="[^"]+" alt="[^"]*" loading="eager" decoding="(?:async|sync)">'
-          replacement = '<img class="dept-bg" src="/assets/catalog/accessories/acc-home-card-20260815.jpg?v=202608152040" alt="Accessories watch" loading="eager" onerror="this.onerror=null;this.src=\'/assets/catalog/accessories/16511.jpg?v=202608152040\'">'
-          s2, n = re.subn(pattern, replacement, s, count=1)
+          replacement = '<img class="dept-bg" src="/assets/catalog/accessories/accessories-card-clean-20260815.jpg?v=202608152100" alt="Accessories watch" loading="eager" decoding="sync" onerror="this.onerror=null;this.src=\'/assets/catalog/accessories/16511.jpg?v=202608152100\'">'
+          s2, n = re.subn(r'<img class="dept-bg"[^>]*>', replacement, s, count=1)
           if n != 1:
               raise SystemExit(f'Expected one accessories image element, replaced {n}')
           p.write_text(s2)
           PY
 
-      - name: Commit neutral image fix
+      - name: Commit browser-decodable image
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add qiqishoes-com/index.html qiqishoes-com/assets/catalog/accessories/acc-home-card-20260815.jpg
+          git add qiqishoes-com/index.html qiqishoes-com/assets/catalog/accessories/accessories-card-clean-20260815.jpg
           if git diff --cached --quiet; then
             echo 'No changes to commit'
             exit 0
           fi
-          git commit -m 'Fix accessories image with neutral URL and fallback'
+          git commit -m 'Use browser-decodable clean accessories image'
           git push
