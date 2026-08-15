@@ -22,13 +22,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat \
-            qiqishoes-com/assets/catalog/accessories/rolex-clean.part0 \
-            qiqishoes-com/assets/catalog/accessories/rolex-clean.part1 \
-            qiqishoes-com/assets/catalog/accessories/rolex-clean.part2 \
-            qiqishoes-com/assets/catalog/accessories/rolex-clean.part3 \
-            | tr -cd 'A-Za-z0-9+/=' > /tmp/rolex-clean.b64
-          base64 -d /tmp/rolex-clean.b64 > qiqishoes-com/assets/catalog/accessories/accessories-card-clean-20260815.jpg
+          python - <<'PY'
+          from pathlib import Path
+          import base64
+          parts = [Path(f'qiqishoes-com/assets/catalog/accessories/rolex-clean.part{i}').read_text() for i in range(4)]
+          s = ''.join(parts)
+          s = ''.join(c for c in s if c.isalnum() or c in '+/')
+          s += '=' * (-len(s) % 4)
+          raw = base64.b64decode(s, validate=True)
+          Path('qiqishoes-com/assets/catalog/accessories/accessories-card-clean-20260815.jpg').write_bytes(raw)
+          print('decoded bytes', len(raw))
+          PY
           test "$(stat -c '%s' qiqishoes-com/assets/catalog/accessories/accessories-card-clean-20260815.jpg)" = "23757"
           echo 'c66faaad6e8058e6849bc19e6adbcc6baf8c55552742b14aa55b67acd8409cf2  qiqishoes-com/assets/catalog/accessories/accessories-card-clean-20260815.jpg' | sha256sum -c -
           python -m pip install --quiet pillow
