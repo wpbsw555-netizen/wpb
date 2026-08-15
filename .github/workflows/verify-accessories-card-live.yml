@@ -29,12 +29,7 @@ jobs:
               size=$(stat -c '%s' /tmp/watch.jpg)
               if [[ "$type" == "image/jpeg" ]] && [[ "$size" -gt 10000 ]]; then
                 python -m pip install --quiet pillow
-                python - <<'PY'
-from PIL import Image
-im = Image.open('/tmp/watch.jpg')
-im.verify()
-print('PIL_DECODE_OK')
-PY
+                python -c "from PIL import Image; im=Image.open('/tmp/watch.jpg'); print(im.format, im.size, im.mode); im.verify()"
                 echo "LIVE_NEUTRAL_ACCESSORIES_IMAGE_OK mime=$type size=$size"
                 exit 0
               fi
