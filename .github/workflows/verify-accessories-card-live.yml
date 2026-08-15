@@ -14,27 +14,29 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Wait for Cloudflare and verify neutral accessories image
+      - name: Wait for Cloudflare and verify clean accessories image
         shell: bash
         run: |
           set -euo pipefail
           HOME_URL='https://qiqishoes-com.pages.dev/'
-          IMG_URL='https://qiqishoes-com.pages.dev/assets/catalog/accessories/acc-home-card-20260815.jpg?v=202608152040'
+          IMG_URL='https://qiqishoes-com.pages.dev/assets/catalog/accessories/accessories-card-clean-20260815.jpg?v=202608152100'
           for i in $(seq 1 30); do
             echo "Attempt $i"
             home=$(curl -fsSL --max-time 20 "$HOME_URL" || true)
             code=$(curl -L -sS -o /tmp/watch.jpg -w '%{http_code}' --max-time 20 "$IMG_URL" || true)
-            if [[ "$code" == "200" ]] && grep -q 'acc-home-card-20260815.jpg?v=202608152040' <<<"$home" && [[ -s /tmp/watch.jpg ]]; then
+            if [[ "$code" == "200" ]] && grep -q 'accessories-card-clean-20260815.jpg?v=202608152100' <<<"$home" && [[ -s /tmp/watch.jpg ]]; then
               type=$(file -b --mime-type /tmp/watch.jpg)
               size=$(stat -c '%s' /tmp/watch.jpg)
-              if [[ "$type" == "image/jpeg" ]] && [[ "$size" -gt 10000 ]]; then
+              sha=$(sha256sum /tmp/watch.jpg | awk '{print $1}')
+              echo "mime=$type size=$size sha=$sha"
+              if [[ "$type" == "image/jpeg" ]] && [[ "$size" == "23757" ]] && [[ "$sha" == "c66faaad6e8058e6849bc19e6adbcc6baf8c55552742b14aa55b67acd8409cf2" ]]; then
                 python -m pip install --quiet pillow
                 python -c "from PIL import Image; im=Image.open('/tmp/watch.jpg'); print(im.format, im.size, im.mode); im.verify()"
-                echo "LIVE_NEUTRAL_ACCESSORIES_IMAGE_OK mime=$type size=$size"
+                echo 'LIVE_CLEAN_ACCESSORIES_IMAGE_OK'
                 exit 0
               fi
             fi
             sleep 15
           done
-          echo 'Neutral accessories image did not update in time'
+          echo 'Clean accessories image did not update in time'
           exit 1
