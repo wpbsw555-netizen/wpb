@@ -136,14 +136,23 @@
     }
   }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 
-  function rewriteOriginalLandingPages() {
-    document.querySelectorAll('#productGrid a[href*="categoryen_"]').forEach((link) => {
-      const match = link.href.match(/categoryen_(\d+)\.html/i);
-      if (!match) return;
-      const categoryId = match[1];
-      link.href = `${domain}/categoryen_${categoryId}.html?path=0_${categoryId}`;
-    });
-  }
+  function localMirrorUrl(targetUrl) {
+  return `${location.origin}/catalog-proxy?u=${encodeURIComponent(targetUrl)}`;
+}
+
+function rewriteOriginalLandingPages() {
+  document.querySelectorAll('#productGrid a[href*="categoryen_"]').forEach((link) => {
+    const rawHref = link.getAttribute('href') || link.href;
+    const match = rawHref.match(/categoryen_(\d+)\.html/i);
+    if (!match) return;
+    const categoryId = match[1];
+    const target = `${domain}/categoryen_${categoryId}.html?path=0_${categoryId}`;
+    link.href = localMirrorUrl(target);
+    link.removeAttribute('target');
+    link.removeAttribute('rel');
+    link.target = '_self';
+  });
+}
 
   function patchDamagedThumbnail() {
     if (department !== 'accessories') return;
