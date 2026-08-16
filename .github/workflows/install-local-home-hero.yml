@@ -1,18 +1,18 @@
-name: Install Verified Local AJ4 Hero
+name: Install Clean AJ4 Hero
 
 on:
   workflow_dispatch:
   push:
     branches: [main]
     paths:
-      - 'scripts/home-hero-final.part*'
+      - 'scripts/aj4-final-clean-20260817.b64'
       - '.github/workflows/install-local-home-hero.yml'
 
 permissions:
   contents: write
 
 concurrency:
-  group: install-verified-local-aj4-hero
+  group: install-clean-aj4-hero
   cancel-in-progress: true
 
 jobs:
@@ -26,85 +26,78 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Assemble and verify local JPEG
+      - name: Decode and verify clean AJ4 JPEG
         shell: bash
         run: |
           set -euo pipefail
-          out='qiqishoes-com/assets/aj4-black-home-final.jpg'
-          cat scripts/home-hero-final.part0 scripts/home-hero-final.part1 scripts/home-hero-final.part2 scripts/home-hero-final.part3 \
-            | tr -d '\r\n' \
-            | base64 --decode --ignore-garbage \
-            > "$out"
-          echo "assembled bytes: $(wc -c < "$out")"
-          echo "assembled sha256: $(sha256sum "$out" | cut -d' ' -f1)"
-          file "$out"
+          out='qiqishoes-com/assets/aj4-black-home-clean-20260817.jpg'
+          tr -d '\r\n' < scripts/aj4-final-clean-20260817.b64 | base64 --decode > "$out"
+          test "$(wc -c < "$out")" -eq 92143
+          test "$(sha256sum "$out" | cut -d' ' -f1)" = '98bf74fdc550fc1f4553044cf8b3220bfaa25c49938ed731dccd0c1abe45732c'
+          file "$out" | grep -qi 'JPEG image data'
           python -m pip install --quiet pillow
           python - <<'PY'
           from PIL import Image
-          p='qiqishoes-com/assets/aj4-black-home-final.jpg'
+          p='qiqishoes-com/assets/aj4-black-home-clean-20260817.jpg'
           im=Image.open(p)
           im.verify()
           im=Image.open(p)
-          print('verified local image', im.format, im.size)
-          if im.format != 'JPEG' or im.width < 800 or im.height < 400:
-              raise SystemExit(f'Unexpected local image: {im.format} {im.size}')
+          print('local hero', im.format, im.size)
+          if im.format != 'JPEG' or im.size != (1000,605):
+              raise SystemExit(f'Unexpected hero image: {im.format} {im.size}')
           PY
 
-      - name: Point homepage hero to verified local JPEG
+      - name: Update homepage hero reference
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
-          from PIL import Image
           import re
-          img=Image.open('qiqishoes-com/assets/aj4-black-home-final.jpg')
-          w,h=img.size
           p=Path('qiqishoes-com/index.html')
           s=p.read_text(encoding='utf-8')
-          new=f'src="./assets/aj4-black-home-final.jpg?v=202608170125" alt="黑色 AJ4 鞋款" width="{w}" height="{h}"'
+          new='src="./assets/aj4-black-home-clean-20260817.jpg?v=202608170135" alt="黑色 AJ4 鞋款" width="1000" height="605"'
           pattern=r'src="\./assets/aj4-black[^\"]+" alt="黑色 AJ4 鞋款" width="\d+" height="\d+"'
           s2,n=re.subn(pattern,new,s,count=1)
           if n != 1:
               raise SystemExit('Hero image tag not found')
           p.write_text(s2,encoding='utf-8')
-          print('homepage points to verified local JPEG', w, h)
           PY
 
-      - name: Commit verified hero image
+      - name: Commit clean hero image
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add qiqishoes-com/assets/aj4-black-home-final.jpg qiqishoes-com/index.html
-          git commit -m 'Use verified local AJ4 JPEG on homepage'
+          git add qiqishoes-com/assets/aj4-black-home-clean-20260817.jpg qiqishoes-com/index.html
+          git commit -m 'Use clean AJ4 JPEG on homepage'
           git pull --rebase origin main
           git push
 
-      - name: Verify Cloudflare serves exact JPEG
+      - name: Verify Cloudflare serves exact clean JPEG
         shell: bash
         run: |
           set -euo pipefail
           python -m pip install --quiet pillow
-          local_sha=$(sha256sum qiqishoes-com/assets/aj4-black-home-final.jpg | cut -d' ' -f1)
-          for i in $(seq 1 60); do
-            page=$(curl -fsS --max-time 12 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/?v=202608170125${i}" || true)
-            if echo "$page" | grep -q 'aj4-black-home-final.jpg?v=202608170125'; then
-              curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/assets/aj4-black-home-final.jpg?v=202608170125${i}" -o /tmp/live.jpg
-              test "$(sha256sum /tmp/live.jpg | cut -d' ' -f1)" = "$local_sha"
+          for i in $(seq 1 72); do
+            page=$(curl -fsS --max-time 12 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/?v=202608170135${i}" || true)
+            if echo "$page" | grep -q 'aj4-black-home-clean-20260817.jpg?v=202608170135'; then
+              curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/assets/aj4-black-home-clean-20260817.jpg?v=202608170135${i}" -o /tmp/live.jpg
+              test "$(wc -c < /tmp/live.jpg)" -eq 92143
+              test "$(sha256sum /tmp/live.jpg | cut -d' ' -f1)" = '98bf74fdc550fc1f4553044cf8b3220bfaa25c49938ed731dccd0c1abe45732c'
               python - <<'PY'
           from PIL import Image
           p='/tmp/live.jpg'
           im=Image.open(p)
           im.verify()
           im=Image.open(p)
-          if im.format != 'JPEG' or im.width < 800 or im.height < 400:
-              raise SystemExit(f'Bad live hero image: {im.format} {im.size}')
+          if im.format != 'JPEG' or im.size != (1000,605):
+              raise SystemExit(f'Bad live hero: {im.format} {im.size}')
           print('live hero verified', im.format, im.size)
           PY
               exit 0
             fi
             sleep 5
           done
-          echo 'Cloudflare did not publish the verified AJ4 JPEG in time' >&2
+          echo 'Cloudflare did not publish the clean AJ4 JPEG in time' >&2
           exit 1
