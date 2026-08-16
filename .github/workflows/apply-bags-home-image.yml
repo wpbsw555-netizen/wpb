@@ -18,23 +18,23 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Rebuild bag homepage image
+      - name: Rebuild compact bag homepage image
         shell: bash
         run: |
           set -euo pipefail
           cat \
-            qiqishoes-com/assets/catalog/bags/bag-home.part0 \
-            qiqishoes-com/assets/catalog/bags/bag-home.part1 \
-            qiqishoes-com/assets/catalog/bags/bag-home.part2 \
-            qiqishoes-com/assets/catalog/bags/bag-home.part3 \
-            qiqishoes-com/assets/catalog/bags/bag-home.part4 \
-            qiqishoes-com/assets/catalog/bags/bag-home.part5 \
-            > /tmp/bag-home.b64
-          base64 -di /tmp/bag-home.b64 > qiqishoes-com/assets/catalog/bags/bags-home-20260816.jpg
-          test "$(stat -c '%s' qiqishoes-com/assets/catalog/bags/bags-home-20260816.jpg)" = "61861"
-          echo '6e77aa31c2fbf76166cef024390ebb5bcd4774f4f36bb052453968504b11782f  qiqishoes-com/assets/catalog/bags/bags-home-20260816.jpg' | sha256sum -c -
+            qiqishoes-com/assets/catalog/bags/bag-small.part0 \
+            qiqishoes-com/assets/catalog/bags/bag-small.part1 \
+            qiqishoes-com/assets/catalog/bags/bag-small.part2 \
+            qiqishoes-com/assets/catalog/bags/bag-small.part3 \
+            qiqishoes-com/assets/catalog/bags/bag-small.part4 \
+            qiqishoes-com/assets/catalog/bags/bag-small.part5 \
+            > /tmp/bag-small.b64
+          base64 -d /tmp/bag-small.b64 > qiqishoes-com/assets/catalog/bags/bags-home-20260816.jpg
+          test "$(stat -c '%s' qiqishoes-com/assets/catalog/bags/bags-home-20260816.jpg)" = "17114"
+          echo '357284d940e28793cf54f6c86a77ae2ee1386aefb59789caf6631c107e0f6480  qiqishoes-com/assets/catalog/bags/bags-home-20260816.jpg' | sha256sum -c -
           python -m pip install --quiet pillow
-          python -c "from PIL import Image; p='qiqishoes-com/assets/catalog/bags/bags-home-20260816.jpg'; im=Image.open(p); print(im.format, im.size, im.mode); assert im.size==(540,405); im.verify()"
+          python -c "from PIL import Image; p='qiqishoes-com/assets/catalog/bags/bags-home-20260816.jpg'; im=Image.open(p); print(im.format, im.size, im.mode); assert im.size==(360,270); im.verify()"
 
       - name: Replace only bags card image
         shell: bash
@@ -45,7 +45,7 @@ jobs:
           p = Path('qiqishoes-com/index.html')
           s = p.read_text()
           old = '.dept.bags{--image:url("./assets/catalog/bags/29314.jpg")}'
-          new = '.dept.bags{--image:url("./assets/catalog/bags/bags-home-20260816.jpg?v=202608162126")}'
+          new = '.dept.bags{--image:url("./assets/catalog/bags/bags-home-20260816.jpg?v=202608162150")}'
           if old not in s:
               raise SystemExit('Expected bags image CSS not found')
           p.write_text(s.replace(old, new, 1))
