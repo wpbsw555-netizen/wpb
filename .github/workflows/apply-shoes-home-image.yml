@@ -26,19 +26,29 @@ jobs:
           from pathlib import Path
           import base64, hashlib
           base = Path('qiqishoes-com/assets/catalog/shoes')
-          parts=[]
-          for i in range(4):
-              part=(base / f'shoes-home.part{i}').read_text().strip()
-              print('part', i, 'len', len(part), 'head', part[:8], 'tail', part[-8:])
+          names = [
+              'shoes-home.part0a',
+              'shoes-home.part0b',
+              'shoes-home.part1',
+              'shoes-home.part2',
+              'shoes-home.part3',
+          ]
+          parts = []
+          for name in names:
+              part = (base / name).read_text().strip()
+              print(name, len(part), part[:8], part[-8:])
               parts.append(part)
-          s=''.join(parts)
-          print('total b64 len', len(s), 'mod4', len(s)%4)
-          s += '=' * (-len(s) % 4)
-          raw=base64.b64decode(s, validate=False)
-          print('decoded bytes',len(raw),'sha',hashlib.sha256(raw).hexdigest(),'head',raw[:2].hex(),'tail',raw[-2:].hex())
-          out=base / 'shoes-home-20260816.jpg'
-          out.write_bytes(raw)
+          s = ''.join(parts)
+          print('total b64 len', len(s), 'mod4', len(s) % 4)
+          assert len(s) == 25136, len(s)
+          raw = base64.b64decode(s, validate=True)
+          digest = hashlib.sha256(raw).hexdigest()
+          print('decoded bytes', len(raw), 'sha', digest)
+          assert len(raw) == 18851, len(raw)
+          assert digest == 'ac24cae2f16af051122da606700933a5de307513f884219e627c82475e0dad80', digest
           assert raw[:2] == b'\xff\xd8' and raw[-2:] == b'\xff\xd9'
+          out = base / 'shoes-home-20260816.jpg'
+          out.write_bytes(raw)
           PY
           python -m pip install --quiet pillow
           python - <<'PY'
@@ -46,8 +56,9 @@ jobs:
           p='qiqishoes-com/assets/catalog/shoes/shoes-home-20260816.jpg'
           im=Image.open(p)
           im.load()
-          print('PIL OK',im.format,im.size,im.mode)
-          assert im.size==(320,320)
+          print('PIL OK', im.format, im.size, im.mode)
+          assert im.format == 'JPEG'
+          assert im.size == (320, 320)
           PY
 
       - name: Replace only shoes card image
@@ -57,11 +68,11 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import re
-          p=Path('qiqishoes-com/index.html')
-          s=p.read_text()
-          new='.dept.shoes{--image:url("./assets/catalog/shoes/shoes-home-20260816.jpg?v=202608162255")}'
-          s2,n=re.subn(r'\.dept\.shoes\{--image:url\("[^\"]+"\)\}',new,s,count=1)
-          if n!=1:
+          p = Path('qiqishoes-com/index.html')
+          s = p.read_text()
+          new = '.dept.shoes{--image:url("./assets/catalog/shoes/shoes-home-20260816.jpg?v=202608162305")}'
+          s2, n = re.subn(r'\.dept\.shoes\{--image:url\("[^\"]+"\)\}', new, s, count=1)
+          if n != 1:
               raise SystemExit(f'Expected one shoes image CSS rule, replaced {n}')
           p.write_text(s2)
           PY
