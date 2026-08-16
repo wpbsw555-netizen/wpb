@@ -1,0 +1,70 @@
+name: Apply Clear AJ4 Hero
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-clear-aj4-hero.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Replace homepage hero with clear AJ4 image
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('qiqishoes-com/index.html')
+          s = p.read_text()
+          new = '<img class="hero-shoe" src="./assets/aj4-black-clear-900.webp?v=202608170029" alt="黑色 AJ4 鞋款" width="900" height="600" decoding="async" fetchpriority="high">'
+          s2, n = re.subn(r'<img class="hero-shoe"[^>]*>', new, s, count=1)
+          if n != 1:
+              raise SystemExit(f'Expected one hero image element, replaced {n}')
+          p.write_text(s2)
+          PY
+
+      - name: Commit hero image update
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qiqishoes-com/index.html
+          if ! git diff --cached --quiet; then
+            git commit -m 'Use clearer AJ4 image on homepage hero'
+            git push
+          fi
+
+      - name: Verify Cloudflare published clear AJ4 hero
+        shell: bash
+        run: |
+          set -euo pipefail
+          HOME_URL='https://qiqishoes-com.pages.dev/'
+          IMG_URL='https://qiqishoes-com.pages.dev/assets/aj4-black-clear-900.webp?v=202608170029'
+          for i in $(seq 1 40); do
+            echo "Attempt $i"
+            home=$(curl -fsSL --max-time 20 "$HOME_URL" || true)
+            code=$(curl -L -sS -o /tmp/aj4.webp -w '%{http_code}' --max-time 20 "$IMG_URL" || true)
+            if [[ "$code" == "200" ]] && grep -q 'aj4-black-clear-900.webp?v=202608170029' <<<"$home" && [[ -s /tmp/aj4.webp ]]; then
+              type=$(file -b --mime-type /tmp/aj4.webp)
+              size=$(stat -c '%s' /tmp/aj4.webp)
+              echo "mime=$type size=$size"
+              if [[ "$type" == "image/webp" ]] && [[ "$size" -gt 40000 ]]; then
+                echo 'LIVE_CLEAR_AJ4_HERO_OK'
+                exit 0
+              fi
+            fi
+            sleep 15
+          done
+          echo 'Clear AJ4 hero did not update in time'
+          exit 1
