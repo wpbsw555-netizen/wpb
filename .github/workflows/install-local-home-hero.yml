@@ -34,11 +34,9 @@ jobs:
           python - <<'PY'
           from PIL import Image
           p='qiqishoes-com/assets/aj4-black-500.webp'
-          im=Image.open(p)
-          im.verify()
-          im=Image.open(p)
+          im=Image.open(p); im.verify(); im=Image.open(p)
           print('verified source:', im.format, im.size)
-          if im.format != 'WEBP' or im.size != (500,314):
+          if im.format != 'WEBP' or im.size != (480,302):
               raise SystemExit(f'Unexpected AJ4 source: {im.format} {im.size}')
           PY
 
@@ -51,20 +49,15 @@ jobs:
           import re
           p=Path('qiqishoes-com/index.html')
           s=p.read_text(encoding='utf-8')
-          new='src="./assets/aj4-black-500.webp?v=202608170205" alt="黑色 AJ4 鞋款" width="500" height="314"'
+          new='src="./assets/aj4-black-500.webp?v=202608170210" alt="黑色 AJ4 鞋款" width="480" height="302"'
           pattern=r'src="\./assets/aj4-black[^\"]+" alt="黑色 AJ4 鞋款" width="\d+" height="\d+"'
           s,n=re.subn(pattern,new,s,count=1)
           if n != 1:
               raise SystemExit(f'Expected one AJ4 hero image tag, found {n}')
-          old_css='.hero-shoe{display:block;width:100%;height:100%;object-fit:contain;object-position:center}'
-          new_css='.hero-shoe{display:block;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;object-position:center;image-rendering:auto}'
-          if old_css in s:
-              s=s.replace(old_css,new_css,1)
-          else:
-              s=re.sub(r'\.hero-shoe\{[^}]*\}',new_css,s,count=1)
+          s=re.sub(r'\.hero-shoe\{[^}]*\}', '.hero-shoe{display:block;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;object-position:center;image-rendering:auto}', s, count=1)
           p.write_text(s,encoding='utf-8')
           PY
-          grep -F 'aj4-black-500.webp?v=202608170205' qiqishoes-com/index.html >/dev/null
+          grep -F 'aj4-black-500.webp?v=202608170210' qiqishoes-com/index.html >/dev/null
 
       - name: Commit homepage fix
         shell: bash
@@ -82,10 +75,10 @@ jobs:
           set -euo pipefail
           python -m pip install --quiet pillow
           for i in $(seq 1 72); do
-            page=$(curl -fsS --max-time 15 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/?verify=202608170205-${i}" || true)
-            if printf '%s' "$page" | grep -q 'aj4-black-500.webp?v=202608170205'; then
+            page=$(curl -fsS --max-time 15 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/?verify=202608170210-${i}" || true)
+            if printf '%s' "$page" | grep -q 'aj4-black-500.webp?v=202608170210'; then
               curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' \
-                "https://qiqishoes-com.pages.dev/assets/aj4-black-500.webp?verify=202608170205-${i}" \
+                "https://qiqishoes-com.pages.dev/assets/aj4-black-500.webp?verify=202608170210-${i}" \
                 -o /tmp/live-aj4.webp
               test "$(wc -c < /tmp/live-aj4.webp)" -gt 9000
               python - <<'PY'
@@ -93,7 +86,7 @@ jobs:
           p='/tmp/live-aj4.webp'
           im=Image.open(p); im.verify(); im=Image.open(p)
           print('LIVE HERO VERIFIED:', im.format, im.size)
-          if im.format != 'WEBP' or im.size != (500,314):
+          if im.format != 'WEBP' or im.size != (480,302):
               raise SystemExit(f'Bad live hero: {im.format} {im.size}')
           PY
               exit 0
