@@ -1,0 +1,69 @@
+name: Verify Catalog Fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-catalog-fix.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Verify live links and images
+        shell: bash
+        run: |
+          python - <<'PY'
+          import urllib.request, urllib.parse, re, html, time, sys
+
+          origin='https://qiqishoes-com.pages.dev'
+          target='https://www.tangma2088.com/categoryen_3.html?path=0_3'
+          proxy=origin+'/catalog-proxy?u='+urllib.parse.quote(target,safe='')
+
+          def get(url, timeout=30):
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache','Accept':'*/*'})
+              with urllib.request.urlopen(req,timeout=timeout) as r:
+                  return r.status, r.headers, r.read(), r.url
+
+          last=''
+          for i in range(72):
+              try:
+                  st,hd,app,_=get(origin+'/assets/app.js?verify='+str(i))
+                  app_text=app.decode('utf-8','replace')
+                  st2,hd2,body,final=get(proxy+'&verify='+str(i))
+                  ctype=hd2.get('content-type','')
+                  enc='gb18030' if ('gb2312' in ctype.lower() or 'gbk' in ctype.lower()) else 'utf-8'
+                  text=body.decode(enc,'replace')
+                  local_app='function localCatalogHref(u)' in app_text
+                  visible_src='el.setAttribute' not in text  # page should contain transformed output, not source function
+                  imgs=[]
+                  for m in re.finditer(r'<img\b[^>]*\bsrc=["\']([^"\']+)',text,re.I):
+                      u=html.unescape(m.group(1))
+                      if '/catalog-proxy?u=' in u and 'upfile' in urllib.parse.unquote(u):
+                          imgs.append(u)
+                  bad=[]
+                  for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']+)',text,re.I):
+                      u=html.unescape(m.group(1))
+                      if u.startswith(('http://','https://')):
+                          host=(urllib.parse.urlparse(u).hostname or '').lower()
+                          if host not in {'qiqishoes-com.pages.dev','wa.me'}:
+                              bad.append(u)
+                  print('attempt',i,'app_local',local_app,'proxy',st2,'ctype',ctype,'imgs',len(imgs),'bad_links',len(bad))
+                  if local_app and st2==200 and imgs and not bad:
+                      ist,ih,ib,ifu=get(imgs[0])
+                      ict=(ih.get('content-type') or '').lower()
+                      print('image',ist,ict,len(ib),ifu)
+                      if ist==200 and len(ib)>1000 and ('image/' in ict or ib[:3]==b'\xff\xd8\xff'):
+                          print('LIVE CATALOG VERIFIED: local navigation and visible images')
+                          sys.exit(0)
+                  last=f'app={local_app}, status={st2}, imgs={len(imgs)}, bad={bad[:3]}'
+              except Exception as e:
+                  last=repr(e)
+                  print('attempt',i,'error',last)
+              time.sleep(5)
+          raise SystemExit('Verification failed: '+last)
+          PY
