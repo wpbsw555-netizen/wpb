@@ -1,18 +1,18 @@
-name: Install Clean AJ4 Hero
+name: Install Verified AJ4 Hero
 
 on:
   workflow_dispatch:
   push:
     branches: [main]
     paths:
-      - 'scripts/aj4-final-clean-20260817.b64'
+      - 'scripts/aj4-clean-q75.part*'
       - '.github/workflows/install-local-home-hero.yml'
 
 permissions:
   contents: write
 
 concurrency:
-  group: install-clean-aj4-hero
+  group: install-verified-aj4-hero
   cancel-in-progress: true
 
 jobs:
@@ -26,78 +26,91 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Decode and verify clean AJ4 JPEG
+      - name: Assemble and verify AJ4 JPEG
         shell: bash
         run: |
           set -euo pipefail
-          out='qiqishoes-com/assets/aj4-black-home-clean-20260817.jpg'
-          tr -d '\r\n' < scripts/aj4-final-clean-20260817.b64 | base64 --decode > "$out"
-          test "$(wc -c < "$out")" -eq 92143
-          test "$(sha256sum "$out" | cut -d' ' -f1)" = '98bf74fdc550fc1f4553044cf8b3220bfaa25c49938ed731dccd0c1abe45732c'
+          out='qiqishoes-com/assets/aj4-black-home-final-20260817.jpg'
+          cat scripts/aj4-clean-q75.part0 \
+              scripts/aj4-clean-q75.part1 \
+              scripts/aj4-clean-q75.part2 \
+              scripts/aj4-clean-q75.part3 \
+              scripts/aj4-clean-q75.part4 \
+            | tr -d '\r\n' \
+            | base64 --decode \
+            > "$out"
+          test "$(wc -c < "$out")" -eq 52536
+          test "$(sha256sum "$out" | cut -d' ' -f1)" = '9330cad8a47fde3ec4aa24dbbb60a33ad10ed9c1e9da6ae040e9827e65cbd840'
           file "$out" | grep -qi 'JPEG image data'
           python -m pip install --quiet pillow
           python - <<'PY'
           from PIL import Image
-          p='qiqishoes-com/assets/aj4-black-home-clean-20260817.jpg'
+          p='qiqishoes-com/assets/aj4-black-home-final-20260817.jpg'
           im=Image.open(p)
           im.verify()
           im=Image.open(p)
-          print('local hero', im.format, im.size)
-          if im.format != 'JPEG' or im.size != (1000,605):
-              raise SystemExit(f'Unexpected hero image: {im.format} {im.size}')
+          print('local hero verified:', im.format, im.size)
+          if im.format != 'JPEG' or im.size != (800, 484):
+              raise SystemExit(f'Unexpected local hero: {im.format} {im.size}')
           PY
 
-      - name: Update homepage hero reference
+      - name: Point homepage to verified AJ4 JPEG
         shell: bash
         run: |
+          set -euo pipefail
           python - <<'PY'
           from pathlib import Path
           import re
           p=Path('qiqishoes-com/index.html')
           s=p.read_text(encoding='utf-8')
-          new='src="./assets/aj4-black-home-clean-20260817.jpg?v=202608170135" alt="黑色 AJ4 鞋款" width="1000" height="605"'
+          new='src="./assets/aj4-black-home-final-20260817.jpg?v=202608170155" alt="黑色 AJ4 鞋款" width="800" height="484"'
           pattern=r'src="\./assets/aj4-black[^\"]+" alt="黑色 AJ4 鞋款" width="\d+" height="\d+"'
           s2,n=re.subn(pattern,new,s,count=1)
           if n != 1:
-              raise SystemExit('Hero image tag not found')
+              raise SystemExit(f'Expected exactly one AJ4 hero tag, found {n}')
           p.write_text(s2,encoding='utf-8')
+          print('homepage hero reference updated')
           PY
+          grep -F 'aj4-black-home-final-20260817.jpg?v=202608170155' qiqishoes-com/index.html >/dev/null
 
-      - name: Commit clean hero image
+      - name: Commit verified hero image
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add qiqishoes-com/assets/aj4-black-home-clean-20260817.jpg qiqishoes-com/index.html
-          git commit -m 'Use clean AJ4 JPEG on homepage'
+          git add qiqishoes-com/assets/aj4-black-home-final-20260817.jpg qiqishoes-com/index.html
+          git commit -m 'Use verified AJ4 JPEG on homepage'
           git pull --rebase origin main
-          git push
+          git push origin main
 
-      - name: Verify Cloudflare serves exact clean JPEG
+      - name: Verify Cloudflare serves exact AJ4 JPEG
         shell: bash
         run: |
           set -euo pipefail
           python -m pip install --quiet pillow
+          expected_sha='9330cad8a47fde3ec4aa24dbbb60a33ad10ed9c1e9da6ae040e9827e65cbd840'
           for i in $(seq 1 72); do
-            page=$(curl -fsS --max-time 12 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/?v=202608170135${i}" || true)
-            if echo "$page" | grep -q 'aj4-black-home-clean-20260817.jpg?v=202608170135'; then
-              curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/assets/aj4-black-home-clean-20260817.jpg?v=202608170135${i}" -o /tmp/live.jpg
-              test "$(wc -c < /tmp/live.jpg)" -eq 92143
-              test "$(sha256sum /tmp/live.jpg | cut -d' ' -f1)" = '98bf74fdc550fc1f4553044cf8b3220bfaa25c49938ed731dccd0c1abe45732c'
+            page=$(curl -fsS --max-time 15 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/?verify=202608170155-${i}" || true)
+            if printf '%s' "$page" | grep -q 'aj4-black-home-final-20260817.jpg?v=202608170155'; then
+              curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' \
+                "https://qiqishoes-com.pages.dev/assets/aj4-black-home-final-20260817.jpg?verify=202608170155-${i}" \
+                -o /tmp/live-aj4.jpg
+              test "$(wc -c < /tmp/live-aj4.jpg)" -eq 52536
+              test "$(sha256sum /tmp/live-aj4.jpg | cut -d' ' -f1)" = "$expected_sha"
               python - <<'PY'
           from PIL import Image
-          p='/tmp/live.jpg'
+          p='/tmp/live-aj4.jpg'
           im=Image.open(p)
           im.verify()
           im=Image.open(p)
-          if im.format != 'JPEG' or im.size != (1000,605):
+          print('LIVE HERO VERIFIED:', im.format, im.size)
+          if im.format != 'JPEG' or im.size != (800, 484):
               raise SystemExit(f'Bad live hero: {im.format} {im.size}')
-          print('live hero verified', im.format, im.size)
           PY
               exit 0
             fi
             sleep 5
           done
-          echo 'Cloudflare did not publish the clean AJ4 JPEG in time' >&2
+          echo 'Cloudflare did not publish the verified AJ4 JPEG within 6 minutes' >&2
           exit 1
