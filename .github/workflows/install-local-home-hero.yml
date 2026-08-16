@@ -24,31 +24,48 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Assemble and verify AJ4 JPEG
         shell: bash
         run: |
           set -euo pipefail
+          check_chunk() {
+            f="$1"; expected_len="$2"; expected_sha="$3"
+            actual_len=$(wc -c < "$f" | tr -d ' ')
+            actual_sha=$(sha256sum "$f" | cut -d' ' -f1)
+            echo "$f len=$actual_len sha=$actual_sha"
+            test "$actual_len" -eq "$expected_len"
+            test "$actual_sha" = "$expected_sha"
+          }
+          check_chunk scripts/aj4-clean-q75.part0 15000 686b2bc62367ead65bcdf8d8cd0bdcacfa31f1e9d6d99ebe5aecf3b1ababa938
+          check_chunk scripts/aj4-clean-q75.part1 15000 1ae6d914f4b66964d00048027f7d54700e4609fc3f4afdd7f05af401d15a0b1e
+          check_chunk scripts/aj4-clean-q75.part2 15000 75b4e8270ff44cf3b3ffc82ca06065584db4374eee11f28a876e7212729d82d9
+          check_chunk scripts/aj4-clean-q75.part3 15000 cc5357799da138e45129bbf0a638672a9bae6b040b51adbd720e75c46d37f72a
+          check_chunk scripts/aj4-clean-q75.part4 10048 04a5353479db0ef9b34b34f2c91a9fb707a97a19c96c814b455f3c9e71f790e7
           out='qiqishoes-com/assets/aj4-black-home-final-20260817.jpg'
-          cat scripts/aj4-clean-q75.part0 \
-              scripts/aj4-clean-q75.part1 \
-              scripts/aj4-clean-q75.part2 \
-              scripts/aj4-clean-q75.part3 \
-              scripts/aj4-clean-q75.part4 \
-            | tr -d '\r\n' \
-            | base64 --decode \
-            > "$out"
-          test "$(wc -c < "$out")" -eq 52536
-          test "$(sha256sum "$out" | cut -d' ' -f1)" = '9330cad8a47fde3ec4aa24dbbb60a33ad10ed9c1e9da6ae040e9827e65cbd840'
+          python - <<'PY'
+          import base64, hashlib
+          from pathlib import Path
+          parts=[]
+          for i in range(5):
+              p=Path(f'scripts/aj4-clean-q75.part{i}')
+              parts.append(p.read_text(encoding='ascii'))
+          raw=base64.b64decode(''.join(parts), validate=True)
+          out=Path('qiqishoes-com/assets/aj4-black-home-final-20260817.jpg')
+          out.write_bytes(raw)
+          print('decoded bytes',len(raw),'sha',hashlib.sha256(raw).hexdigest())
+          if len(raw) != 52536:
+              raise SystemExit('decoded image size mismatch')
+          if hashlib.sha256(raw).hexdigest() != '9330cad8a47fde3ec4aa24dbbb60a33ad10ed9c1e9da6ae040e9827e65cbd840':
+              raise SystemExit('decoded image hash mismatch')
+          PY
           file "$out" | grep -qi 'JPEG image data'
           python -m pip install --quiet pillow
           python - <<'PY'
           from PIL import Image
           p='qiqishoes-com/assets/aj4-black-home-final-20260817.jpg'
-          im=Image.open(p)
-          im.verify()
-          im=Image.open(p)
+          im=Image.open(p); im.verify(); im=Image.open(p)
           print('local hero verified:', im.format, im.size)
           if im.format != 'JPEG' or im.size != (800, 484):
               raise SystemExit(f'Unexpected local hero: {im.format} {im.size}')
@@ -66,12 +83,9 @@ jobs:
           new='src="./assets/aj4-black-home-final-20260817.jpg?v=202608170155" alt="黑色 AJ4 鞋款" width="800" height="484"'
           pattern=r'src="\./assets/aj4-black[^\"]+" alt="黑色 AJ4 鞋款" width="\d+" height="\d+"'
           s2,n=re.subn(pattern,new,s,count=1)
-          if n != 1:
-              raise SystemExit(f'Expected exactly one AJ4 hero tag, found {n}')
+          if n != 1: raise SystemExit(f'Expected exactly one AJ4 hero tag, found {n}')
           p.write_text(s2,encoding='utf-8')
-          print('homepage hero reference updated')
           PY
-          grep -F 'aj4-black-home-final-20260817.jpg?v=202608170155' qiqishoes-com/index.html >/dev/null
 
       - name: Commit verified hero image
         shell: bash
@@ -81,7 +95,6 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add qiqishoes-com/assets/aj4-black-home-final-20260817.jpg qiqishoes-com/index.html
           git commit -m 'Use verified AJ4 JPEG on homepage'
-          git pull --rebase origin main
           git push origin main
 
       - name: Verify Cloudflare serves exact AJ4 JPEG
@@ -93,20 +106,15 @@ jobs:
           for i in $(seq 1 72); do
             page=$(curl -fsS --max-time 15 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/?verify=202608170155-${i}" || true)
             if printf '%s' "$page" | grep -q 'aj4-black-home-final-20260817.jpg?v=202608170155'; then
-              curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' \
-                "https://qiqishoes-com.pages.dev/assets/aj4-black-home-final-20260817.jpg?verify=202608170155-${i}" \
-                -o /tmp/live-aj4.jpg
+              curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/assets/aj4-black-home-final-20260817.jpg?verify=202608170155-${i}" -o /tmp/live-aj4.jpg
               test "$(wc -c < /tmp/live-aj4.jpg)" -eq 52536
               test "$(sha256sum /tmp/live-aj4.jpg | cut -d' ' -f1)" = "$expected_sha"
               python - <<'PY'
           from PIL import Image
           p='/tmp/live-aj4.jpg'
-          im=Image.open(p)
-          im.verify()
-          im=Image.open(p)
+          im=Image.open(p); im.verify(); im=Image.open(p)
           print('LIVE HERO VERIFIED:', im.format, im.size)
-          if im.format != 'JPEG' or im.size != (800, 484):
-              raise SystemExit(f'Bad live hero: {im.format} {im.size}')
+          if im.format != 'JPEG' or im.size != (800, 484): raise SystemExit(f'Bad live hero: {im.format} {im.size}')
           PY
               exit 0
             fi
