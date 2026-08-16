@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: Verify live links and images
+      - name: Verify live links and real product images
         shell: bash
         run: |
           python - <<'PY'
@@ -32,18 +32,18 @@ jobs:
           last=''
           for i in range(72):
               try:
-                  st,hd,app,_=get(origin+'/assets/app.js?verify='+str(i))
+                  st,hd,app,_=get(origin+'/assets/app.js?verify=product-'+str(i))
                   app_text=app.decode('utf-8','replace')
-                  st2,hd2,body,final=get(proxy+'&verify='+str(i))
+                  st2,hd2,body,final=get(proxy+'&verify=product-'+str(i))
                   ctype=hd2.get('content-type','')
                   enc='gb18030' if ('gb2312' in ctype.lower() or 'gbk' in ctype.lower()) else 'utf-8'
                   text=body.decode(enc,'replace')
                   local_app='function localCatalogHref(u)' in app_text
-                  visible_src='el.setAttribute' not in text  # page should contain transformed output, not source function
                   imgs=[]
                   for m in re.finditer(r'<img\b[^>]*\bsrc=["\']([^"\']+)',text,re.I):
                       u=html.unescape(m.group(1))
-                      if '/catalog-proxy?u=' in u and 'upfile' in urllib.parse.unquote(u):
+                      decoded=urllib.parse.unquote(u).lower()
+                      if '/catalog-proxy?u=' in u and '/upfile/category/' in decoded:
                           imgs.append(u)
                   bad=[]
                   for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']+)',text,re.I):
@@ -52,13 +52,13 @@ jobs:
                           host=(urllib.parse.urlparse(u).hostname or '').lower()
                           if host not in {'qiqishoes-com.pages.dev','wa.me'}:
                               bad.append(u)
-                  print('attempt',i,'app_local',local_app,'proxy',st2,'ctype',ctype,'imgs',len(imgs),'bad_links',len(bad))
+                  print('attempt',i,'app_local',local_app,'proxy',st2,'product_imgs',len(imgs),'bad_links',len(bad))
                   if local_app and st2==200 and imgs and not bad:
                       ist,ih,ib,ifu=get(imgs[0])
                       ict=(ih.get('content-type') or '').lower()
-                      print('image',ist,ict,len(ib),ifu)
+                      print('product image',ist,ict,len(ib),ifu)
                       if ist==200 and len(ib)>1000 and ('image/' in ict or ib[:3]==b'\xff\xd8\xff'):
-                          print('LIVE CATALOG VERIFIED: local navigation and visible images')
+                          print('LIVE PRODUCT VERIFIED: local navigation + real product image')
                           sys.exit(0)
                   last=f'app={local_app}, status={st2}, imgs={len(imgs)}, bad={bad[:3]}'
               except Exception as e:
