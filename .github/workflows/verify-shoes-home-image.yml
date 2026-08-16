@@ -1,0 +1,42 @@
+name: Verify Shoes Home Image
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-shoes-home-image.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Cloudflare and verify shoes image
+        shell: bash
+        run: |
+          set -euo pipefail
+          HOME_URL='https://qiqishoes-com.pages.dev/'
+          IMG_URL='https://qiqishoes-com.pages.dev/assets/catalog/shoes/shoes-home-20260816.jpg?v=202608162305'
+          for i in $(seq 1 30); do
+            echo "Attempt $i"
+            home=$(curl -fsSL --max-time 20 "$HOME_URL" || true)
+            code=$(curl -L -sS -o /tmp/shoes.jpg -w '%{http_code}' --max-time 20 "$IMG_URL" || true)
+            if [[ "$code" == "200" ]] && grep -q 'shoes-home-20260816.jpg?v=202608162305' <<<"$home" && [[ -s /tmp/shoes.jpg ]]; then
+              type=$(file -b --mime-type /tmp/shoes.jpg)
+              size=$(stat -c '%s' /tmp/shoes.jpg)
+              sha=$(sha256sum /tmp/shoes.jpg | awk '{print $1}')
+              echo "mime=$type size=$size sha=$sha"
+              if [[ "$type" == "image/jpeg" ]] && [[ "$size" == "18851" ]] && [[ "$sha" == "ac24cae2f16af051122da606700933a5de307513f884219e627c82475e0dad80" ]]; then
+                python -m pip install --quiet pillow
+                python -c "from PIL import Image; im=Image.open('/tmp/shoes.jpg'); print(im.format, im.size, im.mode); im.verify(); assert im.size==(320,320)"
+                echo 'LIVE_SHOES_IMAGE_OK'
+                exit 0
+              fi
+            fi
+            sleep 15
+          done
+          echo 'Shoes image did not update in time'
+          exit 1
