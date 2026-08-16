@@ -1,0 +1,167 @@
+name: Fix Local Catalog Navigation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-local-catalog-navigation.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fix-local-catalog-navigation
+  cancel-in-progress: true
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Make catalog links local and force lazy images visible
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          # 1) Build local catalog URLs directly in app.js so there is no race
+          # where an external tangma URL can be clicked before images-fix.js runs.
+          app = Path('qiqishoes-com/assets/app.js')
+          s = app.read_text(encoding='utf-8')
+          old = "function card(i){let n=name(i),href=esc(i.landing),img=esc(imageHref(i.image));"
+          new = "function localCatalogHref(u){return `${location.origin}/catalog-proxy?u=${encodeURIComponent(u)}`}\nfunction card(i){let n=name(i),href=esc(localCatalogHref(i.landing)),img=esc(imageHref(i.image));"
+          if old not in s and 'function localCatalogHref(u)' not in s:
+              raise SystemExit('Could not find card() landing link in app.js')
+          if old in s:
+              s = s.replace(old, new, 1)
+          app.write_text(s, encoding='utf-8')
+
+          # 2) The source pages use lazy-loaded images (data-original) and require
+          # their JS. Our mirror intentionally strips upstream JS, so set src
+          # directly to the proxied product image and remove lazy-only attributes.
+          proxy = Path('functions/catalog-proxy.js')
+          p = proxy.read_text(encoding='utf-8')
+          start = p.index('class ImageHandler {')
+          end = p.index('\n\nclass AssetLinkHandler', start)
+          image_handler = r'''class ImageHandler {
+  constructor(base, request) { this.base = base; this.request = request; }
+  element(el) {
+    let displaySrc = null;
+    const priority = ['data-original', 'data-src', 'data-lazy-src', 'src'];
+    for (const attr of priority) {
+      const value = el.getAttribute(attr);
+      const target = resolveTarget(value, this.base);
+      if (!target) continue;
+      const proxied = proxyHref(target, this.request);
+      el.setAttribute(attr, proxied);
+      if (!displaySrc) displaySrc = proxied;
+    }
+    if (displaySrc) {
+      el.setAttribute('src', displaySrc);
+      el.removeAttribute('data-original');
+      el.removeAttribute('data-src');
+      el.removeAttribute('data-lazy-src');
+      el.removeAttribute('loading');
+      const cls = (el.getAttribute('class') || '')
+        .split(/\s+/)
+        .filter(Boolean)
+        .filter(x => !/^(?:lazy|lazyload|lazyloaded)$/i.test(x))
+        .join(' ');
+      if (cls) el.setAttribute('class', cls); else el.removeAttribute('class');
+    }
+    for (const attr of ['srcset', 'data-srcset']) {
+      const value = el.getAttribute(attr);
+      if (value) el.setAttribute(attr, rewriteSrcset(value, this.base, this.request));
+    }
+    const style = el.getAttribute('style');
+    if (style) el.setAttribute('style', rewriteCss(style, this.base, this.request));
+  }
+}'''
+          p = p[:start] + image_handler + p[end:]
+          proxy.write_text(p, encoding='utf-8')
+
+          # 3) Bump both scripts on every catalog page to defeat browser/Cloudflare cache.
+          version = '202608170300'
+          for name in ['fashion', 'accessories', 'bags', 'shoes']:
+              page = Path(f'qiqishoes-com/{name}/index.html')
+              t = page.read_text(encoding='utf-8')
+              t, n1 = re.subn(r'app\.js\?v=\d+', f'app.js?v={version}', t)
+              t, n2 = re.subn(r'images-fix\.js\?v=\d+', f'images-fix.js?v={version}', t)
+              if n1 != 1 or n2 != 1:
+                  raise SystemExit(f'Unexpected script refs in {page}: app={n1}, fix={n2}')
+              page.write_text(t, encoding='utf-8')
+
+          # 4) Make JS/Catalog HTML non-cacheable while this fix propagates.
+          headers = Path('qiqishoes-com/_headers')
+          h = headers.read_text(encoding='utf-8')
+          additions = '''\n/assets/app.js\n  Cache-Control: no-cache, no-store, must-revalidate\n\n/assets/images-fix.js\n  Cache-Control: no-cache, no-store, must-revalidate\n\n/fashion/*\n  Cache-Control: no-cache, no-store, must-revalidate\n\n/accessories/*\n  Cache-Control: no-cache, no-store, must-revalidate\n\n/bags/*\n  Cache-Control: no-cache, no-store, must-revalidate\n\n/shoes/*\n  Cache-Control: no-cache, no-store, must-revalidate\n'''
+          if '/assets/app.js' not in h:
+              h = h.rstrip() + '\n' + additions
+              headers.write_text(h, encoding='utf-8')
+          PY
+
+          grep -q 'function localCatalogHref(u)' qiqishoes-com/assets/app.js
+          grep -q "el.setAttribute('src', displaySrc)" functions/catalog-proxy.js
+
+      - name: Commit fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add functions/catalog-proxy.js qiqishoes-com/assets/app.js qiqishoes-com/assets/images-fix.js qiqishoes-com/_headers qiqishoes-com/fashion/index.html qiqishoes-com/accessories/index.html qiqishoes-com/bags/index.html qiqishoes-com/shoes/index.html
+          git commit -m 'Fix local catalog links and product images'
+          git push origin main
+
+      - name: Verify live catalog stays local and images load
+        shell: bash
+        run: |
+          set -euo pipefail
+          target='https%3A%2F%2Fwww.tangma2088.com%2Fcategoryen_3.html%3Fpath%3D0_3'
+          for i in $(seq 1 72); do
+            app=$(curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/assets/app.js?verify=local-${i}" || true)
+            page=$(curl -fsSL --max-time 30 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/catalog-proxy?u=${target}&verify=local-${i}" || true)
+            if printf '%s' "$app" | grep -q 'function localCatalogHref(u)' && printf '%s' "$page" | grep -q 'qiqi-mirror-bar'; then
+              printf '%s' "$page" > /tmp/page.html
+              python - <<'PY' > /tmp/check.out
+          from pathlib import Path
+          import re, html, urllib.parse
+          s=Path('/tmp/page.html').read_text(encoding='utf-8',errors='replace')
+          # Every normal catalog link must stay on qiqishoes-com.pages.dev.
+          bad=[]
+          for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']+)',s,re.I):
+              u=html.unescape(m.group(1))
+              if u.startswith(('http://','https://')):
+                  host=urllib.parse.urlparse(u).hostname or ''
+                  if host != 'qiqishoes-com.pages.dev' and host not in {'wa.me'}:
+                      bad.append(u)
+          if bad:
+              raise SystemExit('External catalog links remain: '+repr(bad[:5]))
+          imgs=[]
+          for m in re.finditer(r'<img\b[^>]*\bsrc=["\']([^"\']+)',s,re.I):
+              u=html.unescape(m.group(1))
+              if '/catalog-proxy?u=' in u and 'upfile' in urllib.parse.unquote(u):
+                  imgs.append(u)
+          if not imgs:
+              raise SystemExit('No visible proxied product image src found')
+          print(imgs[0])
+          PY
+              img=$(cat /tmp/check.out)
+              code=$(curl -sS -L --max-time 30 -o /tmp/product.img -w '%{http_code}' "$img" || true)
+              if [ "$code" = '200' ] && [ "$(wc -c < /tmp/product.img)" -gt 1000 ]; then
+                file /tmp/product.img | grep -Eqi 'image|JPEG|PNG|GIF|WebP'
+                echo 'LIVE CATALOG FIX VERIFIED: local links + visible product image'
+                exit 0
+              fi
+            fi
+            sleep 5
+          done
+          echo 'Cloudflare did not publish the fixed local catalog within 6 minutes' >&2
+          exit 1
