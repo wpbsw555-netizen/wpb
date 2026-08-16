@@ -9,3 +9,21 @@
 
 /assets/catalog/accessories/rolex-accessories-home-20260815.jpg
   Cache-Control: no-cache, no-store, must-revalidate
+
+/assets/app.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/assets/images-fix.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/fashion/*
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/accessories/*
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/bags/*
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/shoes/*
+  Cache-Control: no-cache, no-store, must-revalidate

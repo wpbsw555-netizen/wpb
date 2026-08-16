@@ -64,10 +64,28 @@ class AnchorHandler {
 class ImageHandler {
   constructor(base, request) { this.base = base; this.request = request; }
   element(el) {
-    for (const attr of ['src', 'data-src', 'data-original', 'data-lazy-src']) {
+    let displaySrc = null;
+    const priority = ['data-original', 'data-src', 'data-lazy-src', 'src'];
+    for (const attr of priority) {
       const value = el.getAttribute(attr);
       const target = resolveTarget(value, this.base);
-      if (target) el.setAttribute(attr, proxyHref(target, this.request));
+      if (!target) continue;
+      const proxied = proxyHref(target, this.request);
+      el.setAttribute(attr, proxied);
+      if (!displaySrc) displaySrc = proxied;
+    }
+    if (displaySrc) {
+      el.setAttribute('src', displaySrc);
+      el.removeAttribute('data-original');
+      el.removeAttribute('data-src');
+      el.removeAttribute('data-lazy-src');
+      el.removeAttribute('loading');
+      const cls = (el.getAttribute('class') || '')
+        .split(/\s+/)
+        .filter(Boolean)
+        .filter(x => !/^(?:lazy|lazyload|lazyloaded)$/i.test(x))
+        .join(' ');
+      if (cls) el.setAttribute('class', cls); else el.removeAttribute('class');
     }
     for (const attr of ['srcset', 'data-srcset']) {
       const value = el.getAttribute(attr);
