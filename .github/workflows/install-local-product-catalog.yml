@@ -1,0 +1,139 @@
+name: Install Fully Local Product Catalog
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/install-local-product-catalog.yml'
+      - 'functions/local-catalog.js'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: install-local-product-catalog
+  cancel-in-progress: true
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Point every catalog card to QIQI local product page
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          app = Path('qiqishoes-com/assets/app.js')
+          s = app.read_text(encoding='utf-8')
+          s, n1 = re.subn(
+              r"function localCatalogHref\(u\)\{return `\$\{location\.origin\}/catalog-proxy\?u=\$\{encodeURIComponent\(u\)\}`\}",
+              "function localCatalogHref(i){return `${location.origin}/local-catalog?dept=${encodeURIComponent(dept)}&id=${encodeURIComponent(i.id)}`}",
+              s,
+              count=1,
+          )
+          s, n2 = re.subn(r"href=esc\(localCatalogHref\(i\.landing\)\)", "href=esc(localCatalogHref(i))", s, count=1)
+          if n1 != 1 and 'function localCatalogHref(i)' not in s:
+              raise SystemExit(f'Could not patch localCatalogHref: {n1}')
+          if n2 != 1 and 'href=esc(localCatalogHref(i))' not in s:
+              raise SystemExit(f'Could not patch card href: {n2}')
+          app.write_text(s, encoding='utf-8')
+
+          version = '202608170330'
+          for name in ['fashion', 'accessories', 'bags', 'shoes']:
+              page = Path(f'qiqishoes-com/{name}/index.html')
+              t = page.read_text(encoding='utf-8')
+              t, n = re.subn(r'app\.js\?v=\d+', f'app.js?v={version}', t)
+              if n != 1:
+                  raise SystemExit(f'Expected one app.js ref in {page}, found {n}')
+              page.write_text(t, encoding='utf-8')
+          PY
+          grep -q 'function localCatalogHref(i)' qiqishoes-com/assets/app.js
+          grep -q 'href=esc(localCatalogHref(i))' qiqishoes-com/assets/app.js
+
+      - name: Commit local navigation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qiqishoes-com/assets/app.js qiqishoes-com/fashion/index.html qiqishoes-com/accessories/index.html qiqishoes-com/bags/index.html qiqishoes-com/shoes/index.html functions/local-catalog.js
+          if git diff --cached --quiet; then
+            echo 'No changes to commit'
+          else
+            git commit -m 'Keep every product catalog fully inside QIQI site'
+            git push origin main
+          fi
+
+      - name: Verify all four local product catalogs and real images
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import urllib.request, urllib.parse, re, html, time, sys
+
+          origin='https://qiqishoes-com.pages.dev'
+          tests=[('fashion','3'),('accessories','16511'),('bags','29314'),('shoes','355')]
+
+          def get(url, timeout=40):
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache','Accept':'*/*'})
+              with urllib.request.urlopen(req,timeout=timeout) as r:
+                  return r.status, r.headers, r.read(), r.url
+
+          last=''
+          for attempt in range(72):
+              try:
+                  _,_,app,_=get(origin+'/assets/app.js?verify=local-page-'+str(attempt))
+                  app_text=app.decode('utf-8','replace')
+                  if 'function localCatalogHref(i)' not in app_text or '/local-catalog?dept=' not in app_text:
+                      raise RuntimeError('new local app.js not live yet')
+
+                  all_ok=True
+                  for dept,cid in tests:
+                      url=f'{origin}/local-catalog?dept={dept}&id={cid}&verify={attempt}'
+                      st,hd,body,final=get(url)
+                      text=body.decode('utf-8','replace')
+                      if st != 200 or 'QIQI SHOES · LOCAL CATALOG' not in text:
+                          raise RuntimeError(f'{dept}: local page not ready status={st}')
+
+                      bad=[]
+                      for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']+)',text,re.I):
+                          href=html.unescape(m.group(1))
+                          if href.startswith(('http://','https://')):
+                              host=(urllib.parse.urlparse(href).hostname or '').lower()
+                              if host not in {'wa.me','qiqishoes-com.pages.dev'}:
+                                  bad.append(href)
+                      if bad:
+                          raise RuntimeError(f'{dept}: external links remain {bad[:3]}')
+
+                      imgs=[]
+                      for m in re.finditer(r'<img\b[^>]*src=["\']([^"\']+)',text,re.I):
+                          src=html.unescape(m.group(1))
+                          if '/catalog-proxy?u=' in src:
+                              imgs.append(src)
+                      if not imgs:
+                          raise RuntimeError(f'{dept}: no product images found')
+
+                      ist,ih,ib,ifu=get(imgs[0])
+                      ict=(ih.get('content-type') or '').lower()
+                      if ist != 200 or len(ib) <= 3000 or ('image/' not in ict and ib[:3] != b'\xff\xd8\xff'):
+                          raise RuntimeError(f'{dept}: image failed status={ist} type={ict} bytes={len(ib)}')
+                      print(dept,'OK','products',len(imgs),'image',ict,len(ib),'final',final)
+
+                  if all_ok:
+                      print('ALL LOCAL PRODUCT CATALOGS VERIFIED')
+                      sys.exit(0)
+              except Exception as e:
+                  last=repr(e)
+                  print('attempt',attempt,last)
+              time.sleep(5)
+          raise SystemExit('Verification failed: '+last)
+          PY
