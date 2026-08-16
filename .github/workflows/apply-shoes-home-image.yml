@@ -1,0 +1,65 @@
+name: Apply Shoes Home Image
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-shoes-home-image.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rebuild shoes homepage image
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import base64, hashlib
+          base = Path('qiqishoes-com/assets/catalog/shoes')
+          s = ''.join((base / f'shoes-home.part{i}').read_text().strip() for i in range(4))
+          raw = base64.b64decode(s, validate=True)
+          out = base / 'shoes-home-20260816.jpg'
+          out.write_bytes(raw)
+          assert len(raw) == 18851, len(raw)
+          assert hashlib.sha256(raw).hexdigest() == 'ac24cae2f16af051122da606700933a5de307513f884219e627c82475e0dad80'
+          assert raw[:2] == b'\xff\xd8' and raw[-2:] == b'\xff\xd9'
+          print('image ok', len(raw))
+          PY
+
+      - name: Replace only shoes card image
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('qiqishoes-com/index.html')
+          s = p.read_text()
+          new = '.dept.shoes{--image:url("./assets/catalog/shoes/shoes-home-20260816.jpg?v=202608162245")}'
+          s2, n = re.subn(r'\.dept\.shoes\{--image:url\("[^\"]+"\)\}', new, s, count=1)
+          if n != 1:
+              raise SystemExit(f'Expected one shoes image CSS rule, replaced {n}')
+          p.write_text(s2)
+          PY
+
+      - name: Commit shoes image update
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qiqishoes-com/index.html qiqishoes-com/assets/catalog/shoes/shoes-home-20260816.jpg
+          if git diff --cached --quiet; then
+            echo 'No changes to commit'
+            exit 0
+          fi
+          git commit -m 'Replace homepage shoes card image'
+          git push
