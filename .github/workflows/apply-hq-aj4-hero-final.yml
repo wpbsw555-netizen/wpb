@@ -14,24 +14,37 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          src="qiqishoes-com/assets/aj4-black-clear-900.webp"
-          out="qiqishoes-com/assets/aj4-black-hero-live-20260817.jpg"
-          test -s "$src"
-          file "$src" | grep -qi 'Web/P image'
-          ffmpeg -hide_banner -loglevel error -y -i "$src" -vf "scale=1200:-2:flags=lanczos,unsharp=5:5:0.55:5:5:0" -q:v 2 "$out"
-          file "$out" | grep -qi 'JPEG image data'
-          test "$(wc -c < "$out")" -gt 50000
+          python -m pip install --quiet pillow
           python - <<'PY'
           from pathlib import Path
+          from PIL import Image, ImageEnhance, ImageFilter
           import re
+          src=Path('qiqishoes-com/assets/aj4-black-clear-900.webp')
+          out=Path('qiqishoes-com/assets/aj4-black-hero-live-20260817.jpg')
+          if not src.exists() or src.stat().st_size < 50000:
+              raise SystemExit('Source AJ4 image missing or too small')
+          im=Image.open(src).convert('RGB')
+          if im.width < 700 or im.height < 400:
+              raise SystemExit(f'Source AJ4 dimensions too small: {im.size}')
+          target_w=1200
+          target_h=round(im.height*target_w/im.width)
+          im=im.resize((target_w,target_h),Image.Resampling.LANCZOS)
+          im=im.filter(ImageFilter.UnsharpMask(radius=1.1,percent=110,threshold=2))
+          im.save(out,'JPEG',quality=94,optimize=True,progressive=True,subsampling=0)
+          test=Image.open(out)
+          test.verify()
+          if out.stat().st_size < 70000:
+              raise SystemExit(f'Output JPG unexpectedly small: {out.stat().st_size}')
           p=Path('qiqishoes-com/index.html')
           s=p.read_text(encoding='utf-8')
-          new='src="./assets/aj4-black-hero-live-20260817.jpg?v=202608170100" alt="黑色 AJ4 鞋款" width="1200" height="800"'
+          new=f'src="./assets/{out.name}?v=202608170105" alt="黑色 AJ4 鞋款" width="{target_w}" height="{target_h}"'
           pattern=r'src="\./assets/aj4-black[^\"]+" alt="黑色 AJ4 鞋款" width="\d+" height="\d+"'
           s2,n=re.subn(pattern,new,s,count=1)
           if n != 1:
               raise SystemExit('Hero image tag not found')
           p.write_text(s2,encoding='utf-8')
+          print('source',src.stat().st_size,Image.open(src).size)
+          print('output',out.stat().st_size,(target_w,target_h))
           PY
       - name: Commit hero JPG and homepage reference
         shell: bash
@@ -46,13 +59,22 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python -m pip install --quiet pillow
           for i in $(seq 1 60); do
-            page=$(curl -fsS --max-time 12 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/?v=202608170100${i}" || true)
-            if echo "$page" | grep -q 'aj4-black-hero-live-20260817.jpg?v=202608170100'; then
-              curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/assets/aj4-black-hero-live-20260817.jpg?v=202608170100${i}" -o /tmp/hero.jpg
-              test "$(wc -c < /tmp/hero.jpg)" -gt 50000
-              file /tmp/hero.jpg | grep -qi 'JPEG image data'
-              ffmpeg -hide_banner -loglevel error -i /tmp/hero.jpg -f null -
+            page=$(curl -fsS --max-time 12 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/?v=202608170105${i}" || true)
+            if echo "$page" | grep -q 'aj4-black-hero-live-20260817.jpg?v=202608170105'; then
+              curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/assets/aj4-black-hero-live-20260817.jpg?v=202608170105${i}" -o /tmp/hero.jpg
+              test "$(wc -c < /tmp/hero.jpg)" -gt 70000
+              python - <<'PY'
+          from PIL import Image
+          p='/tmp/hero.jpg'
+          im=Image.open(p)
+          im.verify()
+          im=Image.open(p)
+          if im.format != 'JPEG' or im.width < 1000 or im.height < 500:
+              raise SystemExit(f'Bad live hero image: {im.format} {im.size}')
+          print('live hero verified',im.format,im.size)
+          PY
               exit 0
             fi
             sleep 5
