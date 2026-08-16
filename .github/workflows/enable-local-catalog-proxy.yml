@@ -1,0 +1,316 @@
+name: Enable Local Catalog Mirror
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/enable-local-catalog-proxy.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: enable-local-catalog-mirror
+  cancel-in-progress: true
+
+jobs:
+  install:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Install Cloudflare catalog proxy and make catalog links local
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p functions
+          cat > functions/catalog-proxy.js <<'EOF'
+          const WHATSAPP = '8613159065939';
+
+          function isAllowedTarget(url) {
+            if (!(url instanceof URL) || url.protocol !== 'https:') return false;
+            const host = url.hostname.toLowerCase();
+            return host === 'tangma2088.com' || host.endsWith('.tangma2088.com');
+          }
+
+          function resolveTarget(value, base) {
+            if (!value) return null;
+            const trimmed = String(value).trim();
+            if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('data:') || trimmed.startsWith('blob:')) return null;
+            try {
+              const url = new URL(trimmed, base);
+              return isAllowedTarget(url) ? url : null;
+            } catch {
+              return null;
+            }
+          }
+
+          function proxyHref(url, request) {
+            const here = new URL(request.url);
+            return `${here.origin}/catalog-proxy?u=${encodeURIComponent(url.href)}`;
+          }
+
+          function rewriteCss(css, base, request) {
+            return css.replace(/url\(\s*(['\"]?)([^'\")]+)\1\s*\)/gi, (all, quote, raw) => {
+              const target = resolveTarget(raw, base);
+              if (!target) return all;
+              return `url("${proxyHref(target, request)}")`;
+            });
+          }
+
+          function rewriteSrcset(value, base, request) {
+            return String(value || '').split(',').map((part) => {
+              const bits = part.trim().split(/\s+/);
+              if (!bits[0]) return part;
+              const target = resolveTarget(bits[0], base);
+              if (!target) return part;
+              bits[0] = proxyHref(target, request);
+              return bits.join(' ');
+            }).join(', ');
+          }
+
+          class AnchorHandler {
+            constructor(base, request) { this.base = base; this.request = request; }
+            element(el) {
+              el.removeAttribute('target');
+              el.removeAttribute('rel');
+              el.removeAttribute('onclick');
+              const href = el.getAttribute('href');
+              if (!href || href.startsWith('#')) return;
+              const target = resolveTarget(href, this.base);
+              if (target) {
+                el.setAttribute('href', proxyHref(target, this.request));
+                return;
+              }
+              if (/^(?:https?:)?\/\//i.test(href) || /^(?:javascript|mailto|tel):/i.test(href)) {
+                el.setAttribute('href', '#');
+              }
+            }
+          }
+
+          class ImageHandler {
+            constructor(base, request) { this.base = base; this.request = request; }
+            element(el) {
+              for (const attr of ['src', 'data-src', 'data-original', 'data-lazy-src']) {
+                const value = el.getAttribute(attr);
+                const target = resolveTarget(value, this.base);
+                if (target) el.setAttribute(attr, proxyHref(target, this.request));
+              }
+              for (const attr of ['srcset', 'data-srcset']) {
+                const value = el.getAttribute(attr);
+                if (value) el.setAttribute(attr, rewriteSrcset(value, this.base, this.request));
+              }
+              const style = el.getAttribute('style');
+              if (style) el.setAttribute('style', rewriteCss(style, this.base, this.request));
+            }
+          }
+
+          class AssetLinkHandler {
+            constructor(base, request) { this.base = base; this.request = request; }
+            element(el) {
+              const href = el.getAttribute('href');
+              const target = resolveTarget(href, this.base);
+              if (target) el.setAttribute('href', proxyHref(target, this.request));
+            }
+          }
+
+          class FormHandler {
+            constructor(base, request) { this.base = base; this.request = request; }
+            element(el) {
+              const action = el.getAttribute('action');
+              const target = resolveTarget(action, this.base);
+              if (target) el.setAttribute('action', proxyHref(target, this.request));
+              else el.setAttribute('action', '#');
+              el.setAttribute('method', 'get');
+            }
+          }
+
+          class StyleHandler {
+            constructor(base, request) { this.base = base; this.request = request; }
+            text(text) {
+              if (text.text) text.replace(rewriteCss(text.text, this.base, this.request));
+            }
+          }
+
+          class HeadHandler {
+            element(el) {
+              el.append(`<style id="qiqi-mirror-style">#qiqi-mirror-bar{position:sticky;top:0;z-index:2147483647;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;background:#0d0d0f;color:#fff;border-bottom:2px solid #c8ff18;font:700 14px/1.2 Arial,sans-serif}#qiqi-mirror-bar a{color:#fff!important;text-decoration:none!important}#qiqi-mirror-bar .qiqi-home{font-weight:900;letter-spacing:1px}#qiqi-mirror-bar .qiqi-wa{background:#20bd63;padding:8px 12px;border-radius:3px}html{scroll-padding-top:54px}</style>`, { html: true });
+            }
+          }
+
+          class BodyHandler {
+            element(el) {
+              el.prepend(`<div id="qiqi-mirror-bar"><a class="qiqi-home" href="/">QIQI SHOES · CATALOG</a><a href="javascript:history.back()">← Back / 返回</a><a class="qiqi-wa" href="https://wa.me/${WHATSAPP}" target="_blank" rel="noopener noreferrer">WhatsApp</a></div>`, { html: true });
+            }
+          }
+
+          class RemoveHandler { element(el) { el.remove(); } }
+          class StripEventHandler {
+            element(el) {
+              for (const attr of ['onclick','onmousedown','onmouseup','onmouseover','onmouseout','onload','onerror']) el.removeAttribute(attr);
+            }
+          }
+
+          export async function onRequest(context) {
+            const { request } = context;
+            if (!['GET', 'HEAD'].includes(request.method)) return new Response('Method Not Allowed', { status: 405 });
+
+            const incoming = new URL(request.url);
+            const raw = incoming.searchParams.get('u');
+            if (!raw) return new Response('Missing catalog target', { status: 400 });
+
+            let target;
+            try { target = new URL(raw); } catch { return new Response('Bad catalog target', { status: 400 }); }
+            if (!isAllowedTarget(target)) return new Response('Catalog target is not allowed', { status: 403 });
+
+            const cache = caches.default;
+            const cacheKey = new Request(request.url, { method: 'GET' });
+            const cached = await cache.match(cacheKey);
+            if (cached) return request.method === 'HEAD' ? new Response(null, { status: cached.status, headers: cached.headers }) : cached;
+
+            let upstream;
+            try {
+              upstream = await fetch(target.href, {
+                redirect: 'follow',
+                headers: {
+                  'Accept': request.headers.get('Accept') || '*/*',
+                  'Accept-Language': request.headers.get('Accept-Language') || 'en-US,en;q=0.9',
+                  'Referer': `${target.origin}/`
+                }
+              });
+            } catch (error) {
+              return new Response(`Catalog source fetch failed: ${error?.message || error}`, { status: 502 });
+            }
+
+            let finalUrl;
+            try { finalUrl = new URL(upstream.url || target.href); } catch { finalUrl = target; }
+            if (!isAllowedTarget(finalUrl)) return new Response('Catalog source redirected outside the allowed host', { status: 502 });
+
+            const type = (upstream.headers.get('content-type') || '').toLowerCase();
+
+            if (type.includes('text/html')) {
+              const headers = new Headers();
+              headers.set('content-type', upstream.headers.get('content-type') || 'text/html; charset=utf-8');
+              headers.set('cache-control', 'no-store');
+              headers.set('x-robots-tag', 'noindex, nofollow');
+              const baseResponse = new Response(request.method === 'HEAD' ? null : upstream.body, { status: upstream.status, headers });
+              if (request.method === 'HEAD') return baseResponse;
+
+              return new HTMLRewriter()
+                .on('base', new RemoveHandler())
+                .on('script', new RemoveHandler())
+                .on('meta[http-equiv="refresh"]', new RemoveHandler())
+                .on('head', new HeadHandler())
+                .on('body', new BodyHandler())
+                .on('a[href]', new AnchorHandler(finalUrl, request))
+                .on('form', new FormHandler(finalUrl, request))
+                .on('img', new ImageHandler(finalUrl, request))
+                .on('source', new ImageHandler(finalUrl, request))
+                .on('input[type="image"]', new ImageHandler(finalUrl, request))
+                .on('link[rel="stylesheet"]', new AssetLinkHandler(finalUrl, request))
+                .on('link[rel*="icon"]', new AssetLinkHandler(finalUrl, request))
+                .on('style', new StyleHandler(finalUrl, request))
+                .on('[style]', new ImageHandler(finalUrl, request))
+                .on('*', new StripEventHandler())
+                .transform(baseResponse);
+            }
+
+            if (type.includes('text/css')) {
+              const css = rewriteCss(await upstream.text(), finalUrl, request);
+              const headers = new Headers();
+              headers.set('content-type', upstream.headers.get('content-type') || 'text/css; charset=utf-8');
+              headers.set('cache-control', 'public, max-age=2592000, s-maxage=2592000, immutable');
+              const out = new Response(request.method === 'HEAD' ? null : css, { status: upstream.status, headers });
+              if (upstream.ok && request.method === 'GET') context.waitUntil(cache.put(cacheKey, out.clone()));
+              return out;
+            }
+
+            const headers = new Headers();
+            const contentType = upstream.headers.get('content-type');
+            if (contentType) headers.set('content-type', contentType);
+            const disposition = upstream.headers.get('content-disposition');
+            if (disposition) headers.set('content-disposition', disposition);
+            headers.set('cache-control', 'public, max-age=2592000, s-maxage=2592000, immutable');
+            headers.set('access-control-allow-origin', '*');
+            const out = new Response(request.method === 'HEAD' ? null : upstream.body, { status: upstream.status, headers });
+            if (upstream.ok && request.method === 'GET') context.waitUntil(cache.put(cacheKey, out.clone()));
+            return out;
+          }
+          EOF
+
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('qiqishoes-com/assets/images-fix.js')
+          s = p.read_text(encoding='utf-8')
+          start = s.index('  function rewriteOriginalLandingPages() {')
+          end = s.index('\n\n  function patchDamagedThumbnail()', start)
+          replacement = r'''  function localMirrorUrl(targetUrl) {
+            return `${location.origin}/catalog-proxy?u=${encodeURIComponent(targetUrl)}`;
+          }
+
+          function rewriteOriginalLandingPages() {
+            document.querySelectorAll('#productGrid a[href*="categoryen_"]').forEach((link) => {
+              const rawHref = link.getAttribute('href') || link.href;
+              const match = rawHref.match(/categoryen_(\d+)\.html/i);
+              if (!match) return;
+              const categoryId = match[1];
+              const target = `${domain}/categoryen_${categoryId}.html?path=0_${categoryId}`;
+              link.href = localMirrorUrl(target);
+              link.removeAttribute('target');
+              link.removeAttribute('rel');
+              link.target = '_self';
+            });
+          }'''
+          s = s[:start] + replacement + s[end:]
+          p.write_text(s, encoding='utf-8')
+
+          version = '202608170238'
+          for name in ['fashion', 'accessories', 'bags', 'shoes']:
+              page = Path(f'qiqishoes-com/{name}/index.html')
+              text = page.read_text(encoding='utf-8')
+              text, n = re.subn(r'images-fix\.js\?v=\d+', f'images-fix.js?v={version}', text)
+              if n != 1:
+                  raise SystemExit(f'Expected one images-fix script in {page}, found {n}')
+              page.write_text(text, encoding='utf-8')
+          PY
+
+          grep -q '/catalog-proxy?u=' qiqishoes-com/assets/images-fix.js
+          test -s functions/catalog-proxy.js
+
+      - name: Commit local catalog mirror
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add functions/catalog-proxy.js qiqishoes-com/assets/images-fix.js qiqishoes-com/fashion/index.html qiqishoes-com/accessories/index.html qiqishoes-com/bags/index.html qiqishoes-com/shoes/index.html
+          git commit -m 'Keep product catalogs inside QIQI site'
+          git push origin main
+
+      - name: Verify Cloudflare local catalog mirror
+        shell: bash
+        run: |
+          set -euo pipefail
+          target='https%3A%2F%2Fwww.tangma2088.com%2Fcategoryen_3.html%3Fpath%3D0_3'
+          for i in $(seq 1 72); do
+            script=$(curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/assets/images-fix.js?verify=202608170238-${i}" || true)
+            if printf '%s' "$script" | grep -q '/catalog-proxy?u='; then
+              code=$(curl -sS --max-time 30 -o /tmp/qiqi-catalog.html -w '%{http_code}' "https://qiqishoes-com.pages.dev/catalog-proxy?u=${target}&verify=${i}" || true)
+              if [ "$code" = '200' ] && grep -q 'qiqi-mirror-bar' /tmp/qiqi-catalog.html; then
+                echo 'LIVE LOCAL CATALOG VERIFIED'
+                exit 0
+              fi
+              echo "proxy status=$code"
+            fi
+            sleep 5
+          done
+          echo 'Cloudflare did not publish the local catalog mirror within 6 minutes' >&2
+          exit 1
