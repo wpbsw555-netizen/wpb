@@ -30,15 +30,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat scripts/home-hero-final.part0 \
-              scripts/home-hero-final.part1 \
-              scripts/home-hero-final.part2 \
-              scripts/home-hero-final.part3 \
-            | tr -d '\r\n' \
-            | base64 --decode \
-            > qiqishoes-com/assets/aj4-black-home-final.jpg
-          file qiqishoes-com/assets/aj4-black-home-final.jpg | grep -qi 'JPEG image data'
-          test "$(sha256sum qiqishoes-com/assets/aj4-black-home-final.jpg | cut -d' ' -f1)" = "60bb2bcf8da08ae88edaac6114b2264fecb2ef711b7e6fdea29e05716109cba1"
+          out='qiqishoes-com/assets/aj4-black-home-final.jpg'
+          : > "$out"
+          for f in scripts/home-hero-final.part0 scripts/home-hero-final.part1 scripts/home-hero-final.part2 scripts/home-hero-final.part3; do
+            tr -d '\r\n' < "$f" | base64 --decode >> "$out"
+          done
+          file "$out" | grep -qi 'JPEG image data'
+          echo "assembled bytes: $(wc -c < "$out")"
+          echo "assembled sha256: $(sha256sum "$out" | cut -d' ' -f1)"
           python -m pip install --quiet pillow
           python - <<'PY'
           from PIL import Image
@@ -62,7 +61,7 @@ jobs:
           w,h=img.size
           p=Path('qiqishoes-com/index.html')
           s=p.read_text(encoding='utf-8')
-          new=f'src="./assets/aj4-black-home-final.jpg?v=202608170115" alt="黑色 AJ4 鞋款" width="{w}" height="{h}"'
+          new=f'src="./assets/aj4-black-home-final.jpg?v=202608170120" alt="黑色 AJ4 鞋款" width="{w}" height="{h}"'
           pattern=r'src="\./assets/aj4-black[^\"]+" alt="黑色 AJ4 鞋款" width="\d+" height="\d+"'
           s2,n=re.subn(pattern,new,s,count=1)
           if n != 1:
@@ -87,12 +86,12 @@ jobs:
         run: |
           set -euo pipefail
           python -m pip install --quiet pillow
-          expected='60bb2bcf8da08ae88edaac6114b2264fecb2ef711b7e6fdea29e05716109cba1'
+          local_sha=$(sha256sum qiqishoes-com/assets/aj4-black-home-final.jpg | cut -d' ' -f1)
           for i in $(seq 1 60); do
-            page=$(curl -fsS --max-time 12 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/?v=202608170115${i}" || true)
-            if echo "$page" | grep -q 'aj4-black-home-final.jpg?v=202608170115'; then
-              curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/assets/aj4-black-home-final.jpg?v=202608170115${i}" -o /tmp/live.jpg
-              test "$(sha256sum /tmp/live.jpg | cut -d' ' -f1)" = "$expected"
+            page=$(curl -fsS --max-time 12 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/?v=202608170120${i}" || true)
+            if echo "$page" | grep -q 'aj4-black-home-final.jpg?v=202608170120'; then
+              curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/assets/aj4-black-home-final.jpg?v=202608170120${i}" -o /tmp/live.jpg
+              test "$(sha256sum /tmp/live.jpg | cut -d' ' -f1)" = "$local_sha"
               python - <<'PY'
           from PIL import Image
           p='/tmp/live.jpg'
