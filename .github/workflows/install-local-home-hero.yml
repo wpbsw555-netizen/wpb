@@ -1,4 +1,4 @@
-name: Install Local Homepage Hero
+name: Install Verified Local AJ4 Hero
 
 on:
   workflow_dispatch:
@@ -11,15 +11,13 @@ on:
 permissions:
   contents: write
 
-env:
-  RUN_REQUEST: '2026-08-03T23:48:00+08:00'
-
 concurrency:
-  group: install-local-home-hero
+  group: install-verified-local-aj4-hero
   cancel-in-progress: true
 
 jobs:
   install:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -31,48 +29,83 @@ jobs:
       - name: Assemble and verify local JPEG
         shell: bash
         run: |
+          set -euo pipefail
           cat scripts/home-hero-final.part0 \
               scripts/home-hero-final.part1 \
               scripts/home-hero-final.part2 \
               scripts/home-hero-final.part3 \
             | tr -d '\r\n' \
             | base64 --decode \
-            > qiqishoes-com/assets/home-hero-final.jpg
-          file qiqishoes-com/assets/home-hero-final.jpg
-          test "$(sha256sum qiqishoes-com/assets/home-hero-final.jpg | cut -d' ' -f1)" = "60bb2bcf8da08ae88edaac6114b2264fecb2ef711b7e6fdea29e05716109cba1"
+            > qiqishoes-com/assets/aj4-black-home-final.jpg
+          file qiqishoes-com/assets/aj4-black-home-final.jpg | grep -qi 'JPEG image data'
+          test "$(sha256sum qiqishoes-com/assets/aj4-black-home-final.jpg | cut -d' ' -f1)" = "60bb2bcf8da08ae88edaac6114b2264fecb2ef711b7e6fdea29e05716109cba1"
+          python -m pip install --quiet pillow
+          python - <<'PY'
+          from PIL import Image
+          p='qiqishoes-com/assets/aj4-black-home-final.jpg'
+          im=Image.open(p)
+          im.verify()
+          im=Image.open(p)
+          print('verified local image', im.format, im.size)
+          if im.format != 'JPEG' or im.width < 800 or im.height < 400:
+              raise SystemExit(f'Unexpected local image: {im.format} {im.size}')
+          PY
 
-      - name: Point homepage to verified local image
+      - name: Point homepage hero to verified local JPEG
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
+          from PIL import Image
           import re
-
-          path = Path('qiqishoes-com/index.html')
-          text = path.read_text(encoding='utf-8')
-          local_url = 'url("./assets/home-hero-final.jpg?v=202608032348")'
-
-          text = re.sub(
-              r'url\("https://static\.flexdog\.hu/flexdog-e/products/images/1ccabe62-9ed5-4d98-b414-410aaf6bfc6a\.jpg\?quality=90&width=(?:1600|1200)"\)',
-              local_url,
-              text,
-          )
-          text = re.sub(
-              r'url\("\./assets/home-hero-user\.svg\?v=[^"]+"\)',
-              local_url,
-              text,
-          )
-          path.write_text(text, encoding='utf-8')
+          img=Image.open('qiqishoes-com/assets/aj4-black-home-final.jpg')
+          w,h=img.size
+          p=Path('qiqishoes-com/index.html')
+          s=p.read_text(encoding='utf-8')
+          new=f'src="./assets/aj4-black-home-final.jpg?v=202608170115" alt="黑色 AJ4 鞋款" width="{w}" height="{h}"'
+          pattern=r'src="\./assets/aj4-black[^\"]+" alt="黑色 AJ4 鞋款" width="\d+" height="\d+"'
+          s2,n=re.subn(pattern,new,s,count=1)
+          if n != 1:
+              raise SystemExit('Hero image tag not found')
+          p.write_text(s2,encoding='utf-8')
+          print('homepage points to verified local JPEG', w, h)
           PY
 
-      - name: Commit verified local homepage hero
+      - name: Commit verified hero image
         shell: bash
         run: |
+          set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add qiqishoes-com/assets/home-hero-final.jpg qiqishoes-com/index.html
-          if ! git diff --cached --quiet; then
-            git commit -m 'Use verified local high-resolution homepage hero'
-            git pull --rebase origin main
-            git push
-          fi
+          git add qiqishoes-com/assets/aj4-black-home-final.jpg qiqishoes-com/index.html
+          git commit -m 'Use verified local AJ4 JPEG on homepage'
+          git pull --rebase origin main
+          git push
+
+      - name: Verify Cloudflare serves exact JPEG
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet pillow
+          expected='60bb2bcf8da08ae88edaac6114b2264fecb2ef711b7e6fdea29e05716109cba1'
+          for i in $(seq 1 60); do
+            page=$(curl -fsS --max-time 12 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/?v=202608170115${i}" || true)
+            if echo "$page" | grep -q 'aj4-black-home-final.jpg?v=202608170115'; then
+              curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://qiqishoes-com.pages.dev/assets/aj4-black-home-final.jpg?v=202608170115${i}" -o /tmp/live.jpg
+              test "$(sha256sum /tmp/live.jpg | cut -d' ' -f1)" = "$expected"
+              python - <<'PY'
+          from PIL import Image
+          p='/tmp/live.jpg'
+          im=Image.open(p)
+          im.verify()
+          im=Image.open(p)
+          if im.format != 'JPEG' or im.width < 800 or im.height < 400:
+              raise SystemExit(f'Bad live hero image: {im.format} {im.size}')
+          print('live hero verified', im.format, im.size)
+          PY
+              exit 0
+            fi
+            sleep 5
+          done
+          echo 'Cloudflare did not publish the verified AJ4 JPEG in time' >&2
+          exit 1
