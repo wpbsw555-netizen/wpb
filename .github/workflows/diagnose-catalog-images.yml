@@ -1,0 +1,77 @@
+name: Diagnose Catalog Images
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/diagnose-catalog-images.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect source and local mirror
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import re, html, urllib.parse, urllib.request
+          urls=[
+            'https://www.tangma2088.com/categoryen_3.html?path=0_3',
+            'https://acc.tangma2088.com/categoryen_16511.html?path=0_16511',
+            'https://bags.tangma2088.com/categoryen_29314.html?path=0_29314',
+            'https://shoes.tangma2088.com/categoryen_355.html?path=0_355',
+          ]
+          for u in urls:
+            print('\n=== SOURCE',u)
+            req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0','Accept':'text/html,*/*'})
+            try:
+              with urllib.request.urlopen(req,timeout=30) as r:
+                raw=r.read()
+                print('status',r.status,'final',r.url,'type',r.headers.get('content-type'),'bytes',len(raw))
+            except Exception as e:
+              print('SOURCE ERROR',repr(e)); continue
+            text=None
+            for enc in ['utf-8','gb18030','latin1']:
+              try:
+                text=raw.decode(enc); print('decoded',enc); break
+              except Exception: pass
+            if text is None: continue
+            vals=[]
+            for tag in re.findall(r'<img\b[^>]*>',text,flags=re.I):
+              m=re.search(r'''(?:data-original|data-src|data-lazy-src|src)\s*=\s*(["'])(.*?)\1''',tag,flags=re.I|re.S)
+              if m:
+                v=html.unescape(m.group(2).strip())
+                try: vals.append(urllib.parse.urljoin(r.url,v))
+                except: pass
+            print('img tags',len(vals))
+            hosts={urllib.parse.urlparse(v).hostname for v in vals if v.startswith(('http://','https://'))}
+            print('image hosts',sorted(h for h in hosts if h))
+            for v in vals[:12]: print('IMG',v)
+            hrefs=[]
+            for m in re.finditer(r'''<a\b[^>]*href\s*=\s*(["'])(.*?)\1''',text,flags=re.I|re.S):
+              hrefs.append(urllib.parse.urljoin(r.url,html.unescape(m.group(2))))
+            print('href hosts',sorted({urllib.parse.urlparse(v).hostname for v in hrefs if v.startswith(('http://','https://')) and urllib.parse.urlparse(v).hostname})[:30])
+            for v in hrefs[:12]: print('HREF',v)
+          PY
+
+          echo '\n=== LOCAL PROXY ==='
+          target='https%3A%2F%2Fwww.tangma2088.com%2Fcategoryen_3.html%3Fpath%3D0_3'
+          curl -sS -L --max-time 30 -D /tmp/headers "https://qiqishoes-com.pages.dev/catalog-proxy?u=${target}&diag=1" -o /tmp/local.html || true
+          cat /tmp/headers || true
+          echo "local bytes $(wc -c < /tmp/local.html 2>/dev/null || echo 0)"
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('/tmp/local.html')
+          if not p.exists(): raise SystemExit()
+          s=p.read_bytes().decode('utf-8','replace')
+          print('external href count',len(re.findall(r'href=["\']https?://',s,re.I)))
+          print('external src count',len(re.findall(r'src=["\']https?://',s,re.I)))
+          print('proxy refs',len(re.findall(r'/catalog-proxy\?u=',s)))
+          for x in re.findall(r'<img\b[^>]*>',s,re.I)[:12]: print('LOCAL IMG',x[:500])
+          for x in re.findall(r'<a\b[^>]*href=["\'][^"\']+["\'][^>]*>',s,re.I)[:12]: print('LOCAL A',x[:500])
+          PY
