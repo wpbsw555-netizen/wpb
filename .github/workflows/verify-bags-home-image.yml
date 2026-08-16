@@ -1,0 +1,39 @@
+name: Verify Bags Home Image
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-bags-home-image.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Cloudflare and verify bags image
+        shell: bash
+        run: |
+          set -euo pipefail
+          HOME_URL='https://qiqishoes-com.pages.dev/'
+          IMG_URL='https://qiqishoes-com.pages.dev/assets/catalog/bags/bags-home-20260816.jpg?v=202608162150'
+          for i in $(seq 1 30); do
+            echo "Attempt $i"
+            home=$(curl -fsSL --max-time 20 "$HOME_URL" || true)
+            code=$(curl -L -sS -o /tmp/bag.jpg -w '%{http_code}' --max-time 20 "$IMG_URL" || true)
+            if [[ "$code" == "200" ]] && grep -q 'bags-home-20260816.jpg?v=202608162150' <<<"$home" && [[ -s /tmp/bag.jpg ]]; then
+              type=$(file -b --mime-type /tmp/bag.jpg)
+              size=$(stat -c '%s' /tmp/bag.jpg)
+              sha=$(sha256sum /tmp/bag.jpg | awk '{print $1}')
+              if [[ "$type" == "image/jpeg" ]] && [[ "$size" == "17114" ]] && [[ "$sha" == "357284d940e28793cf54f6c86a77ae2ee1386aefb59789caf6631c107e0f6480" ]]; then
+                python -m pip install --quiet pillow
+                python -c "from PIL import Image; im=Image.open('/tmp/bag.jpg'); assert im.size==(360,270); im.verify(); print('LIVE_BAGS_IMAGE_OK')"
+                exit 0
+              fi
+            fi
+            sleep 15
+          done
+          exit 1
