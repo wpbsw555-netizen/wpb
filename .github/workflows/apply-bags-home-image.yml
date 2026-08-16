@@ -30,7 +30,7 @@ jobs:
             qiqishoes-com/assets/catalog/bags/bag-home.part4 \
             qiqishoes-com/assets/catalog/bags/bag-home.part5 \
             > /tmp/bag-home.b64
-          base64 -d /tmp/bag-home.b64 > qiqishoes-com/assets/catalog/bags/bags-home-20260816.jpg
+          base64 -di /tmp/bag-home.b64 > qiqishoes-com/assets/catalog/bags/bags-home-20260816.jpg
           test "$(stat -c '%s' qiqishoes-com/assets/catalog/bags/bags-home-20260816.jpg)" = "61861"
           echo '6e77aa31c2fbf76166cef024390ebb5bcd4774f4f36bb052453968504b11782f  qiqishoes-com/assets/catalog/bags/bags-home-20260816.jpg' | sha256sum -c -
           python -m pip install --quiet pillow
