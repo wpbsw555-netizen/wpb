@@ -1,0 +1,66 @@
+name: Adjust Sneakers Card Fit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/adjust-sneakers-card-fit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  adjust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Make sneakers image fully visible
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('qiqishoes-com/index.html')
+          s = p.read_text()
+          new = '.dept.sneakers{--image:url("./assets/aj4-black-500.webp?v=202608162335")}.dept.sneakers::before{background-image:linear-gradient(0deg,rgba(0,0,0,.96),rgba(0,0,0,.02) 68%),var(--image);background-position:center,center 28px;background-size:100% 100%,92% auto;background-repeat:no-repeat,no-repeat;background-color:#efefef}'
+          pattern = r'\.dept\.sneakers\{--image:url\("[^\"]+"\)\}(?:\.dept\.sneakers::before\{[^}]*\})?'
+          s2, n = re.subn(pattern, new, s, count=1)
+          if n != 1:
+              raise SystemExit(f'Expected one sneakers CSS rule, replaced {n}')
+          p.write_text(s2)
+          PY
+
+      - name: Commit sneakers display adjustment
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qiqishoes-com/index.html
+          if git diff --cached --quiet; then
+            echo 'No changes to commit'
+          else
+            git commit -m 'Show full AJ4 on homepage sneakers card'
+            git push
+          fi
+
+      - name: Verify Cloudflare published updated card
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://qiqishoes-com.pages.dev/'
+          for i in $(seq 1 40); do
+            echo "Attempt $i"
+            home=$(curl -fsSL --max-time 20 "$URL" || true)
+            if grep -q 'aj4-black-500.webp?v=202608162335' <<<"$home" && grep -q 'background-size:100% 100%,92% auto' <<<"$home"; then
+              echo 'LIVE_SNEAKERS_FULL_FIT_OK'
+              exit 0
+            fi
+            sleep 15
+          done
+          echo 'Cloudflare did not publish the updated sneakers card in time'
+          exit 1
