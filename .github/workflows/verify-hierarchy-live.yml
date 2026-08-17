@@ -1,0 +1,50 @@
+name: Verify Hierarchy Live
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-hierarchy-live.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Verify full catalog hierarchy and styles
+        run: |
+          python - <<'PY'
+          import html,re,time,urllib.parse,urllib.request
+          origin='https://qiqishoes-com.pages.dev'
+          def get(u,timeout=40):
+              req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'})
+              with urllib.request.urlopen(req,timeout=timeout) as r:
+                  return r.status,r.read(),r.url
+          for attempt in range(120):
+              try:
+                  st,b,_=get(origin+'/local-catalog?dept=fashion&id=11&page=1')
+                  t=b.decode('utf-8','replace')
+                  print('attempt',attempt,'status',st,'len',len(t),'new',('View All Styles' in t),'count133',('133' in t))
+                  if st==200 and 'View All Styles' in t and '133' in t:
+                      break
+              except Exception as e: print('wait',attempt,repr(e))
+              time.sleep(5)
+          else: raise SystemExit('hierarchy version still not live')
+          links=[html.unescape(x) for x in re.findall(r'href=["\']([^"\']+)',t,re.I) if '/local-catalog?' in html.unescape(x)]
+          if not any('id=221376' in u for u in links): raise SystemExit('parent child link missing')
+          child=origin+'/local-catalog?dept=fashion&id=221376&page=1'
+          st2,b2,_=get(child); t2=b2.decode('utf-8','replace')
+          if st2!=200 or 'View All Styles' not in t2 or 'id=408634' not in t2: raise SystemExit('second level incomplete')
+          leaf=origin+'/local-catalog?dept=fashion&id=408634&page=1'
+          st3,b3,_=get(leaf); t3=b3.decode('utf-8','replace')
+          imgs=re.findall(r'<img\b[^>]*src=["\']([^"\']+)',t3,re.I)
+          if st3!=200 or len(imgs)<20: raise SystemExit('leaf styles incomplete')
+          # CDN images must now be accepted too.
+          cdn=origin+'/catalog-proxy?u='+urllib.parse.quote('https://uspic.qiqiyg.com/upfile/category/221376.jpg',safe='')
+          st4,b4,_=get(cdn)
+          if st4!=200 or len(b4)<700: raise SystemExit('qiqiyg CDN image not proxied')
+          print('LIVE HIERARCHY VERIFIED: parent -> child -> styles, CDN images visible')
+          PY
