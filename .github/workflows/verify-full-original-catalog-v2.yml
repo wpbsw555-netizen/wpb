@@ -1,0 +1,85 @@
+name: Verify Full Original Catalog V2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-full-original-catalog-v2.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Verify hierarchy, pagination and images
+        shell: bash
+        run: |
+          python - <<'PY'
+          import html,re,time,urllib.parse,urllib.request
+          origin='https://qiqishoes-com.pages.dev'
+          def get(u,timeout=40):
+              req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'})
+              with urllib.request.urlopen(req,timeout=timeout) as r:
+                  return r.status,r.headers,r.read(),r.url
+
+          parent_url=origin+'/local-catalog?dept=fashion&id=11&page=1'
+          for attempt in range(180):
+              try:
+                  st,h,b,f=get(parent_url)
+                  t=b.decode('utf-8','replace')
+                  decoded=urllib.parse.unquote(html.unescape(t))
+                  ready=(st==200 and 'View All Styles' in t and '133' in t and 'id=221376' in t and 'uspic.qiqiyg.com' not in decoded)
+                  print('attempt',attempt,'status',st,'ready',ready,'len',len(t),flush=True)
+                  if ready: break
+              except Exception as e:
+                  print('wait',attempt,repr(e),flush=True)
+              time.sleep(5)
+          else:
+              raise SystemExit('normalized full catalog did not deploy')
+
+          imgs=[html.unescape(x) for x in re.findall(r"<img\b[^>]*src=[\"']([^\"']+)",t,re.I)]
+          print('parent images',len(imgs),flush=True)
+          if len(imgs)<20: raise SystemExit('parent images missing')
+          st0,h0,b0,f0=get(imgs[0]); ct=(h0.get('content-type') or '').lower()
+          print('first image',st0,ct,len(b0),f0,flush=True)
+          if st0!=200 or len(b0)<1000 or ('image/' not in ct and b0[:3]!=b'\xff\xd8\xff'):
+              raise SystemExit('parent first image failed')
+
+          # First nested category.
+          child_url=origin+'/local-catalog?dept=fashion&id=221376&page=1'
+          st2,h2,b2,f2=get(child_url); t2=b2.decode('utf-8','replace')
+          print('child len',len(t2),'has408634',('id=408634' in t2),flush=True)
+          if st2!=200 or 'View All Styles' not in t2 or 'id=408634' not in t2:
+              raise SystemExit('nested category missing')
+
+          # Leaf must expose all styles with pagination when needed.
+          leaf_url=origin+'/local-catalog?dept=fashion&id=408634&page=1'
+          st3,h3,b3,f3=get(leaf_url); t3=b3.decode('utf-8','replace')
+          imgs3=[html.unescape(x) for x in re.findall(r"<img\b[^>]*src=[\"']([^\"']+)",t3,re.I)]
+          print('leaf images page1',len(imgs3),'next',('下一页 / Next' in t3),flush=True)
+          if st3!=200 or len(imgs3)<20: raise SystemExit('leaf styles incomplete')
+
+          ok=0
+          for u in imgs3[:8]:
+              try:
+                  si,hi,bi,fi=get(u); cti=(hi.get('content-type') or '').lower()
+                  good=si==200 and len(bi)>1000 and ('image/' in cti or bi[:3]==b'\xff\xd8\xff')
+                  print('leaf image',si,cti,len(bi),good,flush=True)
+                  if good: ok+=1
+              except Exception as e: print('leaf image err',repr(e),flush=True)
+          if ok<8: raise SystemExit(f'leaf image checks {ok}/8')
+
+          # No product/category navigation should leave QIQI; WhatsApp is intentionally allowed.
+          bad=[]
+          for page in (t,t2,t3):
+              for href in re.findall(r"href=[\"']([^\"']+)",page,re.I):
+                  u=html.unescape(href)
+                  if u.startswith(('http://','https://')):
+                      host=(urllib.parse.urlparse(u).hostname or '').lower()
+                      if host not in {'qiqishoes-com.pages.dev','wa.me'}: bad.append(u)
+          if bad: raise SystemExit('external navigation remains: '+repr(bad[:3]))
+          print('FULL ORIGINAL CATALOG VERIFIED: nested categories, all styles, images and local navigation',flush=True)
+          PY
