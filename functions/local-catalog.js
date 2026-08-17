@@ -1,7 +1,7 @@
 const WHATSAPP = '8613159065939';
 const PAGE_SIZE = 24;
 const EDGE_TTL = 21600;
-const CACHE_VERSION = '20260817b';
+const CACHE_VERSION = '20260817c';
 
 const DEPARTMENTS = {
   fashion: { host: 'www.tangma2088.com', label: 'FASHION / 时尚服饰', fallback: '3' },
