@@ -1,0 +1,91 @@
+name: Bust Local Catalog Cache
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/bust-local-catalog-cache.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Version the local catalog edge cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('functions/local-catalog.js')
+          s=p.read_text(encoding='utf-8')
+          if "const CACHE_VERSION = '20260817b';" not in s:
+              s=s.replace("const EDGE_TTL = 21600;", "const EDGE_TTL = 21600;\nconst CACHE_VERSION = '20260817b';", 1)
+          needle="normalized.searchParams.set('dept', dept); normalized.searchParams.set('id', id); normalized.searchParams.set('page', String(requestedPage));"
+          repl=needle+" normalized.searchParams.set('_v', CACHE_VERSION);"
+          if "normalized.searchParams.set('_v', CACHE_VERSION)" not in s:
+              if needle not in s: raise SystemExit('cache key line not found')
+              s=s.replace(needle,repl,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+          grep -q "CACHE_VERSION = '20260817b'" functions/local-catalog.js
+          grep -q "searchParams.set('_v', CACHE_VERSION)" functions/local-catalog.js
+
+      - name: Commit cache fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add functions/local-catalog.js
+          git commit -m 'Bust stale local catalog edge cache'
+          git push origin main
+
+      - name: Verify static snapshots are live
+        shell: bash
+        run: |
+          python - <<'PY'
+          import html,re,time,urllib.parse,urllib.request,sys
+          origin='https://qiqishoes-com.pages.dev'
+          targets={'fashion':'3','accessories':'16511','bags':'29314','shoes':'355'}
+          def get(url):
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'})
+              t=time.perf_counter()
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  b=r.read(); return r.status,b,time.perf_counter()-t
+          for attempt in range(90):
+              try:
+                  st,b,t=get(origin+'/local-catalog?dept=fashion&id=3&page=1')
+                  text=b.decode('utf-8','replace')
+                  if st==200 and 'LOCAL SNAPSHOT: STATIC' in text and '每页 24 张' in text:
+                      print('new version live after',attempt,'checks',round(t,3),'seconds'); break
+              except Exception as e: print('wait',attempt,repr(e))
+              time.sleep(5)
+          else: raise SystemExit('new local catalog version did not publish')
+
+          for dept,id_ in targets.items():
+              url=f'{origin}/local-catalog?dept={dept}&id={id_}&page=1'
+              st,b,t1=get(url); text=b.decode('utf-8','replace')
+              st2,b2,t2=get(url)
+              if st!=200 or 'LOCAL SNAPSHOT: STATIC' not in text: raise SystemExit(dept+' not static')
+              imgs=re.findall(r'<img\b[^>]*src=["\']([^"\']+)',text,re.I)
+              proxied=[html.unescape(u) for u in imgs if '/catalog-proxy?u=' in html.unescape(u)]
+              if not (1 <= len(proxied) <= 24): raise SystemExit(f'{dept} image count {len(proxied)}')
+              bad=[]
+              for m in re.finditer(r'<a\b[^>]*href=["\']([^"\']+)',text,re.I):
+                  u=html.unescape(m.group(1))
+                  if u.startswith(('http://','https://')):
+                      host=(urllib.parse.urlparse(u).hostname or '').lower()
+                      if host not in {'qiqishoes-com.pages.dev','wa.me'}: bad.append(u)
+              if bad: raise SystemExit(f'{dept} external links {bad[:3]}')
+              print(dept,'page',round(t1,3),'cached',round(t2,3),'images',len(proxied))
+          print('STATIC LOCAL CATALOGS LIVE AND VERIFIED')
+          PY
