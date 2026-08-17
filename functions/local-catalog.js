@@ -1,7 +1,7 @@
 const WHATSAPP = '8613159065939';
 const PAGE_SIZE = 24;
 const EDGE_TTL = 21600;
-const CACHE_VERSION = '20260817c';
+const CACHE_VERSION = '20260817d';
 
 const DEPARTMENTS = {
   fashion: { host: 'www.tangma2088.com', label: 'FASHION / 时尚服饰', fallback: '3' },
@@ -22,6 +22,17 @@ function isAllowedImage(url, expectedHost) {
   const expected = String(expectedHost || '').toLowerCase();
   const hostOk = host === expected || host === 'qiqiyg.com' || host.endsWith('.qiqiyg.com');
   return hostOk && url.pathname.toLowerCase().includes('/upfile/category/');
+}
+
+function normalizeImageUrl(url, expectedHost) {
+  const out = new URL(url.href);
+  const host = out.hostname.toLowerCase();
+  if (host === 'qiqiyg.com' || host.endsWith('.qiqiyg.com')) {
+    out.protocol = 'https:';
+    out.hostname = String(expectedHost || out.hostname).toLowerCase();
+    out.port = '';
+  }
+  return out;
 }
 
 class ProductImageCollector {
@@ -60,7 +71,9 @@ async function loadLocalSnapshot(context, incoming, dept, id, config) {
     for (const item of data.items) {
       let u;
       try { u = new URL(item.url); } catch { continue; }
-      if (!isAllowedImage(u, config.host) || seen.has(u.href)) continue;
+      if (!isAllowedImage(u, config.host)) continue;
+      u = normalizeImageUrl(u, config.host);
+      if (seen.has(u.href)) continue;
       seen.add(u.href);
       items.push({ url: u.href, alt: String(item.alt || ''), childId: /^\d+$/.test(String(item.childId || '')) ? String(item.childId) : null });
     }
@@ -105,7 +118,9 @@ async function loadLiveItems(config, id) {
     if (!raw) continue;
     let image;
     try { image=new URL(raw, finalUrl); } catch { continue; }
-    if (!isAllowedImage(image, config.host) || seen.has(image.href)) continue;
+    if (!isAllowedImage(image, config.host)) continue;
+    image = normalizeImageUrl(image, config.host);
+    if (seen.has(image.href)) continue;
     seen.add(image.href);
     const childMatch=href.match(/categoryen_(\d+)\.html/i);
     const alt=attr(imgMatch[0],'alt');
@@ -118,7 +133,9 @@ async function loadLiveItems(config, id) {
     if (!raw) continue;
     let image;
     try { image=new URL(raw, finalUrl); } catch { continue; }
-    if (!isAllowedImage(image, config.host) || seen.has(image.href)) continue;
+    if (!isAllowedImage(image, config.host)) continue;
+    image = normalizeImageUrl(image, config.host);
+    if (seen.has(image.href)) continue;
     seen.add(image.href);
     items.push({url:image.href, alt:attr(m[0],'alt'), childId:null});
   }
