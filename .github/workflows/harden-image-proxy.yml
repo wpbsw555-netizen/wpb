@@ -1,0 +1,136 @@
+name: Harden Catalog Image Proxy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/harden-image-proxy.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Add retry and local fallback to product image proxy
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          # Give every local product image request a static same-site fallback.
+          lc=Path('functions/local-catalog.js')
+          s=lc.read_text(encoding='utf-8')
+          old="const proxied = `${origin}/catalog-proxy?u=${encodeURIComponent(item.url)}`;"
+          new="const proxied = `${origin}/catalog-proxy?u=${encodeURIComponent(item.url)}&fallback=${encodeURIComponent(localFallback)}`;"
+          if old in s: s=s.replace(old,new,1)
+          elif '&fallback=${encodeURIComponent(localFallback)}' not in s: raise SystemExit('local catalog proxy URL not found')
+          lc.write_text(s,encoding='utf-8')
+
+          p=Path('functions/catalog-proxy.js')
+          x=p.read_text(encoding='utf-8')
+          marker="  const raw = incoming.searchParams.get('u');\n  if (!raw) return new Response('Missing catalog target', { status: 400 });"
+          insert="""  const raw = incoming.searchParams.get('u');
+  if (!raw) return new Response('Missing catalog target', { status: 400 });
+
+  let fallbackUrl = null;
+  const fallbackRaw = incoming.searchParams.get('fallback');
+  if (fallbackRaw) {
+    try {
+      const candidate = new URL(fallbackRaw, incoming.origin);
+      if (candidate.origin === incoming.origin && candidate.pathname.startsWith('/assets/catalog/')) fallbackUrl = candidate;
+    } catch {}
+  }"""
+          if marker in x: x=x.replace(marker,insert,1)
+          elif 'let fallbackUrl = null;' not in x: raise SystemExit('proxy fallback insertion point not found')
+
+          start=x.index('  let upstream;')
+          end=x.index('\n\n  let finalUrl;',start)
+          retry="""  let upstream = null;
+  let lastFetchError = null;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      upstream = await fetch(target.href, {
+        redirect: 'follow',
+        headers: {
+          'Accept': request.headers.get('Accept') || '*/*',
+          'Accept-Language': request.headers.get('Accept-Language') || 'en-US,en;q=0.9',
+          'Referer': `${target.origin}/`,
+          'User-Agent': 'Mozilla/5.0 (compatible; QIQI-Image-Proxy/2.0)'
+        },
+        cf: { cacheEverything: true, cacheTtl: 2592000 }
+      });
+      if (upstream.ok || upstream.status < 500) break;
+    } catch (error) {
+      lastFetchError = error;
+      upstream = null;
+    }
+    if (attempt < 2) await new Promise(resolve => setTimeout(resolve, 180 * (attempt + 1)));
+  }
+
+  if (!upstream) {
+    if (fallbackUrl) return Response.redirect(fallbackUrl.href, 302);
+    return new Response(`Catalog source fetch failed: ${lastFetchError?.message || lastFetchError || 'unknown error'}`, { status: 502 });
+  }
+  if (!upstream.ok && fallbackUrl) return Response.redirect(fallbackUrl.href, 302);"""
+          x=x[:start]+retry+x[end:]
+          p.write_text(x,encoding='utf-8')
+          PY
+          grep -q "fallback=.*localFallback" functions/local-catalog.js
+          grep -q 'let fallbackUrl = null' functions/catalog-proxy.js
+          grep -q 'attempt < 3' functions/catalog-proxy.js
+
+      - name: Commit resilient image loading
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add functions/local-catalog.js functions/catalog-proxy.js
+          git commit -m 'Retry catalog images and fall back to local thumbnails'
+          git push origin main
+
+      - name: Verify live image resilience
+        shell: bash
+        run: |
+          python - <<'PY'
+          import html,re,time,urllib.parse,urllib.request
+          origin='https://qiqishoes-com.pages.dev'
+          for attempt in range(90):
+              try:
+                  u=origin+'/local-catalog?dept=shoes&id=355&page=1'
+                  req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'})
+                  with urllib.request.urlopen(req,timeout=30) as r: text=r.read().decode('utf-8','replace')
+                  if '&amp;fallback=' in text or '&fallback=' in text:
+                      print('fallback version live after',attempt,'checks'); break
+              except Exception as e: print('wait',attempt,repr(e))
+              time.sleep(5)
+          else: raise SystemExit('fallback image version did not deploy')
+
+          targets={'fashion':'3','accessories':'16511','bags':'29314','shoes':'355'}
+          for dept,id_ in targets.items():
+              u=f'{origin}/local-catalog?dept={dept}&id={id_}&page=1'
+              req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
+              with urllib.request.urlopen(req,timeout=30) as r: text=r.read().decode('utf-8','replace')
+              imgs=[html.unescape(x) for x in re.findall(r'<img\b[^>]*src=["\']([^"\']+)',text,re.I) if '/catalog-proxy?u=' in html.unescape(x)]
+              if not imgs: raise SystemExit(dept+' has no images')
+              ok=0
+              for img in imgs[:8]:
+                  try:
+                      q=urllib.request.Request(img,headers={'User-Agent':'Mozilla/5.0'})
+                      with urllib.request.urlopen(q,timeout=35) as r:
+                          b=r.read(); ct=(r.headers.get('content-type') or '').lower()
+                      if len(b)>700 and ('image/' in ct or b[:3]==b'\xff\xd8\xff'): ok+=1
+                  except Exception as e: print(dept,'image error',repr(e))
+              print(dept,'visible image checks',ok,'of',min(8,len(imgs)))
+              if ok < min(8,len(imgs)): raise SystemExit(dept+' still has broken visible images')
+          print('RESILIENT LOCAL IMAGES VERIFIED')
+          PY
