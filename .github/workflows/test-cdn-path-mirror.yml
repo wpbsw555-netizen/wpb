@@ -1,0 +1,28 @@
+name: Test CDN Path Mirror
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/test-cdn-path-mirror.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          python - <<'PY'
+          import urllib.request
+          paths=['/upfile/category/221376.jpg','/upfile/category/24784.jpeg','/upfile/category/231945.JPG','/upfile/category/57256.jpeg']
+          for p in paths:
+              for base in ['https://www.tangma2088.com','http://uspic.qiqiyg.com']:
+                  u=base+p
+                  try:
+                      req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
+                      with urllib.request.urlopen(req,timeout=20) as r:
+                          b=r.read(2000); print(u,r.status,r.headers.get('content-type'),len(b),r.url)
+                  except Exception as e: print(u,'ERR',repr(e))
+          PY
