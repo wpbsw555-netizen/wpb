@@ -1,11 +1,11 @@
 {
   "status": "verified",
   "url": "https://qiqishoes-com.pages.dev/",
-  "imageSrc": "https://qiqishoes-com.pages.dev/assets/aj4-black-500.webp?v=202608080140",
+  "imageSrc": "https://qiqishoes-com.pages.dev/assets/aj4-black-500.webp?v=202608170210",
   "imageNaturalWidth": 480,
   "imageNaturalHeight": 302,
-  "imageRenderedWidth": 674.4,
-  "imageRenderedHeight": 400,
+  "imageRenderedWidth": 480,
+  "imageRenderedHeight": 302,
   "hotSelling": true,
   "catalog": true,
   "languages": [
@@ -14,5 +14,5 @@
     "es"
   ],
   "whatsapp": "+86 13159065939",
-  "verifiedAtUtc": "2026-08-08T03:50:49Z"
+  "verifiedAtUtc": "2026-08-17T19:32:31Z"
 }
