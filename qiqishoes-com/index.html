@@ -11,7 +11,7 @@
     html{scroll-behavior:smooth}
     body{margin:0;background:var(--ink);color:#fff;font-family:Arial,"Microsoft YaHei",sans-serif}
     .home{width:min(1240px,calc(100% - 28px));margin:0 auto}
-    .top{display:grid;grid-template-columns:230px 1fr;gap:28px;align-items:center;padding:22px 0;border-bottom:1px solid var(--line)}
+    .top{position:sticky;top:0;z-index:100;display:grid;grid-template-columns:230px 1fr;gap:28px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);background:rgba(11,11,13,.98);box-shadow:0 8px 18px rgba(0,0,0,.25)}
     .brand{display:flex;align-items:center;gap:14px;color:#fff;text-decoration:none}
     .logo{width:76px;height:76px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:7px 7px 0 var(--red)}
     .brand-copy strong{display:block;font-size:23px;letter-spacing:-1px}
