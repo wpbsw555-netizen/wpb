@@ -1,0 +1,26 @@
+name: Test QIQIYG Image Protocol
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/test-qiqiyg-image-protocol.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          python - <<'PY'
+          import urllib.request
+          for u in ['https://uspic.qiqiyg.com/upfile/category/221376.jpg','http://uspic.qiqiyg.com/upfile/category/221376.jpg']:
+              try:
+                  req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'})
+                  with urllib.request.urlopen(req,timeout=20) as r:
+                      b=r.read()
+                      print(u,'status',r.status,'final',r.url,'ctype',r.headers.get('content-type'),'len',len(b))
+              except Exception as e: print(u,'ERR',repr(e))
+          PY
