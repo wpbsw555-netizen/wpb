@@ -150,6 +150,15 @@ export async function onRequest(context) {
   const raw = incoming.searchParams.get('u');
   if (!raw) return new Response('Missing catalog target', { status: 400 });
 
+  let fallbackUrl = null;
+  const fallbackRaw = incoming.searchParams.get('fallback');
+  if (fallbackRaw) {
+    try {
+      const candidate = new URL(fallbackRaw, incoming.origin);
+      if (candidate.origin === incoming.origin && candidate.pathname.startsWith('/assets/catalog/')) fallbackUrl = candidate;
+    } catch {}
+  }
+
   let target;
   try { target = new URL(raw); } catch { return new Response('Bad catalog target', { status: 400 }); }
   if (!isAllowedTarget(target)) return new Response('Catalog target is not allowed', { status: 403 });
@@ -159,19 +168,33 @@ export async function onRequest(context) {
   const cached = await cache.match(cacheKey);
   if (cached) return request.method === 'HEAD' ? new Response(null, { status: cached.status, headers: cached.headers }) : cached;
 
-  let upstream;
-  try {
-    upstream = await fetch(target.href, {
-      redirect: 'follow',
-      headers: {
-        'Accept': request.headers.get('Accept') || '*/*',
-        'Accept-Language': request.headers.get('Accept-Language') || 'en-US,en;q=0.9',
-        'Referer': `${target.origin}/`
-      }
-    });
-  } catch (error) {
-    return new Response(`Catalog source fetch failed: ${error?.message || error}`, { status: 502 });
+  let upstream = null;
+  let lastFetchError = null;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      upstream = await fetch(target.href, {
+        redirect: 'follow',
+        headers: {
+          'Accept': request.headers.get('Accept') || '*/*',
+          'Accept-Language': request.headers.get('Accept-Language') || 'en-US,en;q=0.9',
+          'Referer': `${target.origin}/`,
+          'User-Agent': 'Mozilla/5.0 (compatible; QIQI-Image-Proxy/2.0)'
+        },
+        cf: { cacheEverything: true, cacheTtl: 2592000 }
+      });
+      if (upstream.ok || upstream.status < 500) break;
+    } catch (error) {
+      lastFetchError = error;
+      upstream = null;
+    }
+    if (attempt < 2) await new Promise(resolve => setTimeout(resolve, 180 * (attempt + 1)));
   }
+
+  if (!upstream) {
+    if (fallbackUrl) return Response.redirect(fallbackUrl.href, 302);
+    return new Response(`Catalog source fetch failed: ${lastFetchError?.message || lastFetchError || 'unknown error'}`, { status: 502 });
+  }
+  if (!upstream.ok && fallbackUrl) return Response.redirect(fallbackUrl.href, 302);
 
   let finalUrl;
   try { finalUrl = new URL(upstream.url || target.href); } catch { finalUrl = target; }

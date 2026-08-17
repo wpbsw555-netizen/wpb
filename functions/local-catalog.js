@@ -106,7 +106,7 @@ function renderPage({ dept, id, title, allItems, items, origin, page, pages, fal
   const defaultFallback = `${origin}/assets/catalog/${encodeURIComponent(dept)}/${encodeURIComponent(fallbackId)}.jpg`;
   const cards = items.map((item, offset) => {
     const globalIndex = (page - 1) * PAGE_SIZE + offset;
-    const proxied = `${origin}/catalog-proxy?u=${encodeURIComponent(item.url)}`;
+    const proxied = `${origin}/catalog-proxy?u=${encodeURIComponent(item.url)}&fallback=${encodeURIComponent(localFallback)}`;
     const productName = item.alt || `Product ${String(globalIndex + 1).padStart(3, '0')}`;
     const waText = `Hello, I want a quote for ${dept} category ${id}, item ${globalIndex + 1}.`;
     const priority = offset < 4 ? 'eager' : 'lazy';
