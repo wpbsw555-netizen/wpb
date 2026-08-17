@@ -1,0 +1,49 @@
+name: Inspect Leaf Catalog
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/inspect-leaf-catalog.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Inspect leaf category
+        run: |
+          python - <<'PY'
+          import re,html,urllib.request
+          for url in ['https://www.tangma2088.com/categoryen_408634.html?path=0_11_221376_408634','https://www.tangma2088.com/categoryen_364552.html?path=0_11_24784_364552']:
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  raw=r.read(); ct=(r.headers.get('content-type') or '').lower(); final=r.url
+              enc='gb18030' if ('gb2312' in ct or 'gbk' in ct) else 'utf-8'
+              text=raw.decode(enc,'replace')
+              print('\nURL',url,'LEN',len(text))
+              imgs=[]
+              for tag in re.findall(r'<img\b[^>]*>',text,re.I|re.S):
+                  rawimg=None
+                  for attr in ('data-original','data-src','data-lazy-src','src'):
+                      m=re.search(rf'''\b{attr}\s*=\s*(["'])(.*?)\1''',tag,re.I|re.S)
+                      if m: rawimg=html.unescape(m.group(2).strip()); break
+                  if not rawimg: continue
+                  altm=re.search(r'''\balt\s*=\s*(["'])(.*?)\1''',tag,re.I|re.S)
+                  alt=html.unescape(altm.group(2)) if altm else ''
+                  imgs.append((rawimg,alt))
+              print('IMAGES',len(imgs))
+              for i,x in enumerate(imgs[:25]): print('IMG',i,x)
+              hrefs=re.findall(r'href=["\']([^"\']+)',text,re.I)
+              pats={}
+              for h in hrefs:
+                  h=html.unescape(h); key='other'
+                  if 'categoryen_' in h:key='category'
+                  elif 'prodetails' in h.lower() or 'product' in h.lower() or 'prodetail' in h.lower():key='product'
+                  elif 'download_' in h.lower():key='download'
+                  pats[key]=pats.get(key,0)+1
+              print('PATTERNS',pats)
+          PY
