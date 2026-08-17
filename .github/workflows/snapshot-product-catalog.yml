@@ -1,0 +1,144 @@
+name: Snapshot Product Catalog
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/snapshot-product-catalog.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: snapshot-product-catalog
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Build static product image snapshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import concurrent.futures, html, json, re, ssl, time, urllib.parse, urllib.request
+
+          root=Path('qiqishoes-com')
+          data=json.loads((root/'assets/catalog/catalog-data.json').read_text(encoding='utf-8'))
+          out_root=root/'assets/catalog/products'
+          out_root.mkdir(parents=True, exist_ok=True)
+          ctx=ssl.create_default_context()
+          ua='Mozilla/5.0 (compatible; QIQI-Snapshot/1.0)'
+
+          jobs=[]
+          for dept,block in data.get('departments',{}).items():
+              for item in block.get('items',[]):
+                  if item.get('landing') and item.get('id'):
+                      jobs.append((dept,str(item['id']),item['landing']))
+
+          def fetch_page(url):
+              last=None
+              for attempt in range(3):
+                  try:
+                      req=urllib.request.Request(url,headers={'User-Agent':ua,'Accept':'text/html,application/xhtml+xml,*/*;q=0.8','Accept-Language':'en-US,en;q=0.9'})
+                      with urllib.request.urlopen(req,timeout=35,context=ctx) as r:
+                          raw=r.read(); final=r.url; ctype=(r.headers.get('content-type') or '').lower()
+                      enc='gb18030' if ('gb2312' in ctype or 'gbk' in ctype) else 'utf-8'
+                      return raw.decode(enc,'replace'), final
+                  except Exception as e:
+                      last=e; time.sleep(1.5*(attempt+1))
+              raise last
+
+          def one(job):
+              dept,id_,landing=job
+              dest=out_root/dept/f'{id_}.json'
+              try:
+                  text,final=fetch_page(landing)
+                  items=[]; seen=set()
+                  for tag in re.findall(r'<img\b[^>]*>',text,flags=re.I):
+                      raw=None
+                      for attr in ('data-original','data-src','data-lazy-src','src'):
+                          m=re.search(rf'''\b{attr}\s*=\s*(["'])(.*?)\1''',tag,flags=re.I|re.S)
+                          if m:
+                              raw=html.unescape(m.group(2).strip()); break
+                      if not raw: continue
+                      u=urllib.parse.urljoin(final,raw)
+                      parsed=urllib.parse.urlparse(u)
+                      if '/upfile/category/' not in parsed.path.lower(): continue
+                      if u in seen: continue
+                      seen.add(u)
+                      m_alt=re.search(r'''\balt\s*=\s*(["'])(.*?)\1''',tag,flags=re.I|re.S)
+                      alt=html.unescape(m_alt.group(2).strip()) if m_alt else ''
+                      items.append({'url':u,'alt':alt})
+                  payload={'department':dept,'id':id_,'source':final,'count':len(items),'items':items}
+                  dest.parent.mkdir(parents=True,exist_ok=True)
+                  dest.write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
+                  return dept,id_,len(items),'ok'
+              except Exception as e:
+                  if dest.exists():
+                      try:
+                          old=json.loads(dest.read_text(encoding='utf-8'))
+                          if old.get('items'):
+                              return dept,id_,len(old['items']),'kept-old'
+                      except Exception: pass
+                  dest.parent.mkdir(parents=True,exist_ok=True)
+                  dest.write_text(json.dumps({'department':dept,'id':id_,'source':landing,'count':0,'items':[]},separators=(',',':')),encoding='utf-8')
+                  return dept,id_,0,'failed:'+repr(e)
+
+          results=[]
+          with concurrent.futures.ThreadPoolExecutor(max_workers=12) as ex:
+              for r in ex.map(one,jobs):
+                  results.append(r)
+
+          by={}
+          for dept,id_,count,status in results:
+              x=by.setdefault(dept,{'categories':0,'images':0,'empty':0,'kept':0})
+              x['categories']+=1; x['images']+=count
+              if count==0: x['empty']+=1
+              if status=='kept-old': x['kept']+=1
+          print('SNAPSHOT SUMMARY',json.dumps(by,ensure_ascii=False))
+          print('TOTAL CATEGORIES',len(results),'TOTAL IMAGES',sum(r[2] for r in results),'EMPTY',sum(1 for r in results if r[2]==0))
+          if not results or sum(r[2] for r in results) < 500:
+              raise SystemExit('Snapshot collected too few product images')
+          PY
+
+      - name: Commit snapshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qiqishoes-com/assets/catalog/products
+          if git diff --cached --quiet; then
+            echo 'Snapshots already current.'
+          else
+            git commit -m 'Cache product catalog image lists locally'
+            git push origin main
+          fi
+
+      - name: Verify snapshot files
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path('qiqishoes-com/assets/catalog/products')
+          files=list(root.glob('*/*.json'))
+          total=0; nonempty=0
+          for p in files:
+              d=json.loads(p.read_text(encoding='utf-8'))
+              n=len(d.get('items',[])); total+=n
+              if n: nonempty+=1
+          print('snapshot files',len(files),'nonempty',nonempty,'images',total)
+          if len(files)<200 or nonempty<180 or total<500:
+              raise SystemExit('Snapshot coverage too low')
+          PY
