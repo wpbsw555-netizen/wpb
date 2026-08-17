@@ -1,9 +1,11 @@
 const WHATSAPP = '8613159065939';
 
 function isAllowedTarget(url) {
-  if (!(url instanceof URL) || url.protocol !== 'https:') return false;
+  if (!(url instanceof URL)) return false;
   const host = url.hostname.toLowerCase();
-  return host === 'tangma2088.com' || host.endsWith('.tangma2088.com') || host === 'qiqiyg.com' || host.endsWith('.qiqiyg.com');
+  const isQiqiyg = host === 'qiqiyg.com' || host.endsWith('.qiqiyg.com');
+  if (isQiqiyg) return url.protocol === 'https:' || url.protocol === 'http:';
+  return url.protocol === 'https:' && (host === 'tangma2088.com' || host.endsWith('.tangma2088.com'));
 }
 
 function resolveTarget(value, base) {
@@ -163,6 +165,10 @@ export async function onRequest(context) {
   try { target = new URL(raw); } catch { return new Response('Bad catalog target', { status: 400 }); }
   if (!isAllowedTarget(target)) return new Response('Catalog target is not allowed', { status: 403 });
 
+  const fetchTarget = new URL(target.href);
+  const fetchHost = fetchTarget.hostname.toLowerCase();
+  if (fetchHost === 'qiqiyg.com' || fetchHost.endsWith('.qiqiyg.com')) fetchTarget.protocol = 'http:';
+
   const cache = caches.default;
   const cacheKey = new Request(request.url, { method: 'GET' });
   const cached = await cache.match(cacheKey);
@@ -172,12 +178,12 @@ export async function onRequest(context) {
   let lastFetchError = null;
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
-      upstream = await fetch(target.href, {
+      upstream = await fetch(fetchTarget.href, {
         redirect: 'follow',
         headers: {
           'Accept': request.headers.get('Accept') || '*/*',
           'Accept-Language': request.headers.get('Accept-Language') || 'en-US,en;q=0.9',
-          'Referer': `${target.origin}/`,
+          'Referer': `${fetchTarget.origin}/`,
           'User-Agent': 'Mozilla/5.0 (compatible; QIQI-Image-Proxy/2.0)'
         },
         cf: { cacheEverything: true, cacheTtl: 2592000 }
