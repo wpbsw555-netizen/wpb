@@ -1,6 +1,7 @@
 const WHATSAPP = '8613159065939';
 const PAGE_SIZE = 24;
 const EDGE_TTL = 21600;
+const CACHE_VERSION = '20260817b';
 
 const DEPARTMENTS = {
   fashion: { host: 'www.tangma2088.com', label: 'FASHION / 时尚服饰', fallback: '3' },
@@ -135,7 +136,7 @@ export async function onRequest(context) {
 
   const cache = caches.default;
   const normalized = new URL(incoming.origin + '/local-catalog');
-  normalized.searchParams.set('dept', dept); normalized.searchParams.set('id', id); normalized.searchParams.set('page', String(requestedPage));
+  normalized.searchParams.set('dept', dept); normalized.searchParams.set('id', id); normalized.searchParams.set('page', String(requestedPage)); normalized.searchParams.set('_v', CACHE_VERSION);
   const cacheKey = new Request(normalized.href, { method: 'GET' });
   const cached = await cache.match(cacheKey);
   if (cached) return request.method === 'HEAD' ? new Response(null, { status: cached.status, headers: cached.headers }) : cached;
