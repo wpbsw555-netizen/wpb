@@ -1,0 +1,72 @@
+name: Bump Product Cache After Fallback
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/bump-product-cache-after-fallback.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Bump local catalog cache version
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('functions/local-catalog.js')
+          s=p.read_text(encoding='utf-8')
+          old="const CACHE_VERSION = '20260817b';"
+          new="const CACHE_VERSION = '20260817c';"
+          if old in s:
+              s=s.replace(old,new,1)
+          elif new not in s:
+              raise SystemExit('Unexpected cache version')
+          p.write_text(s,encoding='utf-8')
+          PY
+          grep -q "CACHE_VERSION = '20260817c'" functions/local-catalog.js
+
+      - name: Commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add functions/local-catalog.js
+          git commit -m 'Refresh product pages after image fallback fix'
+          git push origin main
+
+      - name: Verify fallback version is live
+        shell: bash
+        run: |
+          python - <<'PY'
+          import html,re,time,urllib.request
+          origin='https://qiqishoes-com.pages.dev'
+          for attempt in range(90):
+              try:
+                  u=origin+'/local-catalog?dept=shoes&id=355&page=1'
+                  req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'})
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      text=r.read().decode('utf-8','replace')
+                  imgs=[html.unescape(x) for x in re.findall(r'<img\b[^>]*src=["\']([^"\']+)',text,re.I)]
+                  proxied=[x for x in imgs if '/catalog-proxy?u=' in x and '&fallback=' in x]
+                  if len(proxied)==24:
+                      print('LIVE FALLBACK PRODUCT PAGE VERIFIED',len(proxied))
+                      break
+              except Exception as e:
+                  print('wait',attempt,repr(e))
+              time.sleep(5)
+          else:
+              raise SystemExit('fallback product page did not deploy')
+          PY
