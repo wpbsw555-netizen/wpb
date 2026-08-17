@@ -1,0 +1,171 @@
+name: Normalize Catalog CDN Images
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/normalize-cdn-images.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Rewrite expired CDN URLs to original catalog hosts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json, urllib.parse
+
+          hosts={
+              'fashion':'www.tangma2088.com',
+              'accessories':'acc.tangma2088.com',
+              'bags':'bags.tangma2088.com',
+              'shoes':'shoes.tangma2088.com',
+          }
+          root=Path('qiqishoes-com/assets/catalog/products')
+          changed_files=0; changed_urls=0
+          for dept,host in hosts.items():
+              for p in (root/dept).glob('*.json'):
+                  d=json.loads(p.read_text(encoding='utf-8'))
+                  changed=False
+                  for item in d.get('items',[]):
+                      raw=item.get('url','')
+                      try: u=urllib.parse.urlparse(raw)
+                      except: continue
+                      h=(u.hostname or '').lower()
+                      if h=='qiqiyg.com' or h.endswith('.qiqiyg.com'):
+                          item['url']=urllib.parse.urlunparse(('https',host,u.path,u.params,u.query,u.fragment))
+                          changed=True; changed_urls+=1
+                  if changed:
+                      p.write_text(json.dumps(d,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
+                      changed_files+=1
+          print('snapshot CDN rewrites',changed_urls,'across files',changed_files)
+
+          p=Path('functions/local-catalog.js')
+          s=p.read_text(encoding='utf-8')
+          anchor="""function isAllowedImage(url, expectedHost) {
+            if (!(url instanceof URL) || url.protocol !== 'https:') return false;
+            const host = url.hostname.toLowerCase();
+            const expected = String(expectedHost || '').toLowerCase();
+            const hostOk = host === expected || host === 'qiqiyg.com' || host.endsWith('.qiqiyg.com');
+            return hostOk && url.pathname.toLowerCase().includes('/upfile/category/');
+          }
+          """
+          addition=anchor+"""
+          function normalizeImageUrl(url, expectedHost) {
+            const out = new URL(url.href);
+            const host = out.hostname.toLowerCase();
+            if (host === 'qiqiyg.com' || host.endsWith('.qiqiyg.com')) {
+              out.protocol = 'https:';
+              out.hostname = String(expectedHost || out.hostname).toLowerCase();
+              out.port = '';
+            }
+            return out;
+          }
+          """
+          if 'function normalizeImageUrl(url, expectedHost)' not in s:
+              if anchor not in s: raise SystemExit('isAllowedImage block not found')
+              s=s.replace(anchor,addition,1)
+
+          old="""      if (!isAllowedImage(u, config.host) || seen.has(u.href)) continue;
+                seen.add(u.href);
+                items.push({ url: u.href, alt: String(item.alt || ''), childId: /^\\d+$/.test(String(item.childId || '')) ? String(item.childId) : null });"""
+          new="""      if (!isAllowedImage(u, config.host)) continue;
+                u = normalizeImageUrl(u, config.host);
+                if (seen.has(u.href)) continue;
+                seen.add(u.href);
+                items.push({ url: u.href, alt: String(item.alt || ''), childId: /^\\d+$/.test(String(item.childId || '')) ? String(item.childId) : null });"""
+          if old in s: s=s.replace(old,new,1)
+          elif 'u = normalizeImageUrl(u, config.host);' not in s: raise SystemExit('snapshot normalization point missing')
+
+          old2="""    if (!isAllowedImage(image, config.host) || seen.has(image.href)) continue;
+              seen.add(image.href);
+              const childMatch=href.match(/categoryen_(\\d+)\\.html/i);"""
+          new2="""    if (!isAllowedImage(image, config.host)) continue;
+              image = normalizeImageUrl(image, config.host);
+              if (seen.has(image.href)) continue;
+              seen.add(image.href);
+              const childMatch=href.match(/categoryen_(\\d+)\\.html/i);"""
+          if old2 in s: s=s.replace(old2,new2,1)
+          elif 'image = normalizeImageUrl(image, config.host);' not in s: raise SystemExit('live anchor normalization point missing')
+
+          old3="""    if (!isAllowedImage(image, config.host) || seen.has(image.href)) continue;
+              seen.add(image.href);
+              items.push({url:image.href, alt:attr(m[0],'alt'), childId:null});"""
+          new3="""    if (!isAllowedImage(image, config.host)) continue;
+              image = normalizeImageUrl(image, config.host);
+              if (seen.has(image.href)) continue;
+              seen.add(image.href);
+              items.push({url:image.href, alt:attr(m[0],'alt'), childId:null});"""
+          if old3 in s: s=s.replace(old3,new3,1)
+
+          s=s.replace("const CACHE_VERSION = '20260817c';","const CACHE_VERSION = '20260817d';",1)
+          p.write_text(s,encoding='utf-8')
+          PY
+          node --check functions/local-catalog.js
+          grep -q "CACHE_VERSION = '20260817d'" functions/local-catalog.js
+          grep -q 'normalizeImageUrl' functions/local-catalog.js
+
+      - name: Commit normalized catalog images
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add functions/local-catalog.js qiqishoes-com/assets/catalog/products
+          git commit -m 'Normalize catalog CDN images to stable source hosts'
+          git push origin main
+
+      - name: Verify all original styles and stable images live
+        shell: bash
+        run: |
+          python - <<'PY'
+          import html,re,time,urllib.parse,urllib.request
+          origin='https://qiqishoes-com.pages.dev'
+          def get(u,timeout=40):
+              req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'})
+              with urllib.request.urlopen(req,timeout=timeout) as r: return r.status,r.headers,r.read(),r.url
+
+          # Wait until parent contains full hierarchy and its first formerly-CDN image is rewritten to tangma host.
+          for attempt in range(150):
+              try:
+                  st,h,b,f=get(origin+'/local-catalog?dept=fashion&id=11&page=1')
+                  t=b.decode('utf-8','replace')
+                  ok=('View All Styles' in t and '133' in t and 'id=221376' in t and 'uspic.qiqiyg.com' not in urllib.parse.unquote(t))
+                  print('attempt',attempt,'status',st,'new',ok,'len',len(t),flush=True)
+                  if st==200 and ok: break
+              except Exception as e: print('wait',attempt,repr(e),flush=True)
+              time.sleep(5)
+          else: raise SystemExit('normalized hierarchy version did not deploy')
+
+          # Parent image must return normally via same-site proxy.
+          imgs=[html.unescape(x) for x in re.findall(r'<img\\b[^>]*src=["\\']([^"\\']+)',t,re.I)]
+          if not imgs: raise SystemExit('parent images missing')
+          st0,h0,b0,f0=get(imgs[0]); ct=(h0.get('content-type') or '').lower()
+          if st0!=200 or len(b0)<1000 or ('image/' not in ct and b0[:3]!=b'\\xff\\xd8\\xff'): raise SystemExit('first parent image failed')
+
+          # Open the first card -> another local category, then deeper -> leaf styles.
+          st2,h2,b2,f2=get(origin+'/local-catalog?dept=fashion&id=221376&page=1'); t2=b2.decode('utf-8','replace')
+          if st2!=200 or 'id=408634' not in t2 or 'View All Styles' not in t2: raise SystemExit('second level missing')
+          st3,h3,b3,f3=get(origin+'/local-catalog?dept=fashion&id=408634&page=1'); t3=b3.decode('utf-8','replace')
+          imgs3=[html.unescape(x) for x in re.findall(r'<img\\b[^>]*src=["\\']([^"\\']+)',t3,re.I)]
+          if st3!=200 or len(imgs3)<20: raise SystemExit('leaf styles incomplete')
+          successes=0
+          for u in imgs3[:8]:
+              try:
+                  si,hi,bi,fi=get(u); cti=(hi.get('content-type') or '').lower()
+                  if si==200 and len(bi)>1000 and ('image/' in cti or bi[:3]==b'\\xff\\xd8\\xff'): successes+=1
+              except Exception as e: print('leaf image err',repr(e),flush=True)
+          if successes<8: raise SystemExit(f'leaf images incomplete: {successes}/8')
+          print('FULL ORIGINAL CATALOG VERIFIED: all levels + styles + images',flush=True)
+          PY
