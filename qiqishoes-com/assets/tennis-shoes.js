@@ -68,7 +68,7 @@
     },
   };
 
-  let lang = 'zh';
+  let lang = 'es';
   let manifest = { categories: [], defaultCategory: null, importedCategoryCount: 0, totalProducts: 0 };
   let categoryData = { category: {}, products: [] };
   let selectedCategory = new URLSearchParams(location.search).get('category');
@@ -83,9 +83,9 @@
   function savedLanguage() {
     try {
       const value = localStorage.getItem(STORAGE_KEY);
-      return ['zh', 'en', 'es'].includes(value) ? value : 'zh';
+      return ['zh', 'en', 'es'].includes(value) ? value : 'es';
     } catch {
-      return 'zh';
+      return 'es';
     }
   }
 
@@ -110,7 +110,7 @@
   }
 
   function setLanguage(value) {
-    lang = ['zh', 'en', 'es'].includes(value) ? value : 'zh';
+    lang = ['zh', 'en', 'es'].includes(value) ? value : 'es';
     try { localStorage.setItem(STORAGE_KEY, lang); } catch {}
     document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
     const t = TEXT[lang];
