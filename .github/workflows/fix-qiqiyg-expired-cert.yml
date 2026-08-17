@@ -1,0 +1,98 @@
+name: Fix QIQIYG Expired Certificate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-qiqiyg-expired-cert.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Route qiqiyg images over HTTP inside the server proxy
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('functions/catalog-proxy.js')
+          s=p.read_text(encoding='utf-8')
+          old="""function isAllowedTarget(url) {
+            if (!(url instanceof URL) || url.protocol !== 'https:') return false;
+            const host = url.hostname.toLowerCase();
+            return host === 'tangma2088.com' || host.endsWith('.tangma2088.com') || host === 'qiqiyg.com' || host.endsWith('.qiqiyg.com');
+          }"""
+          new="""function isAllowedTarget(url) {
+            if (!(url instanceof URL)) return false;
+            const host = url.hostname.toLowerCase();
+            const isQiqiyg = host === 'qiqiyg.com' || host.endsWith('.qiqiyg.com');
+            if (isQiqiyg) return url.protocol === 'https:' || url.protocol === 'http:';
+            return url.protocol === 'https:' && (host === 'tangma2088.com' || host.endsWith('.tangma2088.com'));
+          }"""
+          if old in s:
+              s=s.replace(old,new,1)
+          elif 'const isQiqiyg' not in s:
+              raise SystemExit('isAllowedTarget block not found')
+
+          needle="""  const cache = caches.default;
+            const cacheKey = new Request(request.url, { method: 'GET' });"""
+          insert="""  const fetchTarget = new URL(target.href);
+            const fetchHost = fetchTarget.hostname.toLowerCase();
+            if (fetchHost === 'qiqiyg.com' || fetchHost.endsWith('.qiqiyg.com')) fetchTarget.protocol = 'http:';
+
+            const cache = caches.default;
+            const cacheKey = new Request(request.url, { method: 'GET' });"""
+          if needle in s:
+              s=s.replace(needle,insert,1)
+          elif 'const fetchTarget = new URL(target.href);' not in s:
+              raise SystemExit('fetchTarget insertion point not found')
+
+          s=s.replace("upstream = await fetch(target.href, {", "upstream = await fetch(fetchTarget.href, {", 1)
+          s=s.replace("'Referer': `${target.origin}/`,", "'Referer': `${fetchTarget.origin}/`,", 1)
+          p.write_text(s,encoding='utf-8')
+          PY
+          node --check functions/catalog-proxy.js
+          grep -q "fetchTarget.protocol = 'http:'" functions/catalog-proxy.js
+
+      - name: Commit proxy certificate workaround
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add functions/catalog-proxy.js
+          git commit -m 'Proxy qiqiyg images over HTTP behind QIQI HTTPS'
+          git push origin main
+
+      - name: Verify hierarchy and qiqiyg images live
+        run: |
+          python - <<'PY'
+          import html,re,time,urllib.parse,urllib.request
+          origin='https://qiqishoes-com.pages.dev'
+          sample='https://uspic.qiqiyg.com/upfile/category/221376.jpg'
+          prox=origin+'/catalog-proxy?u='+urllib.parse.quote(sample,safe='')
+          def get(u,timeout=40):
+              req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'})
+              with urllib.request.urlopen(req,timeout=timeout) as r: return r.status,r.headers,r.read(),r.url
+          for attempt in range(120):
+              try:
+                  st,h,b,f=get(prox)
+                  ct=(h.get('content-type') or '').lower()
+                  print('attempt',attempt,'image',st,ct,len(b),f)
+                  if st==200 and len(b)>1000 and ('image/' in ct or b[:3]==b'\xff\xd8\xff'): break
+              except Exception as e: print('wait',attempt,repr(e))
+              time.sleep(5)
+          else: raise SystemExit('qiqiyg proxy fix did not publish')
+          # Parent must have all original category cards and local child links.
+          st,h,b,f=get(origin+'/local-catalog?dept=fashion&id=11&page=1'); t=b.decode('utf-8','replace')
+          if st!=200 or 'View All Styles' not in t or '133' not in t or 'id=221376' not in t: raise SystemExit('parent hierarchy missing')
+          # Second level and leaf styles must remain inside QIQI.
+          st2,h2,b2,f2=get(origin+'/local-catalog?dept=fashion&id=221376&page=1'); t2=b2.decode('utf-8','replace')
+          if st2!=200 or 'id=408634' not in t2: raise SystemExit('second level missing')
+          st3,h3,b3,f3=get(origin+'/local-catalog?dept=fashion&id=408634&page=1'); t3=b3.decode('utf-8','replace')
+          imgs=[html.unescape(x) for x in re.findall(r'<img\b[^>]*src=["\']([^"\']+)',t3,re.I)]
+          if st3!=200 or len(imgs)<20: raise SystemExit('leaf styles missing')
+          print('FULL CATALOG + QIQIYG IMAGES VERIFIED')
+          PY
