@@ -1,0 +1,22 @@
+name: Validate Catalog Functions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/validate-catalog-functions.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          node --check functions/local-catalog.js
+          node --check functions/catalog-proxy.js
+          grep -q "CACHE_VERSION = '20260817c'" functions/local-catalog.js
+          grep -q 'View All Styles' functions/local-catalog.js
+          echo VALID
