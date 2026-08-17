@@ -133,7 +133,7 @@ class HeadHandler {
 
 class BodyHandler {
   element(el) {
-    el.prepend(`<header id="qiqi-persistent-nav"><a class="qiqi-brand" href="/"><img src="/assets/accessories-logo.svg?v=202608012037" alt="Wrestling"><strong>Wrestling</strong></a><nav class="qiqi-links" aria-label="Catalog navigation"><a href="/">Home</a><a href="/tennis-shoes/">Sneakers</a><a href="/fashion/">Fashion</a><a href="/accessories/">Accessories</a><a href="/bags/">Bags</a><a href="/shoes/">Shoes</a></nav><div class="qiqi-langs">中文&nbsp; | &nbsp;English&nbsp; | &nbsp;Español<a class="qiqi-wa" href="https://wa.me/8613159065939" target="_blank" rel="noopener noreferrer">WhatsApp</a></div></header>`, { html: true });
+    el.prepend(`<header id="qiqi-persistent-nav"><a class="qiqi-brand" href="/"><img src="/assets/accessories-logo.svg?v=202608012037" alt="Wrestling"><strong>Wrestling</strong></a><nav class="qiqi-links" aria-label="Catalog navigation"><a href="/">Inicio</a><a href="/tennis-shoes/">Zapatillas</a><a href="/fashion/">Moda</a><a href="/accessories/">Accesorios</a><a href="/bags/">Bolsos</a><a href="/shoes/">Zapatos</a></nav><div class="qiqi-langs">Chino&nbsp; | &nbsp;Inglés&nbsp; | &nbsp;<strong>Español</strong><a class="qiqi-wa" href="https://wa.me/8613159065939" target="_blank" rel="noopener noreferrer">WhatsApp</a></div></header>`, { html: true });
   }
 }
 
