@@ -3,7 +3,7 @@ const WHATSAPP = '8613159065939';
 function isAllowedTarget(url) {
   if (!(url instanceof URL) || url.protocol !== 'https:') return false;
   const host = url.hostname.toLowerCase();
-  return host === 'tangma2088.com' || host.endsWith('.tangma2088.com');
+  return host === 'tangma2088.com' || host.endsWith('.tangma2088.com') || host === 'qiqiyg.com' || host.endsWith('.qiqiyg.com');
 }
 
 function resolveTarget(value, base) {
