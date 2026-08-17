@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="es">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -114,7 +114,7 @@
         es:{nav:['Inicio','Tenis','Moda','Accesorios','Bolsos','Zapatos'],eyebrow:'MAYORISTA CHINO DE CALZADO Y MODA',intro:'Zapatillas, moda urbana, accesorios, bolsos y calzado al por mayor para compradores globales. Explore el catálogo y contáctenos por WhatsApp para precios y envío.',shop:'Ver zapatillas',guide:'Cómo pedir',heroBadge:'MÁS VENDIDO',heroTitle:'AJ4 NEGRO',heroPoint1:'Alta calidad',heroPoint2:'Precio mayorista',heroPoint3:'Envío rápido',heroText:'Guarde la imagen y consulte por WhatsApp el precio y el envío más recientes.',heroButton:'Consultar precio',departments:'Elija un catálogo',departmentsSub:'Abra una categoría para ver el catálogo completo',sneakers:'Catálogo de tenis',fashion:'Moda urbana',accessories:'Accesorios',bags:'Catálogo de bolsos',shoes:'Catálogo de zapatos',open:'Abrir catálogo →',why:'Por qué elegirnos',a1t:'Gran selección',a1p:'Muchas categorías de calzado, moda, accesorios y bolsos.',a2t:'Soporte mayorista',a2p:'Para minoristas, vendedores sociales y compradores habituales.',a3t:'Cotización global',a3p:'Consulte precio, stock, envío y entrega por WhatsApp.',contactTitle:'¿Encontró un producto?',contactText:'Guarde la imagen y el ID y envíelos para recibir una cotización.',whatsapp:'Cotizar por WhatsApp'}
       };
       function setLang(lang){const t=text[lang]||text.zh;document.documentElement.lang=lang==='zh'?'zh-CN':lang;document.querySelectorAll('[data-nav]').forEach((node,i)=>node.textContent=t.nav[i]);document.querySelectorAll('[data-t]').forEach(node=>{const v=t[node.dataset.t];if(v)node.textContent=v});document.querySelectorAll('[data-lang]').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));try{localStorage.setItem(KEY,lang)}catch{}}
-      document.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>setLang(b.dataset.lang));let saved='zh';try{saved=localStorage.getItem(KEY)||'zh'}catch{}setLang(['zh','en','es'].includes(saved)?saved:'zh');
+      document.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>setLang(b.dataset.lang));let saved='es';try{saved=localStorage.getItem(KEY)||'es'}catch{}setLang(['zh','en','es'].includes(saved)?saved:'es');
     })();
   </script>
 </body>
