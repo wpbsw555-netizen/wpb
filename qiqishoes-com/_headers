@@ -1,29 +1,38 @@
 /
-  Cache-Control: no-cache, no-store, must-revalidate
+  Cache-Control: public, max-age=60, must-revalidate
 
-/assets/home-hero-loader.js
-  Cache-Control: no-cache, no-store, must-revalidate
+/assets/*.js
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
 
-/assets/aj4-hero.part*
-  Cache-Control: no-cache, no-store, must-revalidate
+/assets/*.css
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
 
-/assets/catalog/accessories/rolex-accessories-home-20260815.jpg
-  Cache-Control: no-cache, no-store, must-revalidate
+/assets/catalog/*.json
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
 
-/assets/app.js
-  Cache-Control: no-cache, no-store, must-revalidate
+/assets/tennis-shoes/*.json
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
 
-/assets/images-fix.js
-  Cache-Control: no-cache, no-store, must-revalidate
+/assets/tennis-shoes/categories/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/assets/tennis-shoes/images/*
+  Cache-Control: public, max-age=2592000, immutable
+
+/assets/catalog/*/*.jpg
+  Cache-Control: public, max-age=2592000, immutable
 
 /fashion/*
-  Cache-Control: no-cache, no-store, must-revalidate
+  Cache-Control: public, max-age=60, must-revalidate
 
 /accessories/*
-  Cache-Control: no-cache, no-store, must-revalidate
+  Cache-Control: public, max-age=60, must-revalidate
 
 /bags/*
-  Cache-Control: no-cache, no-store, must-revalidate
+  Cache-Control: public, max-age=60, must-revalidate
 
 /shoes/*
-  Cache-Control: no-cache, no-store, must-revalidate
+  Cache-Control: public, max-age=60, must-revalidate
+
+/tennis-shoes/*
+  Cache-Control: public, max-age=60, must-revalidate
