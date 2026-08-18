@@ -1,7 +1,7 @@
 (() => {
   const script = document.currentScript;
   const assetsRoot = new URL('./', script.src);
-  const manifestUrl = new URL(`tennis-shoes/catalog.json?v=${Date.now()}`, assetsRoot);
+  const manifestUrl = new URL('tennis-shoes/catalog.json?v=20260818', assetsRoot);
   const STORAGE_KEY = 'qiqi-catalog-language';
   const PAGE_SIZE = 40;
 
@@ -97,7 +97,7 @@
 
   function assetUrl(path) {
     const url = new URL(`tennis-shoes/${path}`, assetsRoot);
-    url.searchParams.set('v', String(Date.now()));
+    url.searchParams.set('v', '20260818');
     return url.href;
   }
 
@@ -219,7 +219,7 @@
     pager.hidden = true;
 
     try {
-      const response = await fetch(assetUrl(meta.data), { cache: 'no-store' });
+      const response = await fetch(assetUrl(meta.data), { cache: 'force-cache' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       categoryData = await response.json();
       if (!Array.isArray(categoryData.products)) categoryData.products = [];
@@ -236,7 +236,7 @@
     status.textContent = TEXT[lang].loading;
 
     try {
-      const response = await fetch(manifestUrl, { cache: 'no-store' });
+      const response = await fetch(manifestUrl, { cache: 'force-cache' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       manifest = await response.json();
       if (!Array.isArray(manifest.categories)) manifest.categories = [];
